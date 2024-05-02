@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { getClases } from "../data/data"
+import { getClases } from "../data/conexiones"
+import Navbar from "../components/Navbar";
 
 export default function Horario() {
   const [clases, setClases] = useState<any>(null);
@@ -16,6 +17,8 @@ export default function Horario() {
     }, []);
   return (
     <div>
+      <Navbar />
+      
  
       <table>
           <tr>
