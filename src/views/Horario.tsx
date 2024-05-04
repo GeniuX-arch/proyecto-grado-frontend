@@ -3,7 +3,13 @@ import { getClases } from "../data/conexiones"
 import Navbar from "../components/Navbar";
 
 export default function Horario() {
+  interface horarioo  {
+    horaInicio:String,
+    horaFin:String,
+    Dia:String,
+  }
   const [clases, setClases] = useState<any>(null);
+  const [horario, setHorario] = useState<horarioo>()
   useEffect(() => {
         const fetchClases = async () => {
             try {
@@ -16,42 +22,51 @@ export default function Horario() {
         fetchClases();
     }, []);
   return (
-    <div>
+    <>
       <Navbar />
+    <div className='text-white bg-slate-950 min-h-screen flex flex-col items-center pt-24'>
       
- 
-      <table>
+
+
+    
+
+    <div className="overflow-x-auto">
+      <table className="table-auto border-collapse border border-gray-400">
+        <thead>
           <tr>
-              <th>Hora</th>
-              <th>Lunes</th>
-              <th>Martes</th>
-              <th>Miércoles</th>
-              <th>Jueves</th>
-              <th>Viernes</th>
-              <th>Sábado</th>
+            <th className="border border-gray-400">Hora</th>
+            <th className="border border-gray-400">Lunes</th>
+            <th className="border border-gray-400">Martes</th>
+            <th className="border border-gray-400">Miércoles</th>
+            <th className="border border-gray-400">Jueves</th>
+            <th className="border border-gray-400">Viernes</th>
+            <th className="border border-gray-400">Sábado</th>
           </tr>
-          <tr>
-              <td>8:00 - 9:00</td>
-              <td>Clase</td>
-              <td>Clase</td>
-              <td>Clase</td>
-              <td>Clase</td>
-              <td>Clase</td>
-              <td>Descanso</td>
-          </tr>
-          <tr>
-              <td>9:00 - 10:00</td>
-              <td>Reunión</td>
-              <td>Trabajo</td>
-              <td>Trabajo</td>
-              <td>Proyecto</td>
-              <td>Trabajo</td>
-              <td>Descanso</td>
-          </tr>
+        </thead>
+        <tbody>
+          {Array.from({ length: 18 }, (_, i) => (
+            <tr key={i}>
+              <td className="border border-gray-400 p-2">
+                {`${6 + Math.floor(i / 2)}:${i % 2 === 0 ? '00' : '45'} - ${6 + Math.floor((i + 1) / 2)}:${i % 2 === 0 ? '45' : '30'}`}
+              </td>
+              <td className="border border-gray-400 p-2">Clase</td>
+              <td className="border border-gray-400 p-2">Clase</td>
+              <td className="border border-gray-400 p-2">Clase</td>
+              <td className="border border-gray-400 p-2">Clase</td>
+              <td className="border border-gray-400 p-2">Clase</td>
+              <td className="border border-gray-400 p-2">
+                {i < 15 ? 'Descanso' : ''}
+              </td>
+            </tr>
+          ))}
+        </tbody>
       </table>
+    </div>
+
 
 
     </div>
+    </>
 
   )
 }
