@@ -30,11 +30,10 @@ export default function Horario() {
 
     
 
-    <div className="overflow-x-auto">
-      <table className="table-auto border-collapse border border-gray-400">
+      <table className="table-auto border-collapse border border-gray-400 w-11/12">
         <thead>
-          <tr>
-            <th className="border border-gray-400">Hora</th>
+          <tr className="grid grid-cols-7">
+            <th className="border border-gray-400 ">Hora</th>
             <th className="border border-gray-400">Lunes</th>
             <th className="border border-gray-400">Martes</th>
             <th className="border border-gray-400">Miércoles</th>
@@ -45,23 +44,21 @@ export default function Horario() {
         </thead>
         <tbody>
           {Array.from({ length: 18 }, (_, i) => (
-            <tr key={i}>
+            <tr key={i} className="grid grid-cols-7">
               <td className="border border-gray-400 p-2">
                 {`${6 + Math.floor(i / 2)}:${i % 2 === 0 ? '00' : '45'} - ${6 + Math.floor((i + 1) / 2)}:${i % 2 === 0 ? '45' : '30'}`}
               </td>
-              <td className="border border-gray-400 p-2">Clase</td>
-              <td className="border border-gray-400 p-2">Clase</td>
-              <td className="border border-gray-400 p-2">Clase</td>
-              <td className="border border-gray-400 p-2">Clase</td>
-              <td className="border border-gray-400 p-2">Clase</td>
+              <td className="border border-gray-400 p-2"></td>
+              <td className="border border-gray-400 p-2"></td>
+              <td className="border border-gray-400 p-2"></td>
+              <td className="border border-gray-400 p-2"></td>
+              <td className="border border-gray-400 p-2"></td>
               <td className="border border-gray-400 p-2">
-                {i < 15 ? 'Descanso' : ''}
               </td>
             </tr>
           ))}
         </tbody>
       </table>
-    </div>
 
 
 
