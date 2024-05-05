@@ -2,17 +2,29 @@ import { useDrag } from "react-dnd";
 
 
 interface DragComponentProps {
-  backgroundColor?: string;
-  borderColor?: string;
+  dia: string;
+  horaInicio: string;
+  horaFin: string;
 }
 
-const DragClase: React.FC<DragComponentProps> = ({ backgroundColor, borderColor }) => {
+
+
+
+const DragClase: React.FC<DragComponentProps> = ({ dia, horaInicio,horaFin }) => {
+
   const [{ isDragging }, drag] = useDrag({
-    type: 'box',
-    collect: monitor => ({
-      isDragging: monitor.isDragging(),
-    }),
-  });
+  type: 'box',
+  item: { id: 'unique_id', dia, horaInicio, horaFin }, // Puedes pasar las propiedades directamente aquí
+  collect: monitor => ({
+    isDragging: monitor.isDragging(),
+    // Acceder a las propiedades del objeto en el momento del arrastre
+    dia: monitor.getItem()?.dia,
+    horaInicio: monitor.getItem()?.horaInicio,
+    horaFin: monitor.getItem()?.horaFin
+  }),
+});
+console.log('Props pasados a DragClase:', { dia, horaInicio, horaFin });
+
 
   return (
     <div
@@ -20,14 +32,19 @@ const DragClase: React.FC<DragComponentProps> = ({ backgroundColor, borderColor 
       style={{
         opacity: isDragging ? 0.5 : 1,
         cursor: 'pointer',
-        backgroundColor: backgroundColor,
-        borderColor: borderColor,
         border: '1px solid',
         padding: '8px',
+        color:"white",
         margin: '4px',
-        display: 'inline-block'
+        backgroundColor: "black"
       }}
     >
+
+
+      <p>{dia}</p>
+      <p>{horaInicio}</p>
+      <p>{horaFin}</p>
+
       Drag me!
     </div>
   );

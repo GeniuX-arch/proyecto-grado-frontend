@@ -1,54 +1,26 @@
+import { ReactNode, useState } from "react";
 import { useDrop } from "react-dnd";
 
+
 interface DropComponentProps {
-  onDrop: (propsToPass: { backgroundColor: string; borderColor: string }) => void;
+  dia: string;
+  horaInicio: string;
+  horaFin: string;
+  onDrop: (propsToPass: { dia: string; horaInicio: string,horaFin:string }) => void;
+  onDropItems:(propsToPass: { dia: string; horaInicio: string,horaFin:string }) => void;
+  children?: ReactNode
 }
 
-const DropClase : React.FC<DropComponentProps> = ({ onDrop }) => {
+
+const DropClase: React.FC<DropComponentProps> = ({ dia, horaInicio, horaFin, onDrop,onDropItems, children }) => {
   const [{ isOver }, drop] = useDrop({
     accept: 'box',
-    drop: (item, monitor) => {
-      const propsToPass = {
-        backgroundColor: 'red',
-        borderColor: 'blue'
-      };
-      onDrop(propsToPass);
+
+      drop: (item: any) => {
+        const { horaFin, dia, horaInicio } = item;
+    // Agrupa las variables en un objeto antes de llamar a onDrop
+        onDropItems({ dia, horaInicio,  horaFin}); 
     },
-    collect: monitor => ({
-      isOver: monitor.isOver(),
-    }),
-  });
-
-  return (
-    <div
-      ref={drop}
-      style={{
-        width: 200,
-        height: 200,
-        border: '1px solid black',
-        backgroundColor: isOver ? 'lightgray' : 'white',
-      }}
-    >
-      Drop here!
-    </div>
-  );
-};
-
-export default DropClase
-
-
-
-/*
-
-interface DropComponentProps {
-  backgroundColor?: string;
-  borderColor?: string;
-  onDrop: (propsToPass: { backgroundColor: string; borderColor: string }) => void;
-}
-
-const DropComponent: React.FC<DropComponentProps> = ({ backgroundColor, borderColor, onDrop }) => {
-  const [{ isOver }, drop] = useDrop({
-    accept: 'box',
     collect: monitor => ({
       isOver: monitor.isOver(),
     }),
@@ -56,8 +28,9 @@ const DropComponent: React.FC<DropComponentProps> = ({ backgroundColor, borderCo
 
   const handleDrop = () => {
     const propsToPass = {
-      backgroundColor: backgroundColor || 'red',
-      borderColor: borderColor || 'blue'
+      dia: dia,
+      horaInicio: horaInicio,
+      horaFin: horaFin,
     };
     onDrop(propsToPass);
   };
@@ -71,32 +44,11 @@ const DropComponent: React.FC<DropComponentProps> = ({ backgroundColor, borderCo
         border: '1px solid black',
         backgroundColor: isOver ? 'lightgray' : 'white',
       }}
-      onClick={handleDrop}
+      onDrop={handleDrop}
     >
-      Drop here!
+      {children}
     </div>
   );
 };
 
-const App: React.FC = () => {
-  const handleDrop = (propsToPass: { backgroundColor: string; borderColor: string }) => {
-    console.log('Dropped with props:', propsToPass);
-  };
-
-  const dropProps = {
-    backgroundColor: 'yellow',
-    borderColor: 'green'
-  };
-
-  return (
-    <DndProvider backend={HTML5Backend}>
-      <div>
-        <DragComponent />
-        <DropComponent {...dropProps} onDrop={handleDrop} />
-      </div>
-    </DndProvider>
-  );
-};
-
-export default App;
-*/
+export default DropClase
