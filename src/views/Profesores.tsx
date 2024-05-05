@@ -1,11 +1,13 @@
 import React from 'react'
 import Navbar from '../components/Navbar'
+import { Link } from 'react-router-dom'
 
 export default function Profesores() {
   return (
     <>
         <Navbar />
-    <div className='text-white bg-slate-950 min-h-screen flex flex-col items-center pt-24'>
+    <div className='  min-h-screen flex flex-col items-center pt-24'>
+        <Link to="/profesor/crear">Crear</Link>
          <h1 className='text-2xl'>Listado de profesores</h1>
         
         <div className='w-11/12 mt-5'>

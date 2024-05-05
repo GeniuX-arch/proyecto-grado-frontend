@@ -9,6 +9,7 @@ import DragClase from "../components/DragClase";
 
 
 
+//sumatoria de numeros
 function sumarMinutos(hora: string, minutos: number): string {
   // Dividir la hora en horas y minutos
   const [horas, minutosHora] = hora.split(":").map(Number);
@@ -39,8 +40,9 @@ function sumarMinutos(hora: string, minutos: number): string {
     }
 
 
+
+    //lista de clases de prueba
   const listadoClases: horario[] = [
-        // Tu lista de clases... {
       {
         dia: 'lunes',
         horaInicio: '06:00',
@@ -95,14 +97,15 @@ export default function Horario() {
     */
 
 
+    //Creación del horario completo
    useEffect(() => {
     const updateHorarioo = () => {
-        const newHorarioo: Array<Array<Array<horario>>> = Array.from({ length: 18 }, (_, i) => {
+        const newHorarioo: Array<Array<Array<horario>>> = Array.from({ length: 18 }, (_, ) => {
                 horaInicio = horaFin;
                 const minutosASumar: number = 45;
                 horaFin = sumarMinutos(horaInicio, minutosASumar);
 
-            const updatedHorarioo: Array<Array<horario>> = dias.map((dia, index) => {
+            const updatedHorarioo: Array<Array<horario>> = dias.map((dia) => {
                 const clasesFiltradas = clases.filter(clase =>
                     clase.dia === dia &&
                     clase.horaInicio === horaInicio &&
@@ -124,13 +127,16 @@ export default function Horario() {
     return (
         <>
             <Navbar />
-            <div className="text-white bg-slate-950 min-h-screen flex flex-col items-center pt-24">
-                <table className="table-auto border-collapse border border-gray-400 w-11/12">
+            <div className=" min-h-screen flex flex-row justify-center items-center pt-24">
+                
+                
+                <table className="table-auto border-collapse border border-solid border-gray-200 w-11/12">
                     <thead>
-                        <tr className="grid grid-cols-7">
-                            <th className="border border-gray-400 ">Hora</th>
+                        <tr className="lg:flex lg:flex-row grid grid-cols-7">
+                            <th className="border border-gray-300 lg:w-32 text-center items-center flex justify-center shadow-gray-200 shadow-sm border-solid">Hora</th>
                             {dias.map((dia, index) => (
-                                <th key={index} className="border border-gray-400">{dia}</th>
+                                <th key={index} className="border h-12 text-center flex justify-center items-center border-gray-300  border-solid shadow-gray-200 shadow-sm lg:w-1/6">{dia}</th>
+
                             ))}
                         </tr>
                     </thead>
@@ -140,20 +146,20 @@ export default function Horario() {
                               hora=sumarMinutos(hora,45)
                             return(
                               
-                                <tr key={rowIndex} className="grid grid-cols-7">
-                                    <td className="border border-gray-400 p-2">
+                                <tr key={rowIndex} className="lg:flex lg:flex-row grid grid-cols-7">
+                                    <td className="border  p-2 text-center lg:w-32 border-gray-300 shadow-gray-200 shadow-sm border-solid">
+
                                         {hora}-{sumarMinutos(hora,45)}
                                     </td>
                                     {horaRow.map((diaClases, diaIndex) => {
                                      
                                     return(
-                                        <td key={diaIndex} className="border border-gray-400 p-2">
+                                        <td key={diaIndex} className="border border-gray-200 p-2 lg:w-1/6 border-solid">
                                             <DropClase 
                                                 dia={dias[diaIndex]}
-                                                horaInicio={hora} // Asegúrate de pasar la hora correcta aquí
-                                                horaFin={sumarMinutos(hora,45)} // Asegúrate de pasar la hora correcta aquí
+                                                horaInicio={hora} 
+                                                horaFin={sumarMinutos(hora,45)} 
                                                 onDrop={(propsToPass) => {
-                                                console.log('Dropped with props:', propsToPass);
                                                    // Crear una copia del array listadoClases
                                               setProps(
                                                 {
@@ -163,11 +169,9 @@ export default function Horario() {
                                                 }
                                               )
                                               
-                                              // Buscar el índice del elemento en el array
                                                 }}
                                               onDropItems={(propsToPass)=>{
 
-                                                 console.log('Drap with props:', propsToPass);
                                               const updatedClases = [...clases];
                                               const index = updatedClases.findIndex(clase => 
                                                   clase.dia === propsToPass.dia &&
@@ -185,7 +189,6 @@ export default function Horario() {
                                                       dia: props.dia,
                                                       horaInicio: props.horaInicio,
                                                       horaFin: props.horaFin,
-                                                      // Puedes agregar más propiedades si las necesitas
                                                   };
                                                   
                                                   // Reemplazar listadoClases con la copia actualizada
@@ -195,7 +198,6 @@ export default function Horario() {
                                                   console.error('No se encontró el elemento en listadoClases');
                                               }
                                               
-                                              console.log('Dropped with props:', propsToPass);
                                               }}
                                               
                                             >

@@ -23,7 +23,6 @@ const DragClase: React.FC<DragComponentProps> = ({ dia, horaInicio,horaFin }) =>
     horaFin: monitor.getItem()?.horaFin
   }),
 });
-console.log('Props pasados a DragClase:', { dia, horaInicio, horaFin });
 
 
   return (
@@ -32,12 +31,11 @@ console.log('Props pasados a DragClase:', { dia, horaInicio, horaFin });
       style={{
         opacity: isDragging ? 0.5 : 1,
         cursor: 'pointer',
-        border: '1px solid',
         padding: '8px',
-        color:"white",
+        color:"black",
         margin: '4px',
       }}
-      className="bg-slate-800 rounded-md shadow-sm shadow-slate-500"
+      className="bg-green-200 rounded-md "
     >
 
 

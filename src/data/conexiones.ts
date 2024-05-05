@@ -1,8 +1,9 @@
+import {host} from "./server";
 import axios from "axios"
 
 export const getClases = async () => {
     try {
-        const response = await axios.get(''); // Coloca la URL correcta aquí
+        const response = await axios.get(`${host}/clase `); // Coloca la URL correcta aquí
         return response.data;
     } catch (error) {
         console.error("Error en la petición", error);
