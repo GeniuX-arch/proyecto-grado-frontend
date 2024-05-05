@@ -40,10 +40,11 @@ const DropClase: React.FC<DropComponentProps> = ({ dia, horaInicio, horaFin, onD
       ref={drop}
       style={{
         border: '1px solid black',
-        backgroundColor: isOver ? 'lightgray' : 'white',
+        
       }}
       onDrop={handleDrop}
-      className="w-full min-h-10 h-full "
+      className={`w-full min-h-10 h-full ${isOver ? 'bg-slate-500' : ''}`}
+
     >
       {children}
     </div>

@@ -36,8 +36,8 @@ console.log('Props pasados a DragClase:', { dia, horaInicio, horaFin });
         padding: '8px',
         color:"white",
         margin: '4px',
-        backgroundColor: "black"
       }}
+      className="bg-slate-800 rounded-md shadow-sm shadow-slate-500"
     >
 
 
