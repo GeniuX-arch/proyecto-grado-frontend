@@ -14,7 +14,7 @@ const DragClase: React.FC<DragComponentProps> = ({ dia, horaInicio,horaFin }) =>
 
   const [{ isDragging }, drag] = useDrag({
   type: 'box',
-  item: { id: 'unique_id', dia, horaInicio, horaFin }, // Puedes pasar las propiedades directamente aquí
+  item: { id: 'unique_id', dia, horaInicio, horaFin },
   collect: monitor => ({
     isDragging: monitor.isDragging(),
     // Acceder a las propiedades del objeto en el momento del arrastre

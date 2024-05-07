@@ -1,6 +1,5 @@
 
 import { useEffect, useState } from "react";
-import { getClases } from "../data/conexiones";
 import Navbar from "../components/Navbar";
 import DropClase from "../components/DropClase";
 import { DndProvider } from "react-dnd";
@@ -82,7 +81,7 @@ export default function Horario() {
   
     const [props, setProps] = useState<horario>();
     const [clases, setClases] = useState<horario[]>(listadoClases);
-    const [horarioo, setHorarioo] = useState<Array<Array<Array<horario>>>>([[[]]]);
+    const [horarioo, setHorarioo] = useState<Array<Array<Array<horario>>>>([[[]]]); //array de 3 dimenciones
       /*
     useEffect(() => {
         const fetchClases = async () => {
@@ -121,7 +120,7 @@ export default function Horario() {
     };
 
     updateHorarioo();
-}, [clases]); // Solo ejecutar el efecto cuando listadoClases cambie
+}, [clases]); // Solo ejecutar el efecto cuando el estado de clases cambie
  
 
     return (
@@ -160,6 +159,7 @@ export default function Horario() {
                                                 horaInicio={hora} 
                                                 horaFin={sumarMinutos(hora,45)} 
                                                 onDrop={(propsToPass) => {
+
                                                    // Crear una copia del array listadoClases
                                               setProps(
                                                 {

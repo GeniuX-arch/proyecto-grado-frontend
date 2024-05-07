@@ -16,6 +16,8 @@ const DropClase: React.FC<DropComponentProps> = ({ dia, horaInicio, horaFin, onD
   const [{ isOver }, drop] = useDrop({
     accept: 'box',
 
+
+    // item son las propiedades del drop
       drop: (item: any) => {
         const { horaFin, dia, horaInicio } = item;
     // Agrupa las variables en un objeto antes de llamar a onDrop
