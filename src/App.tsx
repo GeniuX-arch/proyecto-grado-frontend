@@ -1,26 +1,43 @@
-import {  Route, Routes } from 'react-router-dom'
-import Horario from './views/Horario'
-import './App.css'
-import Profesores from './views/Profesores'
-import CrearProfesor from './views/CrearProfesor'
-import Profesor from './views/Profesor'
-import Login from './views/Login'
-import {Error} from './views/Error'
+import { Route, Routes, Navigate } from 'react-router-dom';
+import { ReactNode, useContext } from 'react';
+import Horario from './views/Horario';
+import Profesores from './views/Profesores';
+import CrearProfesor from './views/CrearProfesor';
+import Profesor from './views/Profesor';
+import Login from './views/Login';
+import Error from './views/Error';
+import { AuthContext,AuthProvider } from './context/authContext';
 
-function App() {
-
-  return (
-        <Routes>
-          <Route path="/horario" element={ <Horario /> } />
-          <Route path="/" element={ <Profesores /> } />
-          <Route path="/profesor/:id" element={ <Profesor /> } />
-          <Route path="/profesor/crear" element={ <CrearProfesor /> } />
-          <Route path="/login" element={ <Login /> } />
-          <Route path="/*" element={ <Error /> } />
-        </Routes>
-        
-     
-  )
+interface PrivateRouteProps {
+  element: ReactNode;
+  path: string;
+  // Puedes agregar otras propiedades aquí si es necesario
 }
 
-export default App
+function PrivateRoute({ element, ...props }: PrivateRouteProps) {
+  const { status } = useContext(AuthContext);
+
+  return (
+    <Route
+      {...props}
+      element={status === 'authenticated' ? element : <Navigate to="/login" />}
+    />
+  );
+}
+
+function App() {
+  return (
+    <AuthProvider>
+      <Routes>
+        <PrivateRoute path="/horario" element={<Horario />} />
+        <PrivateRoute path="/" element={<Profesores />} />
+        <PrivateRoute path="/profesor/:id" element={<Profesor />} />
+        <PrivateRoute path="/profesor/crear" element={<CrearProfesor />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/*" element={<Error />} />
+      </Routes>
+    </AuthProvider>
+  );
+}
+
+export default App;

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-export function Error() {
+export default function Error() {
   return (
     <div className="flex flex-col justify-center items-center h-screen">
       <span className="text-6xl font-bold text-gray-900 mb-8">Oops!</span>

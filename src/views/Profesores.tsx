@@ -1,7 +1,16 @@
 import Navbar from '../components/Navbar'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import { AuthContext } from '../context/authContext';
+import { useContext, useEffect } from 'react';
 
 export default function Profesores() {
+  //redireccionar
+    const { status } = useContext(AuthContext);
+
+     const navigate = useNavigate();
+  if (status !== 'authenticated') {
+      navigate("/login");
+  }
   return (
     <>
       <Navbar />

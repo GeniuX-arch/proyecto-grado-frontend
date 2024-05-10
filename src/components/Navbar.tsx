@@ -1,9 +1,22 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link,useNavigate } from 'react-router-dom';
+import { useContext } from 'react';
+import { AuthContext } from '../context/authContext';
+
 
 export default function Navbar() {
+  const navegate = useNavigate();
+  const {handleLogOut}= useContext(AuthContext)
   const [isOpen, setIsOpen] = useState(false);
+  const handleSubmit = async () => {
+    try {
+      await handleLogOut();
 
+      navegate('/login')
+    } catch (error) {
+      console.error(error);
+    }
+  };
   const toggleMenu = () => {
     setIsOpen(!isOpen);
   };
@@ -29,9 +42,9 @@ export default function Navbar() {
             </Link>
           </div>
           <div>
-            <Link to="/login" className="inline-block text-sm px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-gray-900 hover:bg-white mt-4 lg:mt-0">
+            <a onClick={handleSubmit} className="inline-block text-sm px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-gray-900 hover:bg-white mt-4 lg:mt-0">
               Cerrar Sesion
-            </Link>
+            </a>
           </div>
           <div className="ml-4 flex items-center">
             <Link to="/perfil">
