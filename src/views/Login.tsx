@@ -58,7 +58,6 @@ type StateDispatch = any
     e.preventDefault();
     try {
       await handleLoginWithCredentials(email, password);
-      navegate('/')
       
     } catch (error) {
       console.error(error);

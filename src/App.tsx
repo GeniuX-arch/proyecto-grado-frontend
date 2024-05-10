@@ -1,3 +1,4 @@
+
 import { Route, Routes, Navigate } from 'react-router-dom';
 import { ReactNode, useContext } from 'react';
 import Horario from './views/Horario';
@@ -9,30 +10,26 @@ import Error from './views/Error';
 import { AuthContext,AuthProvider } from './context/authContext';
 
 interface PrivateRouteProps {
-  element: ReactNode;
-  path: string;
+  children: ReactNode;
   // Puedes agregar otras propiedades aquí si es necesario
 }
 
-function PrivateRoute({ element, ...props }: PrivateRouteProps) {
-  const { status } = useContext(AuthContext);
-
-  return (
-    <Route
-      {...props}
-      element={status === 'authenticated' ? element : <Navigate to="/login" />}
-    />
-  );
+function PrivateRoutes({ children }: PrivateRouteProps) {
+    const { status,userId } = useContext(AuthContext);
+    if (status === 'checking') return <p className="loading"><span>Checking credentials, wait a moment...</span></p>
+    return(
+      (status=== 'authenticated' && userId )? <>{children}</> : <Navigate to="/login" />
+    )
 }
 
 function App() {
   return (
     <AuthProvider>
       <Routes>
-        <PrivateRoute path="/horario" element={<Horario />} />
-        <PrivateRoute path="/" element={<Profesores />} />
-        <PrivateRoute path="/profesor/:id" element={<Profesor />} />
-        <PrivateRoute path="/profesor/crear" element={<CrearProfesor />} />
+        <Route path="/horario" element={<PrivateRoutes><Horario /></PrivateRoutes>} />
+        <Route path="/" element={ <PrivateRoutes><Profesores /></PrivateRoutes>} />
+         <Route path="/profesor/:id" element={<PrivateRoutes><Profesor /></PrivateRoutes>} />
+        <Route path="/profesor/crear" element={<PrivateRoutes><CrearProfesor /></PrivateRoutes>} />
         <Route path="/login" element={<Login />} />
         <Route path="/*" element={<Error />} />
       </Routes>

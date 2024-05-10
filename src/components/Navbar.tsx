@@ -42,7 +42,7 @@ export default function Navbar() {
             </Link>
           </div>
           <div>
-            <a onClick={handleSubmit} className="inline-block text-sm px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-gray-900 hover:bg-white mt-4 lg:mt-0">
+            <a onClick={handleSubmit} className="hover:cursor-pointer inline-block text-sm px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-gray-900 hover:bg-white mt-4 lg:mt-0">
               Cerrar Sesion
             </a>
           </div>
