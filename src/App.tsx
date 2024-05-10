@@ -5,6 +5,7 @@ import Profesores from './views/Profesores'
 import CrearProfesor from './views/CrearProfesor'
 import Profesor from './views/Profesor'
 import Login from './views/Login'
+import {Error} from './views/Error'
 
 function App() {
 
@@ -15,6 +16,7 @@ function App() {
           <Route path="/profesor/:id" element={ <Profesor /> } />
           <Route path="/profesor/crear" element={ <CrearProfesor /> } />
           <Route path="/login" element={ <Login /> } />
+          <Route path="/*" element={ <Error /> } />
         </Routes>
         
      

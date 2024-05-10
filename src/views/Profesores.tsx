@@ -4,49 +4,45 @@ import { Link } from 'react-router-dom'
 export default function Profesores() {
   return (
     <>
-        <Navbar />
-    <div className='  min-h-screen flex flex-col items-center pt-24'>
-        <Link to="/profesor/crear">Crear</Link>
-         <h1 className='text-2xl'>Listado de profesores</h1>
-        
-        <div className='w-11/12 mt-5'>
-          <div className='items-center text-center grid grid-cols-2 gap-2 h-14 '>
-            <div className='items-center text-center grid grid-cols-3 gap-2 h-14'>
-              <p>cedula</p>
-              <p>nombres</p>
-              <p>tipocontrato</p>
+      <Navbar />
+      <div className='min-h-screen flex flex-col items-center pt-24'>
+        <Link to="/profesor/crear" className="text-blue-800 hover:underline mb-4">Crear Nuevo Profesor</Link>
+        <h1 className='text-3xl font-bold text-gray-1000 mb-6'>Listado de Profesores</h1>
+
+        <div className='w-full max-w-screen-lg grid grid-cols-1 sm:grid-cols-2 gap-6'>
+          <div className='bg-gray-100 rounded-md shadow-md'>
+            <div className='p-6 flex items-center'>
+              <img src="../../public/perfil.png" alt="" className='h-16 w-16 rounded-full mr-4' />
+              <div>
+                <p className='font-semibold text-gray-800'>12164888791</p>
+                <p className="text-gray-600">Pepito Perez</p>
+                <p className="text-gray-600">Tipo de Contrato: Tiempo Completo</p>
+              </div>
             </div>
-            <div className='flex justify-center'>Materias</div>
+            <ul className='flex justify-center gap-4 py-2 border-t border-gray-200'>
+              <li className="text-gray-600">Materia 1</li>
+              <li className="text-gray-600">Materia 2</li>
+              <li className="text-gray-600">Materia 3</li>
+            </ul>
           </div>
-              <div className='bg-slate-800 items-center text-center grid grid-cols-2 gap-2 h-20 rounded-md mb-3 '>
-                <div className='items-center text-center grid grid-cols-3 gap-2 h-20'>
-                <div className='flex justify-center items-center gap-10'><img src="../../public/perfil.jpg" alt="" className='h-16 rounded-full' /> <p>12164888791</p></div>
-                <p>Pepito perez</p>
-                <p>tipoContrato</p>
-                </div>
-                <ul className='flex justify-center gap-4'>
-                  <li>materia1</li>
-                  <li>materia2</li>
-                  <li>materia3</li>
 
-                </ul>
+          <div className='bg-gray-100 rounded-md shadow-md'>
+            <div className='p-6 flex items-center'>
+              <img src="../../public/perfil.png" alt="" className='h-16 w-16 rounded-full mr-4' />
+              <div>
+                <p className='font-semibold text-gray-800'>12164888791</p>
+                <p className="text-gray-600">Pepito Perez</p>
+                <p className="text-gray-600">Tipo de Contrato: Tiempo Parcial</p>
               </div>
-              <div className='bg-slate-800 items-center text-center grid grid-cols-2 gap-2 h-20 rounded-md mb-3'>
-                <div className='items-center text-center grid grid-cols-3 gap-2 h-20'>
-                <div className='flex justify-center items-center gap-10'><img src="../../public/perfil.jpg" alt="" className='h-16 rounded-full' /> <p>12164888791</p></div>
-                <p>Pepito perez</p>
-                <p>tipoContrato</p>
-                </div>
-                <ul className='flex justify-center gap-4'>
-                  <li>materia1</li>
-                  <li>materia2</li>
-                  <li>materia3</li>
-
-                </ul>
-              </div>
+            </div>
+            <ul className='flex justify-center gap-4 py-2 border-t border-gray-200'>
+              <li className="text-gray-600">Materia 1</li>
+              <li className="text-gray-600">Materia 2</li>
+              <li className="text-gray-600">Materia 3</li>
+            </ul>
+          </div>
         </div>
-
-    </div>
+      </div>
     </>
-  )
+  );
 }
