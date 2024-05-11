@@ -1,6 +1,6 @@
 import React, { useState,useContext } from "react";
 import { AuthContext } from "../context/authContext";
-import { useNavigate } from "react-router-dom";
+import { FirebaseError } from "firebase/app";
 
 
 
@@ -14,13 +14,11 @@ import { useNavigate } from "react-router-dom";
 
 // Inicializar Firebase y obtener el servicio de autenticación
 export default function Login() {
-  const navegate= useNavigate()
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [error, setError] = useState<string>("");
   console.log(useContext(AuthContext))
-  const {status, handleLoginWithCredentials}=useContext(AuthContext)
-  if(status=='authenticated'){
-  }
+  const { handleLoginWithCredentials}=useContext(AuthContext)
     
 
   /*
@@ -59,28 +57,39 @@ type StateDispatch = any
     try {
       await handleLoginWithCredentials(email, password);
       
-    } catch (error) {
-      console.error(error);
+    } catch (e) {
+      if (e instanceof FirebaseError){
+
+      setError("Error en el usuario o contraseña");
+      }else{
+          setError("Ocurrió un error");
+
+      }
+      
+      
     }
   };
 
   return (
-    <div>
-      <form onSubmit={handleSubmit}>
+     <div className="flex items-center justify-center ">
+      <form onSubmit={handleSubmit} className="m-20 flex flex-col w-5/12 text-center gap-3">
         <h2>Iniciar Sesión</h2>
         <input
+          className="p-5 border h-10 focus:border-cyan-600  focus:outline-none "
           type="email"
           placeholder="Correo electrónico"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
         <input
+          className="p-5 border h-10 focus:border-cyan-600  focus:outline-none "
           type="password"
           placeholder="Contraseña"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
-        <button type="submit">Iniciar Sesión</button>
+         {error && <p className="text-red-500 ">{error}</p>}
+        <button type="submit" className="bg-blue-600 h-10 text-white">Iniciar Sesión</button>
       </form>
     </div>
   );

@@ -27,9 +27,8 @@ export const FirebaseAuth= getAuth(firebaseApp);
 export const loginWithCredentials = async (email: string, password: string) => {
     try {
       const resp = await signInWithEmailAndPassword(FirebaseAuth, email, password);
-      console.log("hola")
       return resp.user.uid;
     } catch (error) {
-      alert((error as Error).message);
+      throw error
     }
   };
