@@ -29,6 +29,7 @@ function PrivateRoutes({ children }: PrivateRouteProps) {
 }
 function Intro({ children }: PrivateRouteProps) {
     const { status,userId } = useContext(AuthContext);
+
     return(
       (status=== 'authenticated' && userId )?  <Navigate to="/" /> : <>{children}</>
     )

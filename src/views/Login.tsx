@@ -1,6 +1,7 @@
 import React, { useState,useContext } from "react";
 import { AuthContext } from "../context/authContext";
 import { FirebaseError } from "firebase/app";
+import { Triangle } from "react-loader-spinner";
 
 
 
@@ -17,6 +18,7 @@ export default function Login() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [error, setError] = useState<string>("");
+  const [carga, setCarga] = useState(false);
   console.log(useContext(AuthContext))
   const { handleLoginWithCredentials}=useContext(AuthContext)
     
@@ -53,25 +55,34 @@ type StateDispatch = any
   
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    setCarga(true);
+
+    let err= ""
     e.preventDefault();
     try {
       await handleLoginWithCredentials(email, password);
       
+      console.log("hola")
     } catch (e) {
       if (e instanceof FirebaseError){
 
-      setError("Error en el usuario o contraseña");
+        err = "Error en el usuario o contraseña";
       }else{
-          setError("Ocurrió un error");
+        err = "Ocurrió un error";
 
       }
       
+    setTimeout(() => {
+      setCarga(false);
+      setError(err);
+    }, 2000);
       
     }
   };
 
   return (
-     <div className="flex items-center justify-center ">
+     <div className="flex items-center justify-center w-screen h-screen">
+       {carga && <div className='flex flex-col items-center justify-center h-screen w-screen bg-gray-50 bg-opacity-60 absolute'><Triangle /> <p>Revisando credenciales...</p> </div>}
       <form onSubmit={handleSubmit} className="m-20 flex flex-col w-5/12 text-center gap-3">
         <h2>Iniciar Sesión</h2>
         <input
@@ -87,7 +98,11 @@ type StateDispatch = any
           placeholder="Contraseña"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          minLength={6}
         />
+        {password.length < 6 && password.length!=0 &&(
+            <p className="text-red-500">La contraseña debe tener al menos 6 caracteres</p>
+          )}
          {error && <p className="text-red-500 ">{error}</p>}
         <button type="submit" className="bg-blue-600 h-10 text-white">Iniciar Sesión</button>
       </form>
