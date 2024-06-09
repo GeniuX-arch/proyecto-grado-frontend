@@ -3,10 +3,11 @@ import { host } from "./server";
 import {  ProfesorMateria } from "../interfaces/interfaces";
 
 // Funciones para ProfesorMateria
+const profesorMateria = 'profesor-materia'; // Variable definida fuera de las funciones
 
 export const listarProfesorMateria = async (): Promise<any[]> => {
     try {
-        const response = await axios.get(`${host}/profesor-materia`);
+        const response = await axios.get(`${host}/${profesorMateria}`);
         return response.data;
     } catch (error) {
         console.error('Error al listar las relaciones ProfesorMateria: ', error);
@@ -16,7 +17,7 @@ export const listarProfesorMateria = async (): Promise<any[]> => {
 
 export const obtenerProfesorMateria = async (id: number): Promise<any> => {
     try {
-        const response = await axios.get(`${host}/profesor-materia/${id}`);
+        const response = await axios.get(`${host}/${profesorMateria}/${id}`);
         if (!response.data) {
             throw new Error("No se encontró la relación ProfesorMateria");
         }
@@ -29,7 +30,7 @@ export const obtenerProfesorMateria = async (id: number): Promise<any> => {
 
 export const crearProfesorMateria = async (nuevaRelacion: ProfesorMateria): Promise<any> => {
     try {
-        const response = await axios.post(`${host}/profesor-materia`, nuevaRelacion);
+        const response = await axios.post(`${host}/${profesorMateria}`, nuevaRelacion);
         return response.data;
     } catch (error) {
         console.error('Error al crear la relación ProfesorMateria: ', error);
@@ -39,7 +40,7 @@ export const crearProfesorMateria = async (nuevaRelacion: ProfesorMateria): Prom
 
 export const actualizarProfesorMateria = async (id: number, relacionActualizada: ProfesorMateria): Promise<any> => {
     try {
-        const response = await axios.put(`${host}/profesor-materia/${id}`, relacionActualizada);
+        const response = await axios.put(`${host}/${profesorMateria}/${id}`, relacionActualizada);
         return response.data;
     } catch (error) {
         console.error('Error al actualizar la relación ProfesorMateria: ', error);
@@ -49,7 +50,7 @@ export const actualizarProfesorMateria = async (id: number, relacionActualizada:
 
 export const eliminarProfesorMateria = async (id: number): Promise<any> => {
     try {
-        const response = await axios.delete(`${host}/profesor-materia/${id}`);
+        const response = await axios.delete(`${host}/${profesorMateria}/${id}`);
         return response.data;
     } catch (error) {
         console.error('Error al eliminar la relación ProfesorMateria: ', error);

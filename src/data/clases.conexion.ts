@@ -3,10 +3,11 @@ import { host } from "./server";
 import { Clase } from "../interfaces/interfaces";
 
 // Funciones para Clases
+const clase = "clases"; // Variable clase definida fuera de las funciones
 
 export const listarClases = async (): Promise<any[]> => {
     try {
-        const response = await axios.get(`${host}/clase`);
+        const response = await axios.get(`${host}/${clase}`);
         return response.data;
     } catch (error) {
         console.error('Error al listar las clases: ', error);
@@ -16,7 +17,7 @@ export const listarClases = async (): Promise<any[]> => {
 
 export const obtenerClase = async (id: number): Promise<any> => {
     try {
-        const response = await axios.get(`${host}/clase/${id}`);
+        const response = await axios.get(`${host}/${clase}/${id}`);
         if (!response.data) {
             throw new Error("No se encontró la clase");
         }
@@ -29,7 +30,7 @@ export const obtenerClase = async (id: number): Promise<any> => {
 
 export const crearClase = async (nuevaClase: Clase): Promise<any> => {
     try {
-        const response = await axios.post(`${host}/clase`, nuevaClase);
+        const response = await axios.post(`${host}/${clase}`, nuevaClase); // Modificado aquí
         return response.data;
     } catch (error) {
         console.error('Error al crear la clase: ', error);
@@ -39,7 +40,7 @@ export const crearClase = async (nuevaClase: Clase): Promise<any> => {
 
 export const actualizarClase = async (id: number, claseActualizada: Clase): Promise<any> => {
     try {
-        const response = await axios.put(`${host}/clase/${id}`, claseActualizada);
+        const response = await axios.put(`${host}/${clase}/${id}`, claseActualizada); // Modificado aquí
         return response.data;
     } catch (error) {
         console.error('Error al actualizar la clase: ', error);
@@ -49,7 +50,7 @@ export const actualizarClase = async (id: number, claseActualizada: Clase): Prom
 
 export const eliminarClase = async (id: number): Promise<any> => {
     try {
-        const response = await axios.delete(`${host}/clase/${id}`);
+        const response = await axios.delete(`${host}/${clase}/${id}`); // Modificado aquí
         return response.data;
     } catch (error) {
         console.error('Error al eliminar la clase: ', error);

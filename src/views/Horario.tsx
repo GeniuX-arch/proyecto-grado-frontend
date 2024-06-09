@@ -5,6 +5,7 @@ import DropClase from "../components/DropClase";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import DragClase from "../components/DragClase";
+import CrearClase from "./CrearClase";
 
 
 
@@ -126,6 +127,7 @@ export default function Horario() {
     return (
         <>
             <Navbar />
+            <CrearClase />
             <div className=" min-h-screen flex flex-row justify-center items-center pt-24">
                 
                 

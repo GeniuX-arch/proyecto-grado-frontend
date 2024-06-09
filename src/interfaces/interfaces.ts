@@ -2,9 +2,8 @@
 export interface Profesor {
   cedula: number;
   nombre: string;
-  tipoContrato: string;
-  horarioDisponible: string;
-  materias: ProfesorMateria[];
+  tipo_contrato: string;
+  estado:string;
 }
 
 // Interface para el modelo ProfesorMateria

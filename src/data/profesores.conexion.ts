@@ -2,10 +2,11 @@ import axios from "axios";
 import { host } from "./server";
 import { Profesor } from "../interfaces/interfaces";
 
+const profesor = 'profesores'; // Variable definida fuera de las funciones
 
 export const listarProfesores = async (): Promise<any[]> => {
     try {
-        const response= await axios.get(`${host}/profesor`);
+        const response= await axios.get(`${host}/${profesor}`);
         return response.data;
     } catch (error) {
         console.error('Error al listar los profesores: ', error);
@@ -15,7 +16,7 @@ export const listarProfesores = async (): Promise<any[]> => {
 
 export const obtenerProfesor = async (cedula: number): Promise<any> => {
     try {
-        const response = await axios.get(`${host}/profesor/${cedula}`);
+        const response = await axios.get(`${host}/${profesor}/${cedula}`);
         if (!response.data) {
             throw new Error("No se encontró al profesor");
         }
@@ -28,7 +29,7 @@ export const obtenerProfesor = async (cedula: number): Promise<any> => {
 
 export const crearProfesor = async (nuevoProfesor: Profesor): Promise<any> => {
     try {
-        const response = await axios.post(`${host}/profesor`, nuevoProfesor);
+        const response = await axios.post(`${host}/${profesor}`, nuevoProfesor);
         return response.data;
     } catch (error) {
         console.error('Error al crear al profesor: ', error);
@@ -38,7 +39,7 @@ export const crearProfesor = async (nuevoProfesor: Profesor): Promise<any> => {
 
 export const actualizarProfesor = async (cedula: number, profesorActualizado: Profesor): Promise<any> => {
     try {
-        const response = await axios.put(`${host}/profesor/${cedula}`, profesorActualizado);
+        const response = await axios.put(`${host}/${profesor}/${cedula}`, profesorActualizado);
         return response.data;
     } catch (error) {
         console.error('Error al actualizar al profesor: ', error);
@@ -48,7 +49,7 @@ export const actualizarProfesor = async (cedula: number, profesorActualizado: Pr
 
 export const eliminarProfesor = async (cedula: number): Promise<any> => {
     try {
-        const response= await axios.delete(`${host}/profesor/${cedula}`);
+        const response= await axios.delete(`${host}/${profesor}/${cedula}`);
         return response.data;
     } catch (error) {
         console.error('Error al eliminar al profesor: ', error);

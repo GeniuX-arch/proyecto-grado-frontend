@@ -1,10 +1,11 @@
 import axios from "axios";
 import { host } from "./server";
 
+const horarioDisponible = 'horario-disponible'; // Variable definida fuera de las funciones
 
 export const listarHorariosDisponibles = async (): Promise<any[]> => {
     try {
-        const response = await axios.get(`${host}/horario-disponible`);
+        const response = await axios.get(`${host}/${horarioDisponible}`);
         return response.data;
     } catch (error) {
         console.error('Error al listar los horarios disponibles: ', error);
@@ -14,7 +15,7 @@ export const listarHorariosDisponibles = async (): Promise<any[]> => {
 
 export const obtenerHorarioDisponible = async (id: number): Promise<any> => {
     try {
-        const response= await axios.get(`${host}/horario-disponible/${id}`);
+        const response = await axios.get(`${host}/${horarioDisponible}/${id}`);
         if (!response.data) {
             throw new Error("No se encontró el horario disponible");
         }
@@ -27,7 +28,7 @@ export const obtenerHorarioDisponible = async (id: number): Promise<any> => {
 
 export const crearHorarioDisponible = async (nuevoHorario: any): Promise<any> => {
     try {
-        const response = await axios.post(`${host}/horario-disponible`, nuevoHorario);
+        const response = await axios.post(`${host}/${horarioDisponible}`, nuevoHorario);
         return response.data;
     } catch (error) {
         console.error('Error al crear el horario disponible: ', error);
@@ -37,7 +38,7 @@ export const crearHorarioDisponible = async (nuevoHorario: any): Promise<any> =>
 
 export const actualizarHorarioDisponible = async (id: number, horarioActualizado: any): Promise<any> => {
     try {
-        const response = await axios.put(`${host}/horario-disponible/${id}`, horarioActualizado);
+        const response = await axios.put(`${host}/${horarioDisponible}/${id}`, horarioActualizado);
         return response.data;
     } catch (error) {
         console.error('Error al actualizar el horario disponible: ', error);
@@ -47,7 +48,7 @@ export const actualizarHorarioDisponible = async (id: number, horarioActualizado
 
 export const eliminarHorarioDisponible = async (id: number): Promise<any> => {
     try {
-        const response = await axios.delete(`${host}/horario-disponible/${id}`);
+        const response = await axios.delete(`${host}/${horarioDisponible}/${id}`);
         return response.data;
     } catch (error) {
         console.error('Error al eliminar el horario disponible: ', error);
