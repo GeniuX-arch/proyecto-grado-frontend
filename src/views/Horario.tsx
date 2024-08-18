@@ -6,6 +6,7 @@ import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import DragClase from "../components/DragClase";
 import CrearClase from "./CrearClase";
+ // Ajusta la ruta según sea necesario
 
 
 

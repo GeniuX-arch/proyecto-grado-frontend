@@ -1,27 +1,43 @@
-import React, { useState,useContext } from "react";
+
+import React, { useState, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/authContext";
 import { FirebaseError } from "firebase/app";
 import { Triangle } from "react-loader-spinner";
+import Buttonxd from "./button";
 
-
-
-
-
-
-
-
-// Configurar Firebase
-
-
-// Inicializar Firebase y obtener el servicio de autenticación
 export default function Login() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [error, setError] = useState<string>("");
   const [carga, setCarga] = useState(false);
-  console.log(useContext(AuthContext))
-  const { handleLoginWithCredentials}=useContext(AuthContext)
-    
+  const { handleLoginWithCredentials } = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    setCarga(true);
+    e.preventDefault();
+    try {
+      await handleLoginWithCredentials(email, password);
+    } catch (e) {
+      let err = "";
+      if (e instanceof FirebaseError) {
+        err = "Error en el usuario o contraseña";
+      } else {
+        err = "Ocurrió un error";
+      }
+      setTimeout(() => {
+        setCarga(false);
+        setError(err);
+      }, 2000);
+    }
+  };
+
+  const handleRegister = () => {
+    navigate("/register");
+  };
+
+  
 
   /*
   const signInWithCredentials = async (email: string, password: string) => {
@@ -52,60 +68,77 @@ type StateDispatch = any
 }
 */
 
-  
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    setCarga(true);
-
-    let err= ""
-    e.preventDefault();
-    try {
-      await handleLoginWithCredentials(email, password);
-      
-      console.log("hola")
-    } catch (e) {
-      if (e instanceof FirebaseError){
-
-        err = "Error en el usuario o contraseña";
-      }else{
-        err = "Ocurrió un error";
-
-      }
-      
-    setTimeout(() => {
-      setCarga(false);
-      setError(err);
-    }, 2000);
-      
-    }
-  };
 
   return (
-     <div className="flex items-center justify-center w-screen h-screen">
-       {carga && <div className='flex flex-col items-center justify-center h-screen w-screen bg-gray-50 bg-opacity-60 absolute'><Triangle /> <p>Revisando credenciales...</p> </div>}
-      <form onSubmit={handleSubmit} className="m-20 flex flex-col w-5/12 text-center gap-3">
-        <h2>Iniciar Sesión</h2>
-        <input
-          className="p-5 border h-10 focus:border-cyan-600  focus:outline-none "
-          type="email"
-          placeholder="Correo electrónico"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <input
-          className="p-5 border h-10 focus:border-cyan-600  focus:outline-none "
-          type="password"
-          placeholder="Contraseña"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          minLength={6}
-        />
-        {password.length < 6 && password.length!=0 &&(
-            <p className="text-red-500">La contraseña debe tener al menos 6 caracteres</p>
+    <div
+      className="flex items-center justify-center w-screen h-screen"
+      style={{
+        backgroundImage: "url('https://img2.wallspic.com/crops/2/5/2/0/30252/30252-negocio-taza_de_cafe-tabla-medios_de_comunicacion_social-empresa-3840x2160.jpg')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
+    >
+      {carga && (
+        <div className="flex flex-col items-center justify-center h-screen w-screen bg-gray-50 bg-opacity-60 absolute">
+          <Triangle />
+          <p>Revisando credenciales...</p>
+        </div>
+      )}
+      <div className="flex w-11/12 max-w-4xl shadow-2xl rounded-lg overflow-hidden bg-white">
+        <form
+          onSubmit={handleSubmit}
+          className="flex flex-col w-1/2 p-10 space-y-6"
+        >
+          <h2 className="text-3xl font-bold text-gray-700">Iniciar Sesión</h2>
+          <input
+            className="p-4 border border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none"
+            type="email"
+            placeholder="Correo electrónico"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <input
+            className="p-4 border border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none"
+            type="password"
+            placeholder="Contraseña"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            minLength={6}
+          />
+          {password.length < 6 && password.length !== 0 && (
+            <p className="text-red-500">
+              La contraseña debe tener al menos 6 caracteres
+            </p>
           )}
-         {error && <p className="text-red-500 ">{error}</p>}
-        <button type="submit" className="bg-blue-600 h-10 text-white">Iniciar Sesión</button>
-      </form>
+          {error && <p className="text-red-500">{error}</p>}
+          <button
+            type="submit"
+            className="w-full py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-300"
+          >
+            Iniciar Sesión
+          </button>
+          <button
+            type="button"
+            onClick={handleRegister}
+            className="w-full py-3 border border-blue-600 text-blue-600 rounded-lg hover:bg-blue-600 hover:text-white transition duration-300"
+          >
+            Registrarse
+          </button>
+        </form>
+        <div className="w-1/2 hidden md:flex items-center justify-center bg-gray-200">
+          <img
+            src="https://www.uts.edu.co/sitio/wp-content/uploads/2020/08/IMG-20200815-WA0004.jpg"
+            alt="Descripción de la imagen"
+            className="object-cover h-full"
+          />
+        </div>
+      </div>
+      <footer className="absolute bottom-0 w-full text-center p-4 bg-white">
+        <p className="text-gray-500">© 2024 Proyecto de grado.</p>
+        
+      </footer>
+
+      
     </div>
   );
-};
+}

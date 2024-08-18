@@ -7,6 +7,8 @@ import CrearProfesor from './views/CrearProfesor';
 import Profesor from './views/Profesor';
 import Login from './views/Login';
 import Error from './views/Error';
+import Register from './views/Register';
+
 import { AuthContext,AuthProvider } from './context/authContext';
 import { Triangle } from 'react-loader-spinner';
 
@@ -44,6 +46,7 @@ function App() {
          <Route path="/profesor/:id" element={<PrivateRoutes><Profesor /></PrivateRoutes>} />
         <Route path="/profesor/crear" element={<PrivateRoutes><CrearProfesor /></PrivateRoutes>} />
         <Route path="/login" element={<Intro><Login /></Intro>} />
+        <Route path="/Register" element={<Intro><Register /></Intro>} />
         <Route path="/*" element={<Error />} />
       </Routes>
     </AuthProvider>
