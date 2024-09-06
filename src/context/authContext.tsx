@@ -1,86 +1,106 @@
-import { createContext, useEffect, useState } from 'react'
-import { loginWithCredentials, FirebaseAuth } from '../firebase/providers'
-import { onAuthStateChanged } from 'firebase/auth'; 
 
 
+import axios from 'axios';
+import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
-type StateDispatch = any
-
-export const onAuthStateHasChanged = (setSession: StateDispatch) => {
-    onAuthStateChanged(FirebaseAuth, user => {
-
-        if (!user) return setSession({ status: 'no-authenticated', userId: null })
-
-        setSession({ status: 'authenticated', userId: user!.uid })
-    })
-}
-export const logoutFirebase = async () => await FirebaseAuth.signOut()
-
-export interface AuthStateContext {
-    userId: string | null
-    status: 'checking' | 'authenticated' | 'no-authenticated'
-    handleLoginWithCredentials: (password: string, email: string) => Promise<void>
-    handleRegisterWithCredentials: (password: string, email: string) => Promise<void>
-    handleLogOut: () => Promise<void>
+interface User {
+    email: string;
+    password:string;
 }
 
+interface AuthContextType {
+    user: User | null;
+    login: (userData: User) => void;
+    logout: () => void;
+}
+
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
+export const useAuth = () => {
+    const context = useContext(AuthContext);
+    if (!context) {
+        throw new Error('useAuth must be used within an AuthProvider');
+    }
+    return context;
+};
 
 
-const initialState: Pick<AuthStateContext, 'status' | 'userId'> = {
-    userId: null,
-    status: 'checking'
+
+
+interface AuthProviderProps {
+    children: ReactNode;
 }
 
 
 
-export const AuthContext = createContext({} as AuthStateContext)
-
-interface IElement { children: JSX.Element | JSX.Element[] }
-
-export const AuthProvider = ({ children }: IElement) => {
-
-    const [session, setSession] = useState(initialState)
+export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
+    const [user, setUser] = useState<User | null>(null);
 
     useEffect(() => {
-        onAuthStateHasChanged(setSession)
-    }, [])
+        const loggedUser = localStorage.getItem('user');
+        if (loggedUser) {
+            setUser(JSON.parse(loggedUser));
+        }
+    }, []);
 
-    const handleLogOut = async () => {
-        logoutFirebase()
-        setSession({ userId: null, status: 'no-authenticated' })
+
+    const login = (userData: User) => {
+    // Supongamos que tienes una función de autenticación que verifica el email y la contraseña.
+    //validación y conexión a la db+
+        axios.get('http://localhost:8000/sanctum/csrf-cookie', { withCredentials: true })
+        .then(() => {
+            axios.post('http://localhost:8000/login', {
+            email: userData.email,
+            password: userData.password
+            }, { withCredentials: true })
+            .then(response => {
+                if(response.data==='Authenticated'){
+                    setUser(userData);
+                    localStorage.setItem('user', JSON.stringify(userData));
+                    console.log(response.data.message);
+                }
+            })
+            .catch(error => {
+            console.error('Error during login:', error.response.data.message);
+            });
+    });
+
+    /*
+         console.log(userData.email=="0000000000@gmail.com" && userData.password=="0000000000@gmail.com")
+    const isValidUser = (userData.email=="0000000000@gmail.com" && userData.password=="0000000000@gmail.com");
+    
+    if (isValidUser) {
+        setUser(userData);
+        localStorage.setItem('user', JSON.stringify(userData));
+    } else {
+        console.error("Invalid credentials");
+        
     }
+        */
 
-    const validateAuth = (userId: string | undefined) => {
-        if (userId) return setSession({ userId, status: 'authenticated' })
-        handleLogOut()
-    }
+    
+};
 
-    const checking = () => setSession(prev => ({ ...prev, status: 'checking' }))
 
-   
+    const logout = () => {
+axios.post('http://localhost:8000/logout', {}, { withCredentials: true })
+  .then(response => {
+        setUser(null);
+        localStorage.removeItem('user');
+        console.log(response.data.message);
+  })
+  .catch(error => {
+    console.error('Error during logout:', error.response.data.message);
+  });
 
-    const handleLoginWithCredentials = async (email: string, password: string) => {
-        checking()
-        const userId = await loginWithCredentials( email, password )
-        validateAuth(userId)
-    }
 
-    const handleRegisterWithCredentials = async (password: string, email: string) => {
-        checking()
-        //const userId = await signInWithCredentials({ email, password })
-        //validateAuth(userId)
-    }
+    };
 
-    return (
-        <AuthContext.Provider
-            value={{
-                ...session,
-                handleLoginWithCredentials,
-                handleRegisterWithCredentials,
-                handleLogOut
-            }}
-        >
-            {children}
-        </AuthContext.Provider>
-    )
-}
+    const value = {
+        user,
+        login,
+        logout,
+    };
+
+    return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+};

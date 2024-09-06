@@ -8,6 +8,7 @@ import { useEffect, useState } from 'react';
 export default function Profesores() {
   const [profesores, setProfesores] = useState<Profesor[]>([]);
   
+  console.log('User in localStorage:', localStorage.getItem('user'));
   useEffect(() => {
     const fetchData = async () => {
       try {

@@ -1,44 +1,37 @@
 
 import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { AuthContext } from "../context/authContext";
-import { FirebaseError } from "firebase/app";
 import { Triangle } from "react-loader-spinner";
 import Buttonxd from "./button";
+import { useAuth } from "../context/AuthContext";
 
 export default function Login() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [error, setError] = useState<string>("");
   const [carga, setCarga] = useState(false);
-  const { handleLoginWithCredentials } = useContext(AuthContext);
   const navigate = useNavigate();
+  const { login } = useAuth();
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    setCarga(true);
-    e.preventDefault();
-    try {
-      await handleLoginWithCredentials(email, password);
-    } catch (e) {
-      let err = "";
-      if (e instanceof FirebaseError) {
-        err = "Error en el usuario o contraseña";
-      } else {
-        err = "Ocurrió un error";
-      }
-      setTimeout(() => {
-        setCarga(false);
-        setError(err);
-      }, 2000);
-    }
-  };
 
   const handleRegister = () => {
     navigate("/register");
   };
 
+  const handleSubmit = () => {
+    const user={
+      password:password,
+      email:email
+    }
+
+    login(user);
+    navigate("/");
+  }
+  console.log('User in localStorage:', localStorage.getItem('user'));
+
   
 
+  
   /*
   const signInWithCredentials = async (email: string, password: string) => {
     try {
@@ -67,6 +60,7 @@ type StateDispatch = any
     })
 }
 */
+
 
 
   return (

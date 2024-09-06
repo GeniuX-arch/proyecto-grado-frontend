@@ -1,17 +1,16 @@
 import { useState } from 'react';
 import { Link,useNavigate } from 'react-router-dom';
 import { useContext } from 'react';
-import { AuthContext } from '../context/authContext';
+import { useAuth } from '../context/AuthContext';
 
 
 export default function Navbar() {
+const { logout } = useAuth();
   const navegate = useNavigate();
-  const {handleLogOut}= useContext(AuthContext)
   const [isOpen, setIsOpen] = useState(false);
   const handleSubmit = async () => {
     try {
-      await handleLogOut();
-
+      logout();
       navegate('/login')
     } catch (error) {
       console.error(error);
