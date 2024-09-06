@@ -49,7 +49,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     //validación y conexión a la db+
         axios.get('http://localhost:8000/sanctum/csrf-cookie', { withCredentials: true })
 
-        
+
         .then(() => {
             axios.post('http://localhost:8000/login', {
             email: userData.email,
@@ -85,15 +85,18 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
 
     const logout = () => {
-axios.post('http://localhost:8000/logout', {}, { withCredentials: true })
-  .then(response => {
+        
+
+        
+    axios.post('http://localhost:8000/logout', {}, { withCredentials: true })
+    .then(response => {
         setUser(null);
         localStorage.removeItem('user');
         console.log(response.data.message);
-  })
-  .catch(error => {
-    console.error('Error during logout:', error.response.data.message);
-  });
+    })
+    .catch(error => {
+        console.error('Error during logout:', error.response.data.message);
+    });
 
 
     };

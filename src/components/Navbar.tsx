@@ -4,24 +4,16 @@ import { useContext } from 'react';
 import { useAuth } from '../context/AuthContext';
 
 export default function Navbar() {
-<<<<<<< HEAD
 const { logout } = useAuth();
   const navegate = useNavigate();
-=======
-  const navigate = useNavigate();
-  const { handleLogOut } = useContext(AuthContext);
->>>>>>> ea9b185b70b472cc126662f1ae9feb2917a8d731
+
   const [isOpen, setIsOpen] = useState(false);
 
   const handleSubmit = async () => {
     try {
-<<<<<<< HEAD
       logout();
       navegate('/login')
-=======
-      await handleLogOut();
-      navigate('/login');
->>>>>>> ea9b185b70b472cc126662f1ae9feb2917a8d731
+
     } catch (error) {
       console.error(error);
     }
