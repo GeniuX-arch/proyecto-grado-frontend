@@ -48,6 +48,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     // Supongamos que tienes una función de autenticación que verifica el email y la contraseña.
     //validación y conexión a la db+
         axios.get('http://localhost:8000/sanctum/csrf-cookie', { withCredentials: true })
+
+        
         .then(() => {
             axios.post('http://localhost:8000/login', {
             email: userData.email,
