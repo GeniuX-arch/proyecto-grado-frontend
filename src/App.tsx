@@ -1,16 +1,21 @@
 
 import { Route, Routes, Navigate } from 'react-router-dom';
 import { ReactNode, useContext, useEffect, useState } from 'react';
-import Horario from './views/Horario';
+import Horario from './views/Horario.tsx';
 import Profesores from './views/Profesores';
-import CrearProfesor from './views/CrearProfesor';
+import CrearProfesor from './views/CrearProfesor.tsx';
 import Profesor from './views/Profesor';
-import Login from './views/Login';
-import Error from './views/Error';
+import Login from './views/Login.tsx';
+import Error from './views/Login.tsx';
+import Materias from './views/Materias.tsx';
 import { AuthProvider } from './context/AuthContext';
+
+
 
 import { Triangle } from 'react-loader-spinner';
 import ProtectedRoute from './context/ProtectedRoute';
+import Salones from './views/Salones.tsx';
+import Clases from './views/Clases.tsx';
 
 
 
@@ -69,6 +74,9 @@ function App() {
           <Route path="/profesor/crear" element={<ProtectedRoute><CrearProfesor /></ProtectedRoute>} />
           <Route path="/login" element={<Login />} />
           <Route path="/*" element={<ProtectedRoute><Error /></ProtectedRoute>} />
+          <Route path="/materias" element={ <ProtectedRoute><Materias /></ProtectedRoute>} />
+          <Route path="/salones" element={ <ProtectedRoute><Salones /></ProtectedRoute>} />
+          <Route path="/clases" element={ <ProtectedRoute><Clases /></ProtectedRoute>} />
         </Routes>
       </AuthProvider>
   );
