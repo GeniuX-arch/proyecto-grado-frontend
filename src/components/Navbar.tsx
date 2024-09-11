@@ -1,19 +1,17 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useContext } from 'react';
 import { useAuth } from '../context/AuthContext';
 
 export default function Navbar() {
-const { logout } = useAuth();
-  const navegate = useNavigate();
-
+  const { logout } = useAuth();
+  const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
 
   const handleSubmit = async () => {
     try {
-      logout();
-      navegate('/login')
-
+      await logout();
+      navigate('/login');
     } catch (error) {
       console.error(error);
     }
@@ -23,8 +21,12 @@ const { logout } = useAuth();
     setIsOpen(!isOpen);
   };
 
+  const toggleProfileMenu = () => {
+    setIsProfileOpen(!isProfileOpen);
+  };
+
   return (
-    <div className="bg-green-700 shadow-lg">
+    <div className="bg-blue-900 bg-opacity-50 backdrop-filter backdrop-blur-lg shadow-lg fixed w-full z-50">
       <nav className="flex items-center justify-between flex-wrap p-6">
         <div className="flex items-center text-white">
           <span className="font-bold text-xl tracking-wide">USUARIO ADMIN</span>
@@ -48,59 +50,48 @@ const { logout } = useAuth();
           className={`w-full flex-grow lg:flex lg:items-center lg:justify-center lg:w-auto ${isOpen ? 'block' : 'hidden'}`}
         >
           <div className="text-lg lg:flex-grow text-center">
-            <Link
-              to="/horario"
-              className="block mt-4 lg:inline-block lg:mt-0 text-green-100 hover:text-white mx-6 transition-all duration-300 transform hover:scale-105"
-            >
-              <div className="flex flex-col items-center">
-                <svg
-                  className="w-8 h-8 mb-1"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M8 7V3m8 4V3m-9 8h10m-9 4h9m-6 4h6m4-12H5a2 2 0 00-2 2v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2z"></path>
-                </svg>
-                <span>Horario</span>
-              </div>
-            </Link>
-            <Link
-              to="/"
-              className="block mt-4 lg:inline-block lg:mt-0 text-green-100 hover:text-white mx-6 transition-all duration-300 transform hover:scale-105"
-            >
-              <div className="flex flex-col items-center">
-                <svg
-                  className="w-8 h-8 mb-1"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M16 11V7a4 4 0 10-8 0v4M5 11h14m-7 8a2 2 0 002-2H9a2 2 0 002 2z"></path>
-                </svg>
-                <span>Profesores</span>
-              </div>
-            </Link>
+            {['Horario', 'Profesores', 'Materias', 'Salones', 'Clases'].map((item) => (
+              <Link
+                to={`/${item.toLowerCase()}`}
+                className="block mt-4 lg:inline-block lg:mt-0 text-green-100 hover:text-white mx-6 transition-all duration-300 transform hover:scale-105"
+                key={item}
+              >
+                <span>{item}</span>
+              </Link>
+            ))}
           </div>
-          <div className="text-center mt-4 lg:mt-0">
-            <a
-              onClick={handleSubmit}
-              className="hover:cursor-pointer inline-block text-sm px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-green-700 hover:bg-white transition-colors duration-300"
-            >
-              Cerrar Sesión
-            </a>
-          </div>
-          <div className="ml-4 flex items-center justify-center">
-            <Link to="/perfil">
+          <div className="flex items-center justify-center mt-4 lg:mt-0">
+            <div className="relative">
               <img
                 src="/perfil.png"
                 alt="Perfil"
-                className="h-10 w-10 lg:h-16 lg:w-16 rounded-full border-2 border-white hover:border-green-300 transition-transform duration-500 hover:scale-110"
+                className="h-10 w-10 lg:h-16 lg:w-16 rounded-full border-2 border-white hover:border-green-300 transition-transform duration-500 hover:scale-110 cursor-pointer"
+                onClick={toggleProfileMenu}
               />
-            </Link>
+              {isProfileOpen && (
+                  <div className="absolute right-0 mt-2 w-48 bg-white bg-opacity-80 rounded-md shadow-lg py-2">
+                    <Link
+                      to="/perfil"
+                      className="block px-4 py-2 text-gray-700 hover:bg-green-200 hover:bg-opacity-70 transition-colors duration-300 bg-transparent"
+                    >
+                      Ver Perfil
+                    </Link>
+                    <Link
+                      to="/configuracion"
+                      className="block px-4 py-2 text-gray-700 hover:bg-green-200 transition-colors duration-300"
+                    >
+                      Configuración
+                    </Link>
+                    <button
+                      onClick={handleSubmit}
+                      className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-green-200 transition-colors duration-300"
+                    >
+                      Cerrar Sesión
+                    </button>
+                  </div>
+                )}
+
+            </div>
           </div>
         </div>
       </nav>

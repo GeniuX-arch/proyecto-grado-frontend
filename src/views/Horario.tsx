@@ -125,101 +125,95 @@ export default function Horario() {
 }, [clases]); // Solo ejecutar el efecto cuando el estado de clases cambie
  
 
-    return (
-        <>
-            <Navbar />
-            <div className=" min-h-screen flex flex-row justify-center items-center pt-24">
-                
-                
+return (
+    <>
+        <Navbar />
+
+        <CrearClase />
+
+        <div
+            style={{
+                backgroundColor: '#001f3f', // Azul oscuro
+                minHeight: '100vh',
+                color: 'white', // Ajusta el color del texto si es necesario para contraste
+            }}
+        >
+            <div className="min-h-screen flex flex-row justify-center items-center pt-24">
                 <table className="table-auto border-collapse border border-solid border-gray-200 w-11/12">
                     <thead>
                         <tr className="lg:flex lg:flex-row grid grid-cols-7">
                             <th className="border border-gray-300 lg:w-32 text-center items-center flex justify-center shadow-gray-200 shadow-sm border-solid">Hora</th>
                             {dias.map((dia, index) => (
-                                <th key={index} className="border h-12 text-center flex justify-center items-center border-gray-300  border-solid shadow-gray-200 shadow-sm lg:w-1/6">{dia}</th>
-
+                                <th key={index} className="border h-12 text-center flex justify-center items-center border-gray-300 border-solid shadow-gray-200 shadow-sm lg:w-1/6">{dia}</th>
                             ))}
                         </tr>
                     </thead>
                     <tbody>
                         <DndProvider backend={HTML5Backend}>
                             {horarioo.map((horaRow, rowIndex) => {
-                              hora=sumarMinutos(hora,45)
-                            return(
-                              
-                                <tr key={rowIndex} className="lg:flex lg:flex-row grid grid-cols-7">
-                                    <td className="border  p-2 text-center lg:w-32 border-gray-300 shadow-gray-200 shadow-sm border-solid">
-
-                                        {hora}-{sumarMinutos(hora,45)}
-                                    </td>
-                                    {horaRow.map((diaClases, diaIndex) => {
-                                     
-                                    return(
-                                        <td key={diaIndex} className="border border-gray-200 p-2 lg:w-1/6 border-solid">
-                                            <DropClase 
-                                                dia={dias[diaIndex]}
-                                                horaInicio={hora} 
-                                                horaFin={sumarMinutos(hora,45)} 
-                                                onDrop={(propsToPass) => {
-
-                                                   // Crear una copia del array listadoClases
-                                              setProps(
-                                                {
-                                                      dia: propsToPass.dia,
-                                                      horaInicio: propsToPass.horaInicio,
-                                                      horaFin: propsToPass.horaFin,
-                                                }
-                                              )
-                                              
-                                                }}
-                                              onDropItems={(propsToPass)=>{
-
-                                              const updatedClases = [...clases];
-                                              const index = updatedClases.findIndex(clase => 
-                                                  clase.dia === propsToPass.dia &&
-                                                  clase.horaInicio === propsToPass.horaInicio &&
-                                                  clase.horaFin === propsToPass.horaFin
-                                              );
-                                              
-                                              
-                                              // Verificar si se encontró el elemento
-                                              if (index !== -1) {
-                                                  // Actualizar el elemento con los nuevos datos
-
-                                                if(props){
-                                                  updatedClases[index] = {
-                                                      dia: props.dia,
-                                                      horaInicio: props.horaInicio,
-                                                      horaFin: props.horaFin,
-                                                  };
-                                                  
-                                                  // Reemplazar listadoClases con la copia actualizada
-                                                  setClases(updatedClases);
-                                                }
-                                              } else {
-                                                  console.error('No se encontró el elemento en listadoClases');
-                                              }
-                                              
-                                              }}
-                                              
-                                            >
-                                                {diaClases.map((clase, claseIndex) => (
-                                                    <DragClase
-                                                        key={claseIndex}
-                                                        dia={clase.dia}
-                                                        horaInicio={clase.horaInicio}
-                                                        horaFin={clase.horaFin}
-                                                    />
-                                                ))}
-                                            </DropClase>
+                                hora = sumarMinutos(hora, 45);
+                                return (
+                                    <tr key={rowIndex} className="lg:flex lg:flex-row grid grid-cols-7">
+                                        <td className="border p-2 text-center lg:w-32 border-gray-300 shadow-gray-200 shadow-sm border-solid">
+                                            {hora}-{sumarMinutos(hora, 45)}
                                         </td>
-                                    )})}
-                                </tr>
-                            )})}
+                                        {horaRow.map((diaClases, diaIndex) => {
+                                            return (
+                                                <td key={diaIndex} className="border border-gray-200 p-2 lg:w-1/6 border-solid">
+                                                    <DropClase
+                                                        dia={dias[diaIndex]}
+                                                        horaInicio={hora}
+                                                        horaFin={sumarMinutos(hora, 45)}
+                                                        onDrop={(propsToPass) => {
+                                                            setProps({
+                                                                dia: propsToPass.dia,
+                                                                horaInicio: propsToPass.horaInicio,
+                                                                horaFin: propsToPass.horaFin,
+                                                            });
+                                                        }}
+                                                        onDropItems={(propsToPass) => {
+                                                            const updatedClases = [...clases];
+                                                            const index = updatedClases.findIndex(clase =>
+                                                                clase.dia === propsToPass.dia &&
+                                                                clase.horaInicio === propsToPass.horaInicio &&
+                                                                clase.horaFin === propsToPass.horaFin
+                                                            );
+
+                                                            if (index !== -1) {
+                                                                if (props) {
+                                                                    updatedClases[index] = {
+                                                                        dia: props.dia,
+                                                                        horaInicio: props.horaInicio,
+                                                                        horaFin: props.horaFin,
+                                                                    };
+
+                                                                    setClases(updatedClases);
+                                                                }
+                                                            } else {
+                                                                console.error('No se encontró el elemento en listadoClases');
+                                                            }
+                                                        }}
+                                                    >
+                                                        {diaClases.map((clase, claseIndex) => (
+                                                            <DragClase
+                                                                key={claseIndex}
+                                                                dia={clase.dia}
+                                                                horaInicio={clase.horaInicio}
+                                                                horaFin={clase.horaFin}
+                                                            />
+                                                        ))}
+                                                    </DropClase>
+                                                </td>
+                                            );
+                                        })}
+                                    </tr>
+                                );
+                            })}
                         </DndProvider>
                     </tbody>
                 </table>
             </div>
-        </>
-    );
+        </div>
+    </>
+);
 }

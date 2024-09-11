@@ -46,10 +46,15 @@ export default function CrearProfesor() {
   };
 
   return (
-    <div className="min-h-screen bg-green-100">
+    <div
+      className="min-h-screen bg-cover bg-center bg-no-repeat"
+      style={{
+        backgroundImage: `url('https://c.wallhere.com/photos/64/fc/3840x2160_px_animals_artwork_Clear_Sky_Deer_digital_art_drawing_Firewatch-516653.jpg!d')`,
+      }}
+    >
       <Navbar />
-      <div className="flex justify-center items-center pt-20">
-        <form onSubmit={handleSubmit} className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
+      <div className="relative min-h-screen flex flex-col items-center pt-32">
+        <div className="w-full max-w-md p-6 bg-white bg-opacity-70 backdrop-filter backdrop-blur-lg rounded-lg shadow-md">
           <h2 className="text-2xl font-bold text-green-700 mb-6 text-center">Crear Profesor</h2>
 
           <div className="mb-4">
@@ -111,16 +116,16 @@ export default function CrearProfesor() {
             />
           </div>
 
-          <div className="text-center">
-            <button
-              type="submit"
-              className="w-full bg-green-700 hover:bg-green-800 text-white font-bold py-2 px-4 rounded transition duration-300"
-            >
-              Enviar
-            </button>
-          </div>
-        </form>
+            <div className="text-center">
+              <button
+                type="submit"
+                className="w-full bg-green-700 hover:bg-green-800 text-white font-bold py-2 px-4 rounded transition duration-300"
+              >
+                Enviar
+              </button>
+            </div>
+        </div>
       </div>
-    </div>
+      </div>
   );
 }
