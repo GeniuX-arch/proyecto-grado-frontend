@@ -1,21 +1,28 @@
 import axios from 'axios';
 import { useState } from 'react';
 import Navbar from '../components/Navbar';
+import { host } from '../data/server';
+import { Profesores } from '../interfaces/interfaces';
 
 export default function CrearProfesor() {
-  const [profesor, setProfesor] = useState({
+  const [profesor, setProfesor] = useState<Profesores>({
     cedula: '',
     nombre: '',
-    tipoContrato: '',
-    materias: '',
-    horariosDisponibles: ''
+    tipo_contrato: '',
+    estado: '',
   });
 
   const handleChange = (e: { target: { name: any; value: any; }; }) => {
     const { name, value } = e.target;
+
+    // Si el campo es 'cedula', aseguramos que solo acepte números
+    if (name === 'cedula' && isNaN(Number(value))) {
+      return; // Evita la actualización si el valor no es un número
+    }
+
     setProfesor(prevState => ({
       ...prevState,
-      [name]: value
+      [name]: value,
     }));
   };
 
@@ -23,7 +30,15 @@ export default function CrearProfesor() {
     e.preventDefault();
     console.log(profesor);
     try {
-      const response = await axios.post('URL_DEL_ENDPOINT', profesor);
+      const response = await axios.post(host + "/profesores", profesor);
+
+      setProfesor({
+        cedula: '',
+        nombre: '',
+        tipo_contrato: '',
+        estado: '',
+      });
+
       console.log(response.data);
     } catch (error) {
       console.error('Error al enviar los datos:', error);
@@ -39,6 +54,7 @@ export default function CrearProfesor() {
 
           <div className="mb-4">
             <label htmlFor="cedula" className="block text-green-700 font-medium mb-2">Cédula:</label>
+            
             <input
               type="text"
               id="cedula"
@@ -47,8 +63,11 @@ export default function CrearProfesor() {
               onChange={handleChange}
               className="w-full px-3 py-2 border border-green-300 rounded focus:outline-none focus:border-green-500"
               placeholder="Ingrese la cédula"
+              required
+              pattern="[0-9]*" // Solo permite números
+              inputMode="numeric" // Indica al teclado móvil que solo acepte números
             />
-          </div>
+  </div>
 
           <div className="mb-4">
             <label htmlFor="nombre" className="block text-green-700 font-medium mb-2">Nombre:</label>
@@ -60,45 +79,35 @@ export default function CrearProfesor() {
               onChange={handleChange}
               className="w-full px-3 py-2 border border-green-300 rounded focus:outline-none focus:border-green-500"
               placeholder="Ingrese el nombre"
+              required
             />
           </div>
 
           <div className="mb-4">
-            <label htmlFor="tipoContrato" className="block text-green-700 font-medium mb-2">Tipo de Contrato:</label>
+            <label htmlFor="tipo_contrato" className="block text-green-700 font-medium mb-2">Tipo de Contrato:</label>
             <input
               type="text"
-              id="tipoContrato"
-              name="tipoContrato"
-              value={profesor.tipoContrato}
+              id="tipo_contrato"
+              name="tipo_contrato"
+              value={profesor.tipo_contrato}
               onChange={handleChange}
               className="w-full px-3 py-2 border border-green-300 rounded focus:outline-none focus:border-green-500"
               placeholder="Ingrese el tipo de contrato"
+              required
             />
           </div>
 
           <div className="mb-4">
-            <label htmlFor="materias" className="block text-green-700 font-medium mb-2">Materias:</label>
+            <label htmlFor="estado" className="block text-green-700 font-medium mb-2">Estado:</label>
             <input
               type="text"
-              id="materias"
-              name="materias"
-              value={profesor.materias}
+              id="estado"
+              name="estado"
+              value={profesor.estado}
               onChange={handleChange}
               className="w-full px-3 py-2 border border-green-300 rounded focus:outline-none focus:border-green-500"
-              placeholder="Ingrese las materias"
-            />
-          </div>
-
-          <div className="mb-6">
-            <label htmlFor="horariosDisponibles" className="block text-green-700 font-medium mb-2">Horarios Disponibles:</label>
-            <input
-              type="text"
-              id="horariosDisponibles"
-              name="horariosDisponibles"
-              value={profesor.horariosDisponibles}
-              onChange={handleChange}
-              className="w-full px-3 py-2 border border-green-300 rounded focus:outline-none focus:border-green-500"
-              placeholder="Ingrese los horarios disponibles"
+              placeholder="Ingrese el estado"
+              required
             />
           </div>
 

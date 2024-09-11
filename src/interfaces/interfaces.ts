@@ -1,6 +1,6 @@
 // Interface para el modelo Profesor
-export interface Profesor {
-  cedula: number;
+export interface Profesores {
+  cedula: any;
   nombre: string;
   tipo_contrato: string;
   estado:string;
@@ -9,7 +9,7 @@ export interface Profesor {
 // Interface para el modelo ProfesorMateria
 export interface ProfesorMateria {
   id: number;
-  profesor: Profesor;
+  profesor: Profesores;
   materia: Materia;
 }
 

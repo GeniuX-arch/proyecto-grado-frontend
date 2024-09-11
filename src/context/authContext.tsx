@@ -34,42 +34,48 @@ interface AuthProviderProps {
 
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-    const [user, setUser] = useState<User | null>(null);
+    let [user, setUser] = useState<User | null>(null);
 
     useEffect(() => {
-        const loggedUser = localStorage.getItem('user');
-        if (loggedUser) {
-            setUser(JSON.parse(loggedUser));
+    const loggedUser = localStorage.getItem('user');
+    console.log('Logged user from localStorage:', loggedUser);
+    if (loggedUser) {
+        try {
+            const parsedUser = JSON.parse(loggedUser);
+            console.log('Parsed user:', parsedUser);
+            setUser(user=parsedUser);
+        } catch (error) {
+            console.error('Error parsing stored user:', error);
         }
-    }, []);
+    }
+}, []);
 
 
     const login = (userData: User) => {
     // Supongamos que tienes una función de autenticación que verifica el email y la contraseña.
     //validación y conexión a la db+
+    /*
         axios.get('http://localhost:8000/sanctum/csrf-cookie', { withCredentials: true })
-
-
         .then(() => {
             axios.post('http://localhost:8000/login', {
             email: userData.email,
             password: userData.password
             }, { withCredentials: true })
             .then(response => {
-                if(response.data==='Authenticated'){
-                    setUser(userData);
-                    localStorage.setItem('user', JSON.stringify(userData));
+                if(response.data.message==='Authenticated'){
+                    setUser(response.data);
+                    localStorage.setItem('user', JSON.stringify(response.data));
                     console.log(response.data.message);
                 }
             })
             .catch(error => {
-            console.error('Error during login:', error.response.data.message);
+                console.error('Error during login:', error.response.data.message);
             });
     });
+    */
 
-    /*
-         console.log(userData.email=="0000000000@gmail.com" && userData.password=="0000000000@gmail.com")
-    const isValidUser = (userData.email=="0000000000@gmail.com" && userData.password=="0000000000@gmail.com");
+         console.log(userData.email=="0@gmail.com" && userData.password=="0@gmail.com")
+    const isValidUser = (userData.email=="0@gmail.com" && userData.password=="0@gmail.com");
     
     if (isValidUser) {
         setUser(userData);
@@ -78,7 +84,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         console.error("Invalid credentials");
         
     }
-        */
 
     
 };
@@ -86,8 +91,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
     const logout = () => {
         
-
-        
+        setUser(null);
+        localStorage.removeItem('user');
+        /*
     axios.post('http://localhost:8000/logout', {}, { withCredentials: true })
     .then(response => {
         setUser(null);
@@ -97,8 +103,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     .catch(error => {
         console.error('Error during logout:', error.response.data.message);
     });
-
-
+    */
     };
 
     const value = {
