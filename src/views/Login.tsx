@@ -3,7 +3,7 @@ import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { Triangle } from "react-loader-spinner";
 import Buttonxd from "./button";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../context/authContext";
 
 export default function Login() {
   const [email, setEmail] = useState<string>("");

@@ -8,7 +8,7 @@ import Profesor from './views/Profesor';
 import Login from './views/Login.tsx';
 import Error from './views/Login.tsx';
 import Materias from './views/Materias.tsx';
-import { AuthProvider } from './context/AuthContext';
+import { AuthProvider } from './context/authContext.tsx';
 
 
 
