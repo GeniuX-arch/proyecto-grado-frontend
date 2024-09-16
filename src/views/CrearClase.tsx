@@ -1,4 +1,3 @@
-
 import React, { Component, useEffect, useState } from 'react';
 import { Clase } from '../interfaces/interfaces';
 
@@ -70,4 +69,3 @@ export default function CrearClase() {
     );
 
 }
-

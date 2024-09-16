@@ -8,7 +8,7 @@ import Profesor from './views/Profesor';
 import Login from './views/Login.tsx';
 import Error from './views/Login.tsx';
 import Materias from './views/Materias.tsx';
-import { AuthProvider } from './context/authContext.tsx';
+import { AuthProvider } from './context/AuthContext.tsx';
 
 
 
@@ -16,6 +16,8 @@ import { Triangle } from 'react-loader-spinner';
 import ProtectedRoute from './context/ProtectedRoute';
 import Salones from './views/Salones.tsx';
 import Clases from './views/Clases.tsx';
+import EditarProfesor from './views/EditProfesor.tsx';
+
 
 
 
@@ -68,10 +70,11 @@ function App() {
   return (
     <AuthProvider>
         <Routes>
-          <Route path="/horario" element={ <ProtectedRoute><Horario /></ProtectedRoute>} />
+          <Route path="/horario" element={ <ProtectedRoute><Horario  /></ProtectedRoute>} />
           <Route path="/" element={ <ProtectedRoute><Profesores /></ProtectedRoute>} />
           <Route path="/profesor/:id" element={<ProtectedRoute><Profesor /></ProtectedRoute>} />
           <Route path="/profesor/crear" element={<ProtectedRoute><CrearProfesor /></ProtectedRoute>} />
+          <Route path="/profesor/editar/:id" element={<ProtectedRoute><EditarProfesor /></ProtectedRoute>} />
           <Route path="/login" element={<Login />} />
           <Route path="/*" element={<ProtectedRoute><Error /></ProtectedRoute>} />
           <Route path="/materias" element={ <ProtectedRoute><Materias /></ProtectedRoute>} />
