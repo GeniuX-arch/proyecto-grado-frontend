@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { useState, useEffect } from 'react';
-import Navbar from '../components/Navbar';
-import { host } from '../data/server';
+import Navbar from '../../components/Navbar';
+import { host } from '../../data/server';
 
 export default function CrearHorarioDisponible() {
   const [horarioDisponible, setHorarioDisponible] = useState({

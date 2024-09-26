@@ -1,8 +1,8 @@
 import axios from 'axios';
 import { useState, useEffect } from 'react';
-import Navbar from '../components/Navbar';
-import { host } from '../data/server';
-import { Clases } from '../interfaces/interfaces';
+import Navbar from '../../components/Navbar';
+import { host } from '../../data/server';
+import { Clases } from '../../interfaces/interfaces';
 
 export default function CrearClase() {
   const [clase, setClase] = useState<Clases>({

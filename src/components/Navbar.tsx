@@ -78,11 +78,21 @@ export default function Navbar() {
             </Link>
 
             <Link
-              to="/horariosdisponibles"
+              to="/vistahorariosdisponibles"
               className="block mt-4 lg:inline-block lg:mt-0 text-green-100 hover:text-white mx-6 transition-all duration-300 transform hover:scale-105"
             >
               
-              Horarios Disponibles
+              HorariosDisponibles
+            </Link>
+
+            
+
+            <Link
+              to="/vistaClases"
+              className="block mt-4 lg:inline-block lg:mt-0 text-green-100 hover:text-white mx-6 transition-all duration-300 transform hover:scale-105"
+            >
+              
+              clases
             </Link>
             <div className="relative inline-block mt-4 lg:mt-0 mx-6">
               <button
@@ -93,7 +103,7 @@ export default function Navbar() {
               </button>
               {isSubMenuOpen && (
                 <div className="absolute left-0 mt-2 w-48 bg-gray-800 rounded-md shadow-lg py-2 z-50">
-                  {['Materias', 'Clases', 'Salones'].map((item) => (
+                  {['Materias', 'Salones'].map((item) => (
                     <Link
                       to={`/${item.toLowerCase()}`}
                       className="block px-4 py-2 text-green-100 hover:bg-green-500 hover:text-white transition-colors duration-300"

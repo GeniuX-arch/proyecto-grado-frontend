@@ -1,10 +1,14 @@
 import axios from 'axios';
-import { useState } from 'react';
-import Navbar from '../components/Navbar';
-import { host } from '../data/server';
-import { Profesores } from '../interfaces/interfaces';
+import { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import Navbar from '../../components/Navbar';
+import { host } from '../../data/server';
+import { Profesores } from '../../interfaces/interfaces';
 
-export default function CrearProfesor() {
+export default function EditarProfesor() {
+  const { id } = useParams<{ id: string }>(); // Obtener el ID del profesor de la URL
+  const navigate = useNavigate();
+
   const [profesor, setProfesor] = useState<Profesores>({
     cedula: '',
     nombre: '',
@@ -13,6 +17,21 @@ export default function CrearProfesor() {
   });
 
   const [mensaje, setMensaje] = useState<string>('');
+
+  useEffect(() => {
+    // Función para obtener los detalles del profesor
+    const fetchProfesor = async () => {
+      try {
+        const response = await axios.get(`${host}/profesores/${id}`);
+        setProfesor(response.data);
+      } catch (error) {
+        console.error('Error al obtener los datos del profesor:', error);
+        setMensaje('Error al obtener los datos del profesor');
+      }
+    };
+
+    fetchProfesor();
+  }, [id]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -37,14 +56,9 @@ export default function CrearProfesor() {
     };
 
     try {
-      await axios.post(`${host}/profesores`, data);
-      setProfesor({
-        cedula: '',
-        nombre: '',
-        tipo_contrato: '',
-        estado: '',
-      });
-      setMensaje('Profesor creado exitosamente');
+      await axios.put(`${host}/profesores/${id}`, data);
+      setMensaje('Profesor actualizado exitosamente');
+      navigate(`/profesores/${id}`); // Redirigir a la vista del profesor o a donde quieras
     } catch (error) {
       console.error('Error al enviar los datos:', error);
       setMensaje('Error al enviar los datos');
@@ -61,7 +75,7 @@ export default function CrearProfesor() {
       <Navbar />
       <div className="relative min-h-screen flex flex-col items-center pt-32">
         <div className="w-full max-w-md p-6 bg-white bg-opacity-70 backdrop-filter backdrop-blur-lg rounded-lg shadow-md">
-          <h2 className="text-2xl font-bold text-green-700 mb-6 text-center">Crear Profesor</h2>
+          <h2 className="text-2xl font-bold text-green-700 mb-6 text-center">Editar Profesor</h2>
 
           {mensaje && (
             <div className={`mb-4 p-4 text-center text-white rounded ${mensaje.includes('Error') ? 'bg-red-500' : 'bg-green-500'}`}>
@@ -131,7 +145,7 @@ export default function CrearProfesor() {
                 type="submit"
                 className="w-full bg-green-700 hover:bg-green-800 text-white font-bold py-2 px-4 rounded transition duration-300"
               >
-                Enviar
+                Actualizar
               </button>
             </div>
           </form>

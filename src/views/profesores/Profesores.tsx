@@ -1,7 +1,7 @@
-import Navbar from '../components/Navbar';
+import Navbar from '../../components/Navbar';
 import { Link } from 'react-router-dom';
-import { listarProfesores, eliminarProfesor } from '../data/profesores.conexion';
-import { Profesor } from '../interfaces/interfaces';
+import { listarProfesores, eliminarProfesor } from '../../data/profesores.conexion';
+import { Profesor } from '../../interfaces/interfaces';
 import { useEffect, useState } from 'react';
 
 export default function Profesores() {
