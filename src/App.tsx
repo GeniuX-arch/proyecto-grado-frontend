@@ -19,6 +19,7 @@ import Clases from './views/Clases.tsx';
 import EditarProfesor from './views/EditProfesor.tsx';
 import Perfil from './views/Perfil.tsx';
 import CrearProfesorMateria from './views/ProfesorMateria.tsx';
+import CrearHorarioDisponible from './views/horariosDisponibles.tsx';
 
 
 
@@ -83,6 +84,7 @@ function App() {
           <Route path="/materias" element={ <ProtectedRoute><Materias /></ProtectedRoute>} />
           <Route path="/profesormateria" element={ <ProtectedRoute><CrearProfesorMateria /></ProtectedRoute>} />
           <Route path="/salones" element={ <ProtectedRoute><Salones /></ProtectedRoute>} />
+          <Route path="/horariosdisponibles" element={ <ProtectedRoute><CrearHorarioDisponible /></ProtectedRoute>} />
           <Route path="/clases" element={ <ProtectedRoute><Clases /></ProtectedRoute>} />
           <Route path="/perfil" element={ <ProtectedRoute><Perfil /></ProtectedRoute>} />
         </Routes>

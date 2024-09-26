@@ -76,6 +76,14 @@ export default function Navbar() {
               
               Profesormateria
             </Link>
+
+            <Link
+              to="/horariosdisponibles"
+              className="block mt-4 lg:inline-block lg:mt-0 text-green-100 hover:text-white mx-6 transition-all duration-300 transform hover:scale-105"
+            >
+              
+              Horarios Disponibles
+            </Link>
             <div className="relative inline-block mt-4 lg:mt-0 mx-6">
               <button
                 onClick={toggleSubMenu}
