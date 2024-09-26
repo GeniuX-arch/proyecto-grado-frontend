@@ -17,6 +17,9 @@ import ProtectedRoute from './context/ProtectedRoute';
 import Salones from './views/Salones.tsx';
 import Clases from './views/Clases.tsx';
 import EditarProfesor from './views/EditProfesor.tsx';
+import Perfil from './views/Perfil.tsx';
+import CrearProfesorMateria from './views/ProfesorMateria.tsx';
+
 
 
 
@@ -78,8 +81,10 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/*" element={<ProtectedRoute><Error /></ProtectedRoute>} />
           <Route path="/materias" element={ <ProtectedRoute><Materias /></ProtectedRoute>} />
+          <Route path="/profesormateria" element={ <ProtectedRoute><CrearProfesorMateria /></ProtectedRoute>} />
           <Route path="/salones" element={ <ProtectedRoute><Salones /></ProtectedRoute>} />
           <Route path="/clases" element={ <ProtectedRoute><Clases /></ProtectedRoute>} />
+          <Route path="/perfil" element={ <ProtectedRoute><Perfil /></ProtectedRoute>} />
         </Routes>
       </AuthProvider>
   );

@@ -105,7 +105,7 @@ export default function Horario() {
 
       <div
         className="min-h-screen bg-fixed bg-cover bg-center text-white pt-24"
-        style={{ backgroundImage: 'url(https://i.ytimg.com/vi/NbHD50edwpc/maxresdefault.jpg)' }}
+        style={{ backgroundImage: 'url(https://motionbgs.com/media/490/alone-hollow-knight.jpg)' }}
       >
         <div className="container mx-auto px-4">
           <table className="table-auto border-collapse border border-gray-700 w-full bg-gray-800 bg-opacity-70 rounded-lg shadow-lg">

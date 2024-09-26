@@ -22,7 +22,7 @@ export default function Profesores() {
   }, []);
 
   const handleDelete = async (id: number) => {
-    if (window.confirm('¿Estás seguro de que deseas eliminar este profesor?')) {
+    if (window.confirm('¿Esta seguro de que deseas eliminar este profesor?')) {
       try {
         await eliminarProfesor(id);
         setProfesores(prevState => prevState.filter(profe => profe.cedula !== id));

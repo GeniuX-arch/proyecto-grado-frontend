@@ -9,6 +9,7 @@ export interface Profesores {
 // Interface para el modelo ProfesorMateria
 export interface ProfesorMateria {
   id: number;
+  
   profesor: Profesores;
   materia: Materia;
 }
@@ -17,8 +18,6 @@ export interface ProfesorMateria {
 export interface Materia {
   id: number;
   nombre: string;
-  calificacionAlumno?: number | null;
-  experiencia?: string | null;
   profesores: ProfesorMateria[];
   tiempos: Clase[];
 }

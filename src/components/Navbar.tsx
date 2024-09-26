@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
 export default function Navbar() {
-  const { logout } = useAuth();
+  const { user, logout } = useAuth();
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
@@ -65,7 +65,16 @@ export default function Navbar() {
               to="/profesores"
               className="block mt-4 lg:inline-block lg:mt-0 text-green-100 hover:text-white mx-6 transition-all duration-300 transform hover:scale-105"
             >
+              
               Profesores
+            </Link>
+
+            <Link
+              to="/profesormateria"
+              className="block mt-4 lg:inline-block lg:mt-0 text-green-100 hover:text-white mx-6 transition-all duration-300 transform hover:scale-105"
+            >
+              
+              Profesormateria
             </Link>
             <div className="relative inline-block mt-4 lg:mt-0 mx-6">
               <button
@@ -103,7 +112,7 @@ export default function Navbar() {
                     to="/perfil"
                     className="block px-4 py-2 text-gray-700 hover:bg-green-200 hover:bg-opacity-70 transition-colors duration-300 bg-transparent"
                   >
-                    Ver Perfil
+                    {user ? `que tal, , ${user.email}` : 'Iniciar Sesión'}
                   </Link>
                   <Link
                     to="/configuracion"
