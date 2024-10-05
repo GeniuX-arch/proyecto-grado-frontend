@@ -1,20 +1,27 @@
 
 import React from 'react';
-import { Route, Navigate } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import { useAuth } from './AuthContext';
 
 interface ProtectedRouteProps {
-    children:React.ReactNode;
+    children: React.ReactNode;
+    allowedRoles?: string[];
 }
 
+const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, allowedRoles }) => {
+    const { user } = useAuth();
 
-const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
-    console.log(localStorage.getItem('user'))
-    
+    if (!user) {
+        // User is not authenticated
+        return <Navigate to="/login" replace />;
+    }
 
-    return (
-            localStorage.getItem('user')? children : <Navigate to="/login" />
-    );
+    if (allowedRoles && allowedRoles.length > 0 && !allowedRoles.includes(user.rol)) {
+        // User doesn't have the required role
+        return <Navigate to="/unauthorized" replace />;
+    }
+
+    return <>{children}</>;
 };
 
 export default ProtectedRoute;

@@ -52,7 +52,7 @@ export default function Clases() {
               onChange={(e) => setSearchTerm(e.target.value)}
               className="bg-gray-800 text-white px-4 py-2 rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-green-500 transition-all duration-300"
             />
-            <Link to="/clase/crear" className="bg-green-600 text-white font-semibold px-6 py-3 rounded-lg hover:bg-green-700 transition-all duration-300">
+            <Link to="/clases" className="bg-green-600 text-white font-semibold px-6 py-3 rounded-lg hover:bg-green-700 transition-all duration-300">
               Crear Nueva Clase
             </Link>
           </div>

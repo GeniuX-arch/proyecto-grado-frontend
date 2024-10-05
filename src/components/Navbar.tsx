@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import UserIcon from '@heroicons/react/24/solid/UserIcon';
+import gestionutsLogo from '../../public/gestionuts.png'; // Asegúrate de que la ruta sea correcta
 
 export default function Navbar() {
   const { user, logout } = useAuth();
@@ -34,8 +36,14 @@ export default function Navbar() {
     <div className="bg-gray-900 backdrop-filter backdrop-blur-lg shadow-lg fixed w-full z-50">
       <nav className="flex items-center justify-between flex-wrap p-6">
         <div className="flex items-center text-white">
-          <span className="font-bold text-xl tracking-wide">USUARIO ADMIN</span>
+        <img
+  src={gestionutsLogo} // Añade tu logo aquí
+  alt="Logo Gestion UTS"
+  className="h-16 mr-2" // Cambia la altura aquí
+/>
+
         </div>
+        
         <div className="block lg:hidden">
           <button
             className="flex items-center px-3 py-2 border rounded text-green-200 border-green-500 hover:text-white hover:border-white"
@@ -62,37 +70,28 @@ export default function Navbar() {
               Horario
             </Link>
             <Link
-              to="/profesores"
+              to="/"
               className="block mt-4 lg:inline-block lg:mt-0 text-green-100 hover:text-white mx-6 transition-all duration-300 transform hover:scale-105"
             >
-              
               Profesores
             </Link>
-
             <Link
               to="/profesormateria"
               className="block mt-4 lg:inline-block lg:mt-0 text-green-100 hover:text-white mx-6 transition-all duration-300 transform hover:scale-105"
             >
-              
               Profesormateria
             </Link>
-
             <Link
               to="/vistahorariosdisponibles"
               className="block mt-4 lg:inline-block lg:mt-0 text-green-100 hover:text-white mx-6 transition-all duration-300 transform hover:scale-105"
             >
-              
               HorariosDisponibles
             </Link>
-
-            
-
             <Link
               to="/vistaClases"
               className="block mt-4 lg:inline-block lg:mt-0 text-green-100 hover:text-white mx-6 transition-all duration-300 transform hover:scale-105"
             >
-              
-              clases
+              Clases
             </Link>
             <div className="relative inline-block mt-4 lg:mt-0 mx-6">
               <button
@@ -118,10 +117,8 @@ export default function Navbar() {
           </div>
           <div className="flex items-center justify-center mt-4 lg:mt-0">
             <div className="relative">
-              <img
-                src="/perfil.png"
-                alt="Perfil"
-                className="h-10 w-10 lg:h-16 lg:w-16 rounded-full border-2 border-white hover:border-green-300 transition-transform duration-500 hover:scale-110 cursor-pointer"
+              <UserIcon
+                className="h-10 w-10 lg:h-14 lg:w-14 text-white hover:text-green-300 transition-transform duration-500 hover:scale-110 cursor-pointer"
                 onClick={toggleProfileMenu}
               />
               {isProfileOpen && (
