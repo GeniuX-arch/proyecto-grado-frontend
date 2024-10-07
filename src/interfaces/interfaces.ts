@@ -26,7 +26,7 @@ export interface Materia {
 export interface Clase {
   id: number;
   grupo: string;
-  diaSemana: string;
+  dia: string;
   horaInicio: string;
   horaFin: string;
   materia: Materia;

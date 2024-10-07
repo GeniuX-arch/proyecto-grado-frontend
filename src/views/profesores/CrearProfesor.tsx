@@ -1,3 +1,4 @@
+
 import axios from 'axios';
 import { useState } from 'react';
 import Navbar from '../../components/Navbar';
@@ -11,13 +12,14 @@ export default function CrearProfesor() {
     tipo_contrato: '',
     estado: '',
   });
-
+  
+  const [image, setImage] = useState<File | null>(null); // State for the selected image
   const [mensaje, setMensaje] = useState<string>('');
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
 
-    // Asegurarse de que 'cedula' solo acepte números
+    // Ensure 'cedula' only accepts numbers
     if (name === 'cedula' && isNaN(Number(value))) {
       return;
     }
@@ -28,22 +30,37 @@ export default function CrearProfesor() {
     }));
   };
 
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      setImage(e.target.files[0]); // Set the selected image
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const data = {
-      ...profesor,
-      cedula: parseInt(profesor.cedula, 10),
-    };
+    const data = new FormData(); // Create a FormData object
+    data.append('cedula', profesor.cedula);
+    data.append('nombre', profesor.nombre);
+    data.append('tipo_contrato', profesor.tipo_contrato);
+    data.append('estado', profesor.estado);
+    if (image) {
+      data.append('image', image); // Append the image file if it exists
+    }
 
     try {
-      await axios.post(`${host}/profesores`, data);
+      await axios.post(`${host}/profesores`, data, {
+        headers: {
+          'Content-Type': 'multipart/form-data', // Set the content type for file upload
+        },
+      });
       setProfesor({
         cedula: '',
         nombre: '',
         tipo_contrato: '',
         estado: '',
       });
+      setImage(null); // Reset image state
       setMensaje('Profesor creado exitosamente');
     } catch (error) {
       console.error('Error al enviar los datos:', error);
@@ -122,6 +139,18 @@ export default function CrearProfesor() {
                 onChange={handleChange}
                 className="w-full px-3 py-2 border border-green-300 rounded focus:outline-none focus:border-green-500"
                 placeholder="Ingrese el estado"
+                required
+              />
+            </div>
+
+            <div className="mb-4">
+              <label htmlFor="image" className="block text-green-700 font-medium mb-2">Imagen:</label>
+              <input
+                type="file"
+                id="image"
+                accept="image/*"
+                onChange={handleImageChange}
+                className="w-full px-3 py-2 border border-green-300 rounded focus:outline-none focus:border-green-500"
                 required
               />
             </div>

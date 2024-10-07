@@ -5,10 +5,9 @@ import { AuthProvider } from './context/AuthContext.tsx';
 import ProtectedRoute from './context/ProtectedRoute';
 
 // Import your components
-import Horario from './views/Horario.tsx';
+import Horario from './components/Horario.tsx';
 import Profesores from './views/profesores/Profesores.tsx';
 import CrearProfesor from './views/profesores/CrearProfesor.tsx';
-import Profesor from './views/Profesor';
 import Login from './views/Login.tsx';
 import Error from './views/Error.tsx';
 import Materias from './views/materias/Materias.tsx';
@@ -53,9 +52,11 @@ function App() {
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} /> 
                 <Route path="/unauthorized" element={<Unauthorized />} />
-                <Route path="/" element={<ProtectedRoute allowedRoles={['admin', 'teacher', 'student']}><Profesores /></ProtectedRoute>} />
-                <Route path="/horario" element={<ProtectedRoute allowedRoles={['admin', 'teacher', 'student']}><Horario /></ProtectedRoute>} />
-                <Route path="/profesor/:id" element={<ProtectedRoute allowedRoles={['admin', 'teacher']}><Profesor /></ProtectedRoute>} />
+                <Route path="/" element={
+                    <ProtectedRoute allowedRoles={['admin', 'teacher', 'student']}>
+                        <Profesores />
+                    </ProtectedRoute>
+                    } />
                 <Route path="/profesor/crear" element={<ProtectedRoute allowedRoles={['admin']}><CrearProfesor /></ProtectedRoute>} />
                 <Route path="/profesor/editar/:id" element={<ProtectedRoute allowedRoles={['admin']}><EditarProfesor /></ProtectedRoute>} />
                 <Route path="/materias" element={<ProtectedRoute allowedRoles={['admin', 'teacher', 'student']}><VerMaterias /></ProtectedRoute>} />

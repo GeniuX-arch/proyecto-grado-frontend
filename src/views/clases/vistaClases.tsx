@@ -1,18 +1,43 @@
 import Navbar from '../../components/Navbar';
 import { Link } from 'react-router-dom';
-import { listarClases, eliminarClase } from '../../data/clases.conexion'; // Asegúrate de tener estos métodos en tu conexión de datos
-import { Clase } from '../../interfaces/interfaces'; // Asegúrate de que tu interfaz Clase esté definida
+import { listarClases, eliminarClase } from '../../data/clases.conexion'; 
+import { Clase } from '../../interfaces/interfaces'; 
 import { useEffect, useState } from 'react';
+import Horario from '../../components/Horario'; // Asegúrate de que el componente Horario esté bien implementado
 
 export default function Clases() {
   const [clases, setClases] = useState<Clase[]>([]);
   const [searchTerm, setSearchTerm] = useState<string>('');
+  const [horario, setHorario] = useState<Horario[]>([]); // Estado para el horario
+
+interface Horario {
+  id: number;
+  titulo: string;
+  descripcion:string;
+  dia: string;
+  horaInicio: string;
+  horaFin: string;
+}
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const lista: Clase[] = await listarClases();
+        const lista  = await listarClases();
+        
+        console.log(lista)
+        const horarios = await lista.map((item) => ({
+          id: item.id,
+          descripcion:"descripcion",
+          titulo: item.grupo,
+          dia: item.dia_semana, // Asumiendo que el campo original es 'dia_semana'
+          horaInicio: item.hora_inicio, // Cambiar nombre de 'hora_inicio' a 'horaInicio'
+          horaFin: item.hora_fin,
+        }));
+
+        setHorario(horarios)
         setClases(lista);
+        console.log(horario)
+
       } catch (error) {
         console.error('Error al obtener la lista de clases:', error);
       }
@@ -35,6 +60,9 @@ export default function Clases() {
   const filteredClases = clases.filter(clase =>
     clase.grupo.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+
+    // Limpiar el timeout en caso de que el componente se desmonte antes de que se ejecute el timeout
 
   return (
     <>
@@ -62,11 +90,7 @@ export default function Clases() {
           {filteredClases.map((clase) => (
             <div className="bg-gray-900 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 p-6" key={clase.id}>
               <div className="flex flex-col items-center">
-                <h3 className="text-2xl font-semibold text-green-300 mb-2">Grupo: {clase.grupo}</h3>
-                <p className="text-gray-400 mb-2">Día: {clase.dia_semana}</p>
-                <p className="text-gray-400 mb-2">Hora de inicio: {clase.hora_inicio}</p>
-                <p className="text-gray-400 mb-2">Hora de fin: {clase.hora_fin}</p>
-                <p className="text-gray-400 mb-4">Alumnos: {clase.alumnos}</p>
+
                 <div className="flex flex-col gap-2 w-full">
                   <div className="flex gap-4 w-full">
                     <Link
@@ -88,6 +112,9 @@ export default function Clases() {
           ))}
         </div>
       </div>
+
+      <Horario listadoClases={horario} />
     </>
   );
+
 }

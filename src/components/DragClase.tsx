@@ -4,13 +4,16 @@ interface DragComponentProps {
   dia: string;
   horaInicio: string;
   horaFin: string;
+  idd?:string;
+  titulo?:string;
+  descripcion?:string;
   onClick: () => void; // Agrega la prop onClick
 }
 
-const DragClase: React.FC<DragComponentProps> = ({ dia, horaInicio, horaFin, onClick }) => {
+const DragClase: React.FC<DragComponentProps> = ({ dia, idd, horaInicio, horaFin,titulo,descripcion, onClick }) => {
   const [{ isDragging }, drag] = useDrag({
     type: 'box',
-    item: { id: 'unique_id', dia, horaInicio, horaFin },
+    item: { id: 'unique_id', dia, horaInicio, idd, horaFin,titulo,descripcion },
     collect: (monitor) => ({
       isDragging: monitor.isDragging(),
     }),
@@ -31,10 +34,9 @@ const DragClase: React.FC<DragComponentProps> = ({ dia, horaInicio, horaFin, onC
       className="bg-green-200 rounded-md"
       onClick={onClick} // Usa la prop onClick
     >
-      <p>{dia}</p>
-      <p>{horaInicio}</p>
-      <p>{horaFin}</p>
-      Drag me!
+      <p>{idd}</p>
+      <p>{titulo}</p>
+      <p>{descripcion}</p>
     </div>
   );
 };

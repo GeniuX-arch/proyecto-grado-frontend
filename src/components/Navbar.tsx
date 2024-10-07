@@ -63,12 +63,7 @@ export default function Navbar() {
           className={`w-full flex-grow lg:flex lg:items-center lg:justify-center lg:w-auto ${isOpen ? 'block' : 'hidden'}`}
         >
           <div className="text-lg lg:flex-grow text-center">
-            <Link
-              to="/horario"
-              className="block mt-4 lg:inline-block lg:mt-0 text-green-100 hover:text-white mx-6 transition-all duration-300 transform hover:scale-105"
-            >
-              Horario
-            </Link>
+          
             <Link
               to="/"
               className="block mt-4 lg:inline-block lg:mt-0 text-green-100 hover:text-white mx-6 transition-all duration-300 transform hover:scale-105"
