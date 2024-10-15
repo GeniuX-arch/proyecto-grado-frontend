@@ -1,10 +1,14 @@
 import axios from 'axios';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, ChangeEvent, FormEvent } from 'react';
 import Navbar from '../../components/Navbar';
 import { host } from '../../data/server';
+import { Profesor, HorarioDisponible } from '../../interfaces/interfaces';
+
+
 
 export default function CrearHorarioDisponible() {
-  const [horarioDisponible, setHorarioDisponible] = useState({
+  // Tipado del estado para el formulario del horario
+  const [horarioDisponible, setHorarioDisponible] = useState<HorarioDisponible>({
     id: '',
     dia: '',
     hora_inicio: '',
@@ -12,17 +16,14 @@ export default function CrearHorarioDisponible() {
     profesor_id: '',
   });
 
-  const [mensaje, setMensaje] = useState<string>('');
-  const [profesores, setProfesores] = useState([]);
 
-  const host = 'http://localhost:8000/api';
+  const [mensaje, setMensaje] = useState<string>('');
+  const [profesores, setProfesores] = useState<Profesor[]>([]);
 
   // Función para obtener datos
   const fetchData = async () => {
     try {
-      const [profesoresResponse] = await Promise.all([
-        axios.get(`${host}/profesores`),
-      ]);
+      const profesoresResponse = await axios.get<Profesor[]>(`${host}/profesores`);
       setProfesores(profesoresResponse.data);
     } catch (error) {
       console.error('Error al cargar profesores:', error);
@@ -34,8 +35,8 @@ export default function CrearHorarioDisponible() {
     fetchData();
   }, []);
 
-  // Manejo de cambios en el formulario
-  const handleChange = (e) => {
+  // Manejo de cambios en el formulario (tipado de los eventos de cambio)
+  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setHorarioDisponible((prev) => ({
       ...prev,
@@ -43,8 +44,8 @@ export default function CrearHorarioDisponible() {
     }));
   };
 
-  // Manejo del envío del formulario
-  const handleSubmit = async (event) => {
+  // Manejo del envío del formulario (tipado del evento de envío)
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     try {

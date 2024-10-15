@@ -4,7 +4,7 @@ interface DragComponentProps {
   dia: string;
   horaInicio: string;
   horaFin: string;
-  idd?:string;
+  idd?:number;
   titulo?:string;
   descripcion?:string;
   onClick: () => void; // Agrega la prop onClick

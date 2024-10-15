@@ -1,1 +1,2 @@
-export const host = 'http://localhost:8000/api'
+export const hostImg = 'http://localhost:8000'
+export const host = hostImg+'/api'

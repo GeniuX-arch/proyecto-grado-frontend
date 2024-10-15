@@ -18,7 +18,7 @@ function sumarMinutos(hora: string, minutos: number): string {
 }
 
 interface Horario {
-  id?: string;
+  id?: number;
   titulo?: string;
   descripcion?: string;
   dia: string;
@@ -33,6 +33,7 @@ export default function Horario({ listadoClases }: { listadoClases: Horario[] })
   const [horarioo, setHorarioo] = useState<Array<Array<Array<Horario>>>>([[]]);
   const [selectedClase, setSelectedClase] = useState<Horario | null>(null);
   const [isLoaded, setIsLoaded] = useState(false);
+  
 
   useEffect(() => {
     if (listadoClases.length > 0) {
