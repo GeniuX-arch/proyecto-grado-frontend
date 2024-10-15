@@ -43,8 +43,8 @@ export default function VisualizarProfesorMateria() {
       }}
     >
       <Navbar />
-      <div className="relative min-h-screen flex flex-col items-center pt-32">
-        <div className="w-full max-w-md p-6 bg-white bg-opacity-70 backdrop-filter backdrop-blur-lg rounded-lg shadow-md">
+      <div className="relative  flex flex-col items-center pt-32">
+        <div className="w-full w-auto p-6 bg-white bg-opacity-70 backdrop-filter backdrop-blur-lg rounded-lg shadow-md">
           <Link to="/profesormateria/crear" className="bg-green-600 text-white font-semibold px-6 py-3 rounded-lg hover:bg-green-700 transition-all duration-300">
             Crear Profesor-Materia
           </Link>
@@ -56,7 +56,7 @@ export default function VisualizarProfesorMateria() {
             </div>
           )}
 
-          <div className="overflow-x-auto">
+          <div className="">
             <table className="min-w-full bg-white border border-green-300">
               <thead>
                 <tr>

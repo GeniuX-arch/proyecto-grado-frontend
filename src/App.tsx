@@ -108,7 +108,7 @@ function App() {
                         <VerHorariosDisponibles />
                 </ProtectedRoute>} />
     
-                <Route path="/horarioDisponibles/crear" element={<ProtectedRoute allowedRoles={['admin']}>
+                <Route path="/horarios-disponibles/crear" element={<ProtectedRoute allowedRoles={['admin']}>
                     <CrearHorarioDisponible />
                 </ProtectedRoute>} />
 

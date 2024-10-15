@@ -47,6 +47,16 @@ export default function CrearHorarioDisponible() {
   // Manejo del envío del formulario (tipado del evento de envío)
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    
+    const inicio = new Date(`1970-01-01T${horarioDisponible.hora_inicio}:00`);
+    const fin = new Date(`1970-01-01T${horarioDisponible.hora_fin}:00`);
+
+    // Validar que la hora_inicio es anterior a la hora_fin y que no sean iguales
+    if (inicio >= fin) {
+      alert("La hora de inicio debe ser anterior a la hora de fin y no pueden ser iguales.");
+      return;
+    }
+
 
     try {
       const response = await axios.post(`${host}/horarios_disponibles`, horarioDisponible);
@@ -84,44 +94,89 @@ export default function CrearHorarioDisponible() {
 
           <form onSubmit={handleSubmit}>
             {/* Día */}
+            
+
             <div className="mb-4">
-              <label htmlFor="dia" className="block text-green-700 font-medium mb-2">Día:</label>
-              <input
-                type="text"
+              <label htmlFor="dia" className="block text-green-700 font-medium mb-2">Día de la Semana:</label>
+              <select
                 id="dia"
                 name="dia"
                 value={horarioDisponible.dia}
                 onChange={handleChange}
-                required
                 className="w-full px-3 py-2 border border-green-300 rounded focus:outline-none focus:border-green-500"
-              />
+                required
+              >
+                <option value="lunes">Lunes</option>
+                <option value="martes">Martes</option>
+                <option value="miercoles">Miércoles</option>
+                <option value="jueves">Jueves</option>
+                <option value="viernes">Viernes</option>
+                <option value="sabado">Sábado</option>
+              </select>
             </div>
-            {/* Hora de Inicio */}
+
+
             <div className="mb-4">
-              <label htmlFor="hora_inicio" className="block text-green-700 font-medium mb-2">Hora de Inicio:</label>
-              <input
-                type="time"
+              <label htmlFor="hora_inicio" className="block text-green-700 font-medium mb-2">Hora de inicio:</label>
+              <select
                 id="hora_inicio"
                 name="hora_inicio"
                 value={horarioDisponible.hora_inicio}
                 onChange={handleChange}
-                required
                 className="w-full px-3 py-2 border border-green-300 rounded focus:outline-none focus:border-green-500"
-              />
-            </div>
-            {/* Hora de Fin */}
+                required
+              >
+                <option value="06:00">6:00 AM</option>
+                <option value="06:45">6:45 AM</option>
+                <option value="07:30">7:30 AM</option>
+                <option value="08:15">8:15 AM</option>
+                <option value="09:00">9:00 AM</option>
+                <option value="09:45">9:45 AM</option>
+                <option value="10:30">10:30 AM</option>
+                <option value="11:15">11:15 AM</option>
+                <option value="12:00">12:00 PM</option>
+                <option value="12:45">12:45 PM</option>
+                <option value="13:30">1:30 PM</option>
+                <option value="14:15">2:15 PM</option>
+                <option value="15:00">3:00 PM</option>
+                <option value="15:45">3:45 PM</option>
+                <option value="16:30">4:30 PM</option>
+                <option value="17:15">5:15 PM</option>
+                <option value="18:00">6:00 PM</option>
+              </select>
+          </div>
+
+
             <div className="mb-4">
               <label htmlFor="hora_fin" className="block text-green-700 font-medium mb-2">Hora de Fin:</label>
-              <input
-                type="time"
+              <select
                 id="hora_fin"
                 name="hora_fin"
                 value={horarioDisponible.hora_fin}
                 onChange={handleChange}
-                required
                 className="w-full px-3 py-2 border border-green-300 rounded focus:outline-none focus:border-green-500"
-              />
+                required
+              >
+                <option value="06:00">6:00 AM</option>
+                <option value="06:45">6:45 AM</option>
+                <option value="07:30">7:30 AM</option>
+                <option value="08:15">8:15 AM</option>
+                <option value="09:00">9:00 AM</option>
+                <option value="09:45">9:45 AM</option>
+                <option value="10:30">10:30 AM</option>
+                <option value="11:15">11:15 AM</option>
+                <option value="12:00">12:00 PM</option>
+                <option value="12:45">12:45 PM</option>
+                <option value="13:30">1:30 PM</option>
+                <option value="14:15">2:15 PM</option>
+                <option value="15:00">3:00 PM</option>
+                <option value="15:45">3:45 PM</option>
+                <option value="16:30">4:30 PM</option>
+                <option value="17:15">5:15 PM</option>
+                <option value="18:00">6:00 PM</option>
+              </select>
             </div>
+
             {/* Profesor */}
             <div className="mb-4">
               <label htmlFor="profesor_id" className="block text-green-700 font-medium mb-2">Profesor:</label>
@@ -135,7 +190,7 @@ export default function CrearHorarioDisponible() {
               >
                 <option value="">Seleccione un profesor</option>
                 {profesores.map((profesor) => (
-                  <option key={profesor.cedula} value={profesor.cedula}>
+                  <option key={profesor.id} value={profesor.id}>
                     {profesor.nombre}
                   </option>
                 ))}

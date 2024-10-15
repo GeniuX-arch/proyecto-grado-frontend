@@ -81,7 +81,7 @@ export default function listaHorariosDisponibles() {
       <div className="relative min-h-screen flex flex-col items-center pt-32">
         <div className="w-full max-w-4xl p-6 bg-white bg-opacity-70 backdrop-filter backdrop-blur-lg rounded-lg shadow-md">
           <div>
-            <Link to="/horarios/crear" className="bg-green-600 text-white font-semibold px-6 py-3 rounded-lg hover:bg-green-700 transition-all duration-300">
+            <Link to="/horarios-disponibles/crear" className="bg-green-600 text-white font-semibold px-6 py-3 rounded-lg hover:bg-green-700 transition-all duration-300">
               Crear Nuevo Horario Disponible
             </Link>
             <p></p>
