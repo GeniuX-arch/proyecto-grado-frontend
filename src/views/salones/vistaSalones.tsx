@@ -107,12 +107,12 @@ export default function VerSalones() {
                   <td className="py-4 text-center">{salon.capacidad_alumnos}</td>
                   <td className="py-4 text-center">{salon.tipo}</td>
                   <td className="py-4 flex flex-row gap-2 items-center justify-center">
-                    <button onClick={() => setSalonAEditar(salon)} className="bg-blue-700 text-white px-4 py-1.5 rounded hover:bg-blue-700 transition duration-300">
+                    <Link to={'/salones/new/'+salon.id} className="bg-blue-700 text-white px-4 py-1.5 rounded hover:bg-blue-700 transition duration-300">
 
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-pencil" viewBox="0 0 16 16">
                       <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325"/>
                     </svg>
-                    </button>
+                    </Link>
                     <button onClick={() => handleDelete(salon.id)} className="bg-red-600  text-white px-4 py-1.5 rounded hover:bg-red-700 transition duration-300 ml-2">
 
                       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-trash3" viewBox="0 0 16 16">
@@ -125,70 +125,6 @@ export default function VerSalones() {
             </tbody>
           </table>
 
-          {salonAEditar && (
-            <div className="mt-6">
-              <h2 className="text-2xl font-bold text-green-700 mb-4">Editar Salón</h2>
-              <form onSubmit={handleEdit}>
-                <div className="mb-4">
-                  <label htmlFor="codigo" className="block text-green-700 font-medium mb-2">Código:</label> {/* Nuevo campo para editar código */}
-                  <input
-                    type="text"
-                    id="codigo"
-                    name="codigo"
-                    value={salonAEditar.codigo} // Aquí se agrega el valor de código
-                    onChange={handleChange}
-                    className="w-full px-3 py-2 border border-green-300 rounded focus:outline-none focus:border-green-500"
-                    placeholder="Ingrese el código"
-                    required
-                  />
-                </div>
-
-                <div className="mb-4">
-                  <label htmlFor="capacidad_alumnos" className="block text-green-700 font-medium mb-2">Capacidad de Alumnos:</label>
-                  <input
-                    type="number"
-                    id="capacidad_alumnos"
-                    name="capacidad_alumnos"
-                    value={salonAEditar.capacidad_alumnos}
-                    onChange={handleChange}
-                    className="w-full px-3 py-2 border border-green-300 rounded focus:outline-none focus:border-green-500"
-                    placeholder="Ingrese la capacidad de alumnos"
-                    required
-                  />
-                </div>
-
-                <div className="mb-4">
-                  <label htmlFor="tipo" className="block text-green-700 font-medium mb-2">Tipo:</label>
-                  <input
-                    type="text"
-                    id="tipo"
-                    name="tipo"
-                    value={salonAEditar.tipo}
-                    onChange={handleChange}
-                    className="w-full px-3 py-2 border border-green-300 rounded focus:outline-none focus:border-green-500"
-                    placeholder="Ingrese el tipo"
-                    required
-                  />
-                </div>
-
-                <div className="text-center">
-                  <button
-                    type="submit"
-                    className="w-full bg-green-700 hover:bg-green-800 text-white font-bold py-2 px-4 rounded transition duration-300"
-                  >
-                    Actualizar
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setSalonAEditar(null)}
-                    className="mt-2 w-full bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded transition duration-300"
-                  >
-                    Cancelar
-                  </button>
-                </div>
-              </form>
-            </div>
-          )}
         </div>
       </div>
     </div>

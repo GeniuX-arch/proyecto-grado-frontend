@@ -79,7 +79,7 @@ export default function VisualizarProfesorMateria() {
                       <td className="py-2 px-4 border-b text-center">{profesorMateria.calificacion_alumno}</td>
                       <td className="py-2 px-4 border-b text-center">
                         <Link
-                          to={`/profesor_materia/editar/${profesorMateria.id}`}
+                          to={`/profesor-materia/editar/${profesorMateria.id}`}
                           className="bg-blue-600 text-white font-semibold px-4 py-2 rounded-lg hover:bg-blue-700 transition-all duration-300 mr-2"
                         >
                           Editar

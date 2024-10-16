@@ -14,9 +14,9 @@ export const listarProfesores = async (): Promise<any[]> => {
     }
 }
 
-export const obtenerProfesor = async (cedula: number): Promise<any> => {
+export const obtenerProfesor = async (id: number): Promise<any> => {
     try {
-        const response = await axios.get(`${host}/${profesor}/${cedula}`);
+        const response = await axios.get(`${host}/${profesor}/${id}`);
         if (!response.data) {
             throw new Error("No se encontró al profesor");
         }

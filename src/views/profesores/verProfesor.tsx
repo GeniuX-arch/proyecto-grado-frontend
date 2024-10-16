@@ -1,67 +1,186 @@
-import React, { useState } from 'react';
-import SelectLanguage from './Select';
+import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import axios from 'axios';
+import Navbar from '../../components/Navbar';
+import { host, hostImg } from '../../data/server';
+import { Triangle } from 'react-loader-spinner';
 
-const VerProfesor = () => {
-  const [inputValue, setInputValue] = useState('');
-  const [isOpen, setIsOpen] = useState(false);
-  const languages = ['Python', 'Javascript', 'Ruby'];
+export default function VerProfesor() {
+  const { id } = useParams();
+  const [profesor, setProfesor] = useState(null);
+  const [materias, setMaterias] = useState([]);
+  const [horarios, setHorarios] = useState([]);
+  const [clases, setClases] = useState([]);
 
-  const handleInputChange = (e) => {
-    const value = e.target.value;
-    setInputValue(value);
-    setIsOpen(true);
+  const obtenerNombreMateria = async (materiaId) => {
+    try {
+      const response = await axios.get(`${host}/materias/${materiaId}`);
+      return response.data.nombre;
+    } catch (error) {
+      console.error('Error al obtener el nombre de la materia:', error);
+      return 'Desconocido';
+    }
   };
 
-  const handleLanguageSelect = (language) => {
-    setInputValue(language);
-    setIsOpen(false);
-  };
+  useEffect(() => {
+    const obtenerProfesor = async () => {
+      try {
+        const response = await axios.get(`${host}/profesores/${id}`);
+        setProfesor(response.data);
+      } catch (error) {
+        console.error('Error al obtener profesor:', error);
+      }
+    };
 
-  const filteredLanguages = inputValue.length > 0
-    ? languages.filter(language =>
-        language.toLowerCase().includes(inputValue.toLowerCase())
-      )
-    : languages;
+    const obtenerMaterias = async () => {
+      try {
+        // Filtra materias por profesor_id
+        const response = await axios.get(`${host}/profesor_materia?profesor_id=${id}`);
+        const materiasConNombre = await Promise.all(
+          response.data.map(async (materia) => {
+            const nombreMateria = await obtenerNombreMateria(materia.materia_id);
+            return { ...materia, nombreMateria };
+          })
+        );
+        setMaterias(materiasConNombre);
+      } catch (error) {
+        console.error('Error al obtener materias:', error);
+      }
+    };
+
+    const obtenerHorarios = async () => {
+      try {
+        // Filtra horarios por profesor_id
+        const response = await axios.get(`${host}/horarios_disponibles?profesor_id=${id}`);
+
+        setHorarios(response.data);
+      } catch (error) {
+        console.error('Error al obtener horarios:', error);
+      }
+    };
+
+    const obtenerClases = async () => {
+      try {
+        // Filtra clases por profesor_id
+        const response = await axios.get(`${host}/clases?profesor_id=${id}`);
+        console.log(response.data);
+        
+        setClases(response.data);
+      } catch (error) {
+        console.error('Error al obtener clases:', error);
+      }
+    };
+
+    // Llama a todas las funciones de obtención de datos
+    obtenerProfesor();
+    obtenerMaterias();
+    obtenerHorarios();
+    obtenerClases();
+  }, [id]);
+
+  if (!profesor) {
+    return <div className='flex flex-col items-center justify-center h-screen'><Triangle /> <p>Cargando...</p></div>;
+  }
 
   return (
-    <div className="flex-auto flex flex-col items-center">
-      <div className="relative w-full min-w-[200px]">
-        <input
-          value={inputValue}
-          onChange={handleInputChange}
-          className="peer h-full w-full rounded-[7px] border border-blue-gray-200 bg-transparent px-3 py-2.5 font-sans text-sm font-normal text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 focus:border-2 focus:border-teal-600 focus:border-t-transparent focus:outline-0 disabled:border-0 disabled:bg-blue-gray-50"
-          placeholder=" "
-          onFocus={() => setIsOpen(true)}
-        />
-        <label className="before:content[' '] after:content[' '] pointer-events-none absolute left-0 -top-1.5 flex h-full w-full select-none text-[11px] font-normal leading-tight text-blue-gray-400 transition-all before:pointer-events-none before:mt-[6.5px] before:mr-1 before:box-border before:block before:h-1.5 before:w-2.5 before:rounded-tl-md before:border-t before:border-l before:border-blue-gray-200 before:transition-all after:pointer-events-none after:mt-[6.5px] after:ml-1 after:box-border after:block after:h-1.5 after:w-2.5 after:flex-grow after:rounded-tr-md after:border-t after:border-r after:border-blue-gray-200 after:transition-all peer-placeholder-shown:text-sm peer-placeholder-shown:leading-[3.75] peer-placeholder-shown:text-blue-gray-500 peer-placeholder-shown:before:border-transparent peer-placeholder-shown:after:border-transparent peer-focus:text-[11px] peer-focus:leading-tight peer-focus:text-teal-600 peer-focus:before:border-t-2 peer-focus:before:border-l-2 peer-focus:before:text-teal-600 peer-focus:after:border-t-2 peer-focus:after:border-r-2 peer-focus:after:border-teal-600 peer-disabled:text-transparent peer-disabled:before:border-transparent peer-disabled:after:border-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500">
-          Input Medium
-        </label>
-      </div>
-      {isOpen && (
-        <div className="absolute shadow top-12 z-40 w-full left-0 rounded max-h-40 overflow-y-auto mt-1"> {/* Ajusta el margen superior aquí */}
-          <div className="flex flex-col w-full">
-            {filteredLanguages.map((language, index) => (
-              <div
-                key={index}
-                className="cursor-pointer w-full border-gray-100 rounded-t border-b hover:bg-teal-100"
-                onClick={() => handleLanguageSelect(language)}
-              >
-                <div className="flex w-full items-center p-2 pl-2 border-transparent bg-white border-l-2 relative hover:bg-teal-600 hover:text-teal-100 hover:border-teal-600">
-                  <div className="w-full items-center flex">
-                    <div className="mx-2 leading-6">{language}</div>
-                  </div>
-                </div>
+    <div>
+      <Navbar />
+      <div className='pt-32'>
+        <div className="flex flex-row">
+          {/* Información del profesor */}
+          <section className="border rounded-md p-4 m-5 flex justify-center items-center w-1/3">
+            <div className='flex flex-col justify-center items-center relative'>
+              {profesor.image_path ? (
+                <img
+                  src={hostImg + profesor.image_path}
+                  alt="Perfil"
+                  className="h-28 w-28 rounded-full border-4 border-green-600 mb-4"
+                />
+              ) : (
+                <img
+                  src="/perfil.png"
+                  alt="Perfil"
+                  className="h-28 w-28 rounded-full border-4 border-green-600 mb-4"
+                />
+              )}
+              <h3 className='text-2xl'>{profesor.nombre}</h3>
+              <div className='flex flex-row gap-2 justify-center items-center'>
+                <p>cc</p>
+                <p>{profesor.cedula}</p>
               </div>
-            ))}
-            {filteredLanguages.length === 0 && (
-              <div className="p-2 text-gray-500">No hay resultados</div>
-            )}
-          </div>
+            </div>
+          </section>
+
+          {/* Materias */}
+          <section className="border rounded-md p-4 m-5 flex flex-col items-center w-2/3">
+            <h1 className='text-xl'>Materias que dicta</h1>
+            <table>
+              <thead>
+                <tr>
+                  <th className="py-2 px-4 text-green-700">Materia</th>
+                  <th className="py-2 px-4 text-green-700">Experiencia</th>
+                  <th className="py-2 px-4 text-green-700">Calificación Alumno</th>
+                </tr>
+              </thead>
+              <tbody>
+                {materias.map((materia) => (
+                  <tr key={materia.id}>
+                    <td className="py-2 px-4">{materia.nombreMateria}</td>
+                    <td className="py-2 px-4">{materia.experiencia}</td>
+                    <td className="py-2 px-4">{materia.calificacion_alumno}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </section>
         </div>
-      )}
-      
+
+        {/* Clases */}
+        <section className="border rounded-md p-4 m-5">
+          <h2>Clases que dicta</h2>
+          <table>
+            <thead>
+              <tr>
+                <th className="py-2 px-4 text-green-700">Clase</th>
+                <th className="py-2 px-4 text-green-700">Materia</th>
+                <th className="py-2 px-4 text-green-700">Horario</th>
+              </tr>
+            </thead>
+            <tbody>
+              {clases.map((clase) => (
+                <tr key={clase.id}>
+                  <td className="py-2 px-4">{clase.dia_semana}</td>
+                  <td className="py-2 px-4">{clase.hora_inicio}</td>
+                  <td className="py-2 px-4">{clase.hora_fin}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </section>
+
+        {/* Horarios disponibles */}
+        <section className="border rounded-md p-4 m-5">
+          <h2>Horarios disponibles</h2>
+          <table>
+            <thead>
+              <tr>
+                <th className="py-2 px-4 text-green-700">Día</th>
+                <th className="py-2 px-4 text-green-700">Hora Inicio</th>
+                <th className="py-2 px-4 text-green-700">Hora Fin</th>
+              </tr>
+            </thead>
+            <tbody>
+              {horarios.map((horario) => (
+                <tr key={horario.id}>
+                  <td className="py-2 px-4">{horario.dia}</td>
+                  <td className="py-2 px-4">{horario.hora_inicio}</td>
+                  <td className="py-2 px-4">{horario.hora_fin}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </section>
+      </div>
     </div>
   );
-};
-
-export default VerProfesor;
+}

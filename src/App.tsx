@@ -15,7 +15,6 @@ import Register from './views/Register.tsx';
 //profesores
 import Profesores from './views/profesores/listaProfesores.tsx';
 import CrearProfesor from './views/profesores/CrearProfesor.tsx';
-import EditarProfesor from './views/profesores/EditProfesor.tsx';
 
 //clases
 import VisualizarClases from './views/clases/listaClases.tsx';
@@ -62,20 +61,22 @@ function App() {
                 <Route path="/register" element={<Register />} /> 
                 <Route path="/unauthorized" element={<Unauthorized />} />
 
+                {/* profesores */}
                 <Route path="/" element={
                     <ProtectedRoute allowedRoles={['admin', 'profesor']}>
                         <Profesores />
-                    </ProtectedRoute>
-                    } />
+                    </ProtectedRoute>} />
 
                 <Route path="/profesor/crear" element={<ProtectedRoute allowedRoles={['admin']}>
                     <CrearProfesor />
                     </ProtectedRoute>} />
 
-                <Route path="/profesor/editar/:id" element={<ProtectedRoute allowedRoles={['admin']}>
-                    <EditarProfesor />
+                <Route path="/profesor/perfil/:id" element={<ProtectedRoute allowedRoles={['admin', 'profesor']}>
+                    <Perfil />
                 </ProtectedRoute>} />
             
+
+                {/* materia */}
                 <Route path="/materias" element={<ProtectedRoute allowedRoles={['admin']}>
                     <VerMaterias />
                 </ProtectedRoute>} />
@@ -83,6 +84,12 @@ function App() {
                 <Route path="/materias/crear" element={<ProtectedRoute allowedRoles={['admin']}>
                     <CrearMateria />
                 </ProtectedRoute>} />
+                <Route path="/materias/editar/:id" element={<ProtectedRoute allowedRoles={['admin']}>
+                    <CrearMateria />
+                </ProtectedRoute>} />
+
+
+                {/* Profesor materia */}
 
                 <Route path="/profesormateria" element={<ProtectedRoute allowedRoles={['admin']}>
                     <VisualizarProfesorMateria />
@@ -92,16 +99,27 @@ function App() {
                 <ProtectedRoute allowedRoles={['admin']}>
                     <CrearProfesorMateria />
                 </ProtectedRoute>} />
+                <Route path="/profesor-materia/editar/:id" element={
+                <ProtectedRoute allowedRoles={['admin']}>
+                    <CrearProfesorMateria />
+                </ProtectedRoute>} />
 
+                    
+                {/* salones */}
                 <Route path="/salones" element={
                 <ProtectedRoute allowedRoles={['admin']}>
                     <VerSalones />
                 </ProtectedRoute>} />
 
-
                 <Route path="/salones/crear" element={<ProtectedRoute allowedRoles={['admin']}>
                     <CrearSalon />
                 </ProtectedRoute>} />
+
+                <Route path="/salones/new/:id" element={<ProtectedRoute allowedRoles={['admin']}>
+                    <CrearSalon />
+                </ProtectedRoute>} />
+
+
 
                 
                 <Route path="/vistahorariosdisponibles" element={<ProtectedRoute allowedRoles={['admin']}>
@@ -121,9 +139,6 @@ function App() {
                 </ProtectedRoute>} />
 
 
-                <Route path="/perfil" element={<ProtectedRoute allowedRoles={['admin']}>
-                    <Perfil />
-                </ProtectedRoute>} />
 
                 <Route path="/*" element={<ProtectedRoute>
                     <Error />

@@ -1,21 +1,23 @@
 import axios from 'axios';
 import { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import Navbar from '../../components/Navbar';
 import { host } from '../../data/server';
 import { Profesor, ProfesorMateria } from '../../interfaces/interfaces';
 
 export default function CrearProfesorMateria() {
+  const { id } = useParams<{ id: string }>(); // Obtener el ID de la URL
   const [profesorMateria, setProfesorMateria] = useState<ProfesorMateria>({
-    id: 0, // Cambia esto a un número, ya que id suele ser un número en las bases de datos
-    profesor_id: 0, // Cambiar a número
-    materia_id: 0, // Cambiar a número
-    calificacion_alumno: 0, // Cambiar a número
-    experiencia: '', // Inicialmente vacío
+    id: 0,
+    profesor_id: 0,
+    materia_id: 0,
+    calificacion_alumno: 0,
+    experiencia: '',
   });
 
   const [mensaje, setMensaje] = useState<string>('');
-  const [materias, setMaterias] = useState<{ id: number; nombre: string }[]>([]); // Tipar el estado de materias
-  const [profesores, setProfesores] = useState<Profesor[]>([]); // Tipar el estado de profesores
+  const [materias, setMaterias] = useState<{ id: number; nombre: string }[]>([]);
+  const [profesores, setProfesores] = useState<Profesor[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -27,42 +29,51 @@ export default function CrearProfesorMateria() {
 
         setMaterias(materiasResponse.data);
         setProfesores(profesoresResponse.data);
+
+        // Si hay un ID, cargar los datos existentes
+        if (id) {
+          const response = await axios.get(`${host}/profesor_materia/${id}`);
+          setProfesorMateria(response.data);
+        }
       } catch (error) {
         console.error('Error al cargar datos:', error);
       }
     };
 
     fetchData();
-  }, []);
+  }, [id]);
 
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) => {
     const { name, value } = e.target;
     setProfesorMateria((prevState) => ({
       ...prevState,
-      [name]: name === 'calificacion_alumno' ? Number(value) : value, // Convierte la calificación a número
+      [name]: name === 'calificacion_alumno' ? Number(value) : value,
     }));
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-  
+
     try {
-      const response = await axios.post(`${host}/profesor_materia`, profesorMateria);
-      console.log('Respuesta del servidor:', response.data);
-      
+      if (id) {
+        await axios.put(`${host}/profesor_materia/${id}`, profesorMateria);
+        setMensaje('Profesor y materia actualizados exitosamente');
+      } else {
+        await axios.post(`${host}/profesor_materia`, profesorMateria);
+        setMensaje('Profesor y materia asociados exitosamente');
+      }
+
       // Restablecer el formulario
       setProfesorMateria({
-        id: 0, // Restablecer a un valor inicial
+        id: 0,
         profesor_id: 0,
         materia_id: 0,
         calificacion_alumno: 0,
         experiencia: '',
       });
-      setMensaje('Profesor y materia asociados exitosamente');
     } catch (error: any) {
       console.error('Error al enviar los datos:', error);
       if (error.response) {
-        console.error('Respuesta del servidor:', error.response.data);
         setMensaje(`Error: ${error.response.data.message || 'Error al enviar los datos'}`);
       } else {
         setMensaje('Error al enviar los datos');
@@ -78,7 +89,7 @@ export default function CrearProfesorMateria() {
       <Navbar />
       <div className="relative min-h-screen flex flex-col items-center pt-32">
         <div className="w-full max-w-md p-6 bg-white bg-opacity-70 backdrop-filter backdrop-blur-lg rounded-lg shadow-md">
-          <h2 className="text-2xl font-bold text-green-700 mb-6 text-center">Crear Profesor-Materia</h2>
+          <h2 className="text-2xl font-bold text-green-700 mb-6 text-center">{id ? 'Editar Profesor-Materia' : 'Crear Profesor-Materia'}</h2>
 
           {mensaje && (
             <div className={`mb-4 p-4 text-center text-white rounded ${mensaje.includes('Error') ? 'bg-red-500' : 'bg-green-500'}`}>
@@ -160,7 +171,7 @@ export default function CrearProfesorMateria() {
                 type="submit"
                 className="w-full bg-green-700 hover:bg-green-800 text-white font-bold py-2 px-4 rounded transition duration-300"
               >
-                Guardar
+                {id ? 'Actualizar' : 'Guardar'}
               </button>
             </div>
           </form>
