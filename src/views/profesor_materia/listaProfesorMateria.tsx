@@ -72,11 +72,11 @@ export default function VisualizarProfesorMateria() {
                 {profesorMaterias.length > 0 ? (
                   profesorMaterias.map((profesorMateria) => (
                     <tr key={profesorMateria.id}>
-                      <td className="py-2 px-4 border-b">{profesorMateria.id}</td>
-                      <td className="py-2 px-4 border-b">{profesorMateria.profesor_id}</td>
-                      <td className="py-2 px-4 border-b">{profesorMateria.materia_id}</td>
-                      <td className="py-2 px-4 border-b">{profesorMateria.experiencia}</td>
-                      <td className="py-2 px-4 border-b">{profesorMateria.calificacion_alumno}</td>
+                      <td className="py-2 px-4 border-b text-center">{profesorMateria.id}</td>
+                      <td className="py-2 px-4 border-b text-center">{profesorMateria.profesor_id}</td>
+                      <td className="py-2 px-4 border-b text-center">{profesorMateria.materia_id}</td>
+                      <td className="py-2 px-4 border-b text-center">{profesorMateria.experiencia}</td>
+                      <td className="py-2 px-4 border-b text-center">{profesorMateria.calificacion_alumno}</td>
                       <td className="py-2 px-4 border-b text-center">
                         <Link
                           to={`/profesor_materia/editar/${profesorMateria.id}`}
