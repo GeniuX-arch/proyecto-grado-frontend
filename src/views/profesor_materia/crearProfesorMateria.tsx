@@ -2,7 +2,7 @@ import axios from 'axios';
 import { useState, useEffect } from 'react';
 import Navbar from '../../components/Navbar';
 import { host } from '../../data/server';
-import { ProfesorMateria } from '../../interfaces/interfaces';
+import { Profesor, ProfesorMateria } from '../../interfaces/interfaces';
 
 export default function CrearProfesorMateria() {
   const [profesorMateria, setProfesorMateria] = useState<ProfesorMateria>({
@@ -15,7 +15,7 @@ export default function CrearProfesorMateria() {
 
   const [mensaje, setMensaje] = useState<string>('');
   const [materias, setMaterias] = useState<{ id: number; nombre: string }[]>([]); // Tipar el estado de materias
-  const [profesores, setProfesores] = useState<{ cedula: number; nombre: string }[]>([]); // Tipar el estado de profesores
+  const [profesores, setProfesores] = useState<Profesor[]>([]); // Tipar el estado de profesores
 
   useEffect(() => {
     const fetchData = async () => {
@@ -100,7 +100,7 @@ export default function CrearProfesorMateria() {
               >
                 <option value={0}>Seleccione un profesor</option>
                 {profesores.map((profesor) => (
-                  <option key={profesor.cedula} value={profesor.cedula}>
+                  <option key={profesor.id} value={profesor.id}>
                     {profesor.nombre}
                   </option>
                 ))}

@@ -65,6 +65,8 @@ export default function CrearClase() {
     }
 
     try {
+      console.log(clase);
+      
       await axios.post(`${host}/clases`, clase);
       setClase({
         grupo: '',
@@ -126,6 +128,7 @@ export default function CrearClase() {
                 className="w-full px-3 py-2 border border-green-300 rounded focus:outline-none focus:border-green-500"
                 required
               >
+                <option value="">Selecciona un dia</option>
                 <option value="lunes">Lunes</option>
                 <option value="martes">Martes</option>
                 <option value="miercoles">Miércoles</option>
@@ -146,6 +149,7 @@ export default function CrearClase() {
                 className="w-full px-3 py-2 border border-green-300 rounded focus:outline-none focus:border-green-500"
                 required
               >
+                <option value="">Selecciona una hora</option>
                 <option value="06:00">6:00 AM</option>
                 <option value="06:45">6:45 AM</option>
                 <option value="07:30">7:30 AM</option>
@@ -177,6 +181,7 @@ export default function CrearClase() {
                 className="w-full px-3 py-2 border border-green-300 rounded focus:outline-none focus:border-green-500"
                 required
               >
+                <option value="">Selecciona una hora</option>
                 <option value="06:00">6:00 AM</option>
                 <option value="06:45">6:45 AM</option>
                 <option value="07:30">7:30 AM</option>

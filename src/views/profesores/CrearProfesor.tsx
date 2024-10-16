@@ -36,42 +36,37 @@ export default function CrearProfesor() {
     }
 
 
- const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
 
-    if (file) {
-      setImage(file);
-      setFileName(file.name);
-
-      // Crear vista previa de la imagen
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImagePreview(reader.result as string);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-
-
+ 
     setProfesor(prevState => ({
       ...prevState,
       [name]: value,
     }));
   };
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files.length > 0) {
-      const selectedImage = e.target.files[0];
-      setImage(selectedImage); // Set the selected image
-      setImagePreview(URL.createObjectURL(selectedImage)); // Create a preview URL
-    }
-  };
+ 
   const handleRemoveImages = () => {
   setImage(null);
   setImagePreview(null);
   setFileName(""); // Si 'setFileName' es necesario, asegúrate de tenerlo definido en el state.
 };
+   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const file = e.target.files?.[0];
+
+  if (file) {
+    setImage(file);
+    setFileName(file.name);
+
+    // Crear vista previa de la imagen
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setImagePreview(reader.result as string);
+    };
+    reader.readAsDataURL(file);
+  }
+};
+
+
 
 
 

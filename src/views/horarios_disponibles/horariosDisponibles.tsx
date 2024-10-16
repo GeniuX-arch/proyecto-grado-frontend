@@ -9,12 +9,12 @@ import { Profesor, HorarioDisponible } from '../../interfaces/interfaces';
 export default function CrearHorarioDisponible() {
   // Tipado del estado para el formulario del horario
   const [horarioDisponible, setHorarioDisponible] = useState<HorarioDisponible>({
-    id: '',
     dia: '',
     hora_inicio: '',
     hora_fin: '',
     profesor_id: '',
   });
+  
 
 
   const [mensaje, setMensaje] = useState<string>('');
@@ -59,7 +59,13 @@ export default function CrearHorarioDisponible() {
 
 
     try {
-      const response = await axios.post(`${host}/horarios_disponibles`, horarioDisponible);
+      const horarioData = {
+    ...horarioDisponible,
+    profesor_id: Number(horarioDisponible.profesor_id),
+      };
+      console.log(horarioData);
+      
+      const response = await axios.post(`${host}/horarios_disponibles`, horarioData);
       console.log('Horario creado con éxito:', response.data);
       setMensaje('Horario creado con éxito.');
       // Restablecer el formulario si es necesario
@@ -106,6 +112,7 @@ export default function CrearHorarioDisponible() {
                 className="w-full px-3 py-2 border border-green-300 rounded focus:outline-none focus:border-green-500"
                 required
               >
+                <option value="">Selecciona una opcion</option>
                 <option value="lunes">Lunes</option>
                 <option value="martes">Martes</option>
                 <option value="miercoles">Miércoles</option>
@@ -126,6 +133,7 @@ export default function CrearHorarioDisponible() {
                 className="w-full px-3 py-2 border border-green-300 rounded focus:outline-none focus:border-green-500"
                 required
               >
+                <option value="">Selecciona una opcion</option>
                 <option value="06:00">6:00 AM</option>
                 <option value="06:45">6:45 AM</option>
                 <option value="07:30">7:30 AM</option>
@@ -157,6 +165,7 @@ export default function CrearHorarioDisponible() {
                 className="w-full px-3 py-2 border border-green-300 rounded focus:outline-none focus:border-green-500"
                 required
               >
+                <option value="">Selecciona una opcion</option>
                 <option value="06:00">6:00 AM</option>
                 <option value="06:45">6:45 AM</option>
                 <option value="07:30">7:30 AM</option>

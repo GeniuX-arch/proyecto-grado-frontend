@@ -10,7 +10,7 @@ export interface Profesor {
 }
 
 export interface HorarioDisponible {
-  id: string;
+  id?: string;
   dia: string;
   hora_inicio: string;
   hora_fin: string;

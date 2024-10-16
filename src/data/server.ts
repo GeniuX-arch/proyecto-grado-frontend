@@ -1,2 +1,2 @@
-export const hostImg = 'https://proyectgradebackend-production.up.railway.app'
+export const hostImg = 'http://localhost:8000'
 export const host = hostImg+'/api'
