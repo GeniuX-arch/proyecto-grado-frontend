@@ -74,6 +74,7 @@ export default function VerMaterias() {
                   <th className="border border-gray-300 px-4 py-2 text-green-700">Código</th>
                   <th className="border border-gray-300 px-4 py-2 text-green-700">Nombre</th>
                   <th className="border border-gray-300 px-4 py-2 text-green-700">Alumnos</th>
+                  <th className="border border-gray-300 px-4 py-2 text-green-700">Bloques</th>
                   <th className="border border-gray-300 px-4 py-2 text-green-700">Acciones</th>
                 </tr>
               </thead>
@@ -84,6 +85,8 @@ export default function VerMaterias() {
                       <td className="border border-gray-300 px-4 py-2 text-center">{materia.codigo}</td>
                       <td className="border border-gray-300 px-4 py-2 text-center">{materia.nombre}</td>
                       <td className="border border-gray-300 px-4 py-2 text-center">{materia.alumnos}</td>
+                      <td className="border border-gray-300 px-4 py-2 text-center">{materia.bloques}</td>
+
                       <td className="border border-gray-300 px-4 py-2 flex flex-row justify-center items-center">
                         <Link
                           to={`/materias/editar/${materia.id}`}
