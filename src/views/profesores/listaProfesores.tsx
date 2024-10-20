@@ -41,7 +41,8 @@ export default function Profesores() {
   return (
     <>
       <Navbar />
-      <div className="min-h-screen flex flex-col items-center pt-24 bg-cover bg-center bg-no-repeat" style={{
+      <div  className="min-h-screen flex flex-col items-center pt-24 bg-cover bg-center bg-no-repeat pl-4 md:pl-16 lg:pl-52 pr-6"
+ style={{
       }}>
         <div className="w-full max-w-screen-xl mb-8 flex flex-col lg:flex-row justify-between items-center bg-opacity-80 backdrop-filter backdrop-blur-lg p-6 rounded-lg shadow-lg">
           <h2 className="text-4xl font-bold text-white mb-4 lg:mb-0">Gestión de Profesores</h2>

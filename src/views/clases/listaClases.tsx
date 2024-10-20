@@ -60,7 +60,7 @@ interface Horario {
     <>
 
       <Navbar />
-      <div className="relative min-h-screen  pt-28">
+      <div className="bg-zinc-900 relative min-h-screen  pt-28 pl-4 md:pl-16 lg:pl-52 pr-6">
         <Link
               to="/clases"
               className="bg-green-600 absolute ml-10 mt-2 text-white font-semibold px-6 py-3 rounded-lg hover:bg-green-700 transition-all duration-300"

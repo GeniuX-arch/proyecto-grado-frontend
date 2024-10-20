@@ -10,7 +10,7 @@ const SelectLanguage = ({ onSelect, value }) => {
   };
 
   return (
-    <div className="flex-auto flex flex-col items-center">
+    <div className="flex-auto flex flex-col items-center pl-4 md:pl-16 lg:pl-52 pr-6">
       <div className="relative w-full min-w-[200px]">
         <input
           value={value}

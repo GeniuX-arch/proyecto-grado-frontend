@@ -135,7 +135,7 @@ export default function CrearProfesor() {
   };
 
   return (
-    <div className="min-h-screen bg-cover bg-center bg-no-repeat">
+    <div className="min-h-screen bg-cover bg-center bg-no-repeat pl-4 md:pl-16 lg:pl-52 pr-6">
       <Navbar />
       <div className="relative min-h-screen flex flex-col items-center pt-32">
         <div className="w-full max-w-md p-6 bg-white bg-opacity-70 backdrop-filter backdrop-blur-lg rounded-lg shadow-md">

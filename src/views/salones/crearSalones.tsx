@@ -83,7 +83,7 @@ export default function CrearSalon() {
 
   return (
     <div
-      className="min-h-screen bg-cover bg-center bg-no-repeat"
+      className="min-h-screen bg-cover bg-center bg-no-repeat pl-4 md:pl-16 lg:pl-52 "
       style={{ /* Estilo de fondo personalizado si es necesario */ }}
     >
       <Navbar />
