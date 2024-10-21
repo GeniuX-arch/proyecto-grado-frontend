@@ -4,6 +4,7 @@ import axios from 'axios';
 import Navbar from '../../components/Navbar';
 import { host, hostImg } from '../../data/server';
 import { Triangle } from 'react-loader-spinner';
+import { obtenerProfesor } from '../../data/profesores.conexion';
 
 export default function VerProfesor() {
   const { id } = useParams();
@@ -11,6 +12,7 @@ export default function VerProfesor() {
   const [materias, setMaterias] = useState([]);
   const [horarios, setHorarios] = useState([]);
   const [clases, setClases] = useState([]);
+  const [newImage, setNewImage] = useState(null);
 
   const obtenerNombreMateria = async (materiaId) => {
     try {
@@ -71,10 +73,34 @@ export default function VerProfesor() {
     obtenerClases();
   }, [id]);
 
+
   if (!profesor) {
     return <div className='flex flex-col items-center justify-center h-screen'><Triangle /> <p>Cargando...</p></div>;
   }
 
+  const handleImageChange = (e) => {
+    setNewImage(e.target.files[0]);
+  };
+
+  const handleImageUpload = async () => {
+    if (!newImage) return; // No hacer nada si no hay imagen
+
+    const formData = new FormData();
+    formData.append('image_path', newImage);
+
+    try {
+      await axios.post(`${host}/profesores/${id}/update-image`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      // Recargar la información del profesor después de la actualización
+      obtenerProfesor();
+    } catch (error) {
+      console.error('Error al actualizar la imagen:', error);
+    }
+  };
+  
   return (
     <div>
       <Navbar />
@@ -93,6 +119,14 @@ export default function VerProfesor() {
                 <p className='font-semibold'>Cédula:</p>
                 <p>{profesor.cedula}</p>
               </div>
+              {/* Input para seleccionar nueva imagen */}
+              <input type="file" onChange={handleImageChange} className="mt-4" />
+              <button
+                onClick={handleImageUpload}
+                className="mt-2 bg-green-600 text-white px-4 py-2 rounded-md"
+              >
+                Actualizar Imagen
+              </button>
             </div>
           </section>
 

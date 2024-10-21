@@ -5,7 +5,6 @@ import { Profesor } from '../../interfaces/interfaces';
 import { useEffect, useState } from 'react';
 import { hostImg } from '../../data/server';
 
-
 export default function Profesores() {
   const [profesores, setProfesores] = useState<Profesor[]>([]);
   const [searchTerm, setSearchTerm] = useState<string>('');
@@ -34,18 +33,18 @@ export default function Profesores() {
     }
   };
 
-  const filteredProfesores = profesores.filter(profe =>
-    profe.nombre.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredProfesores = profesores
+    .filter(profe =>
+      profe.nombre.toLowerCase().includes(searchTerm.toLowerCase())
+    )
+    .sort((a, b) => a.nombre.localeCompare(b.nombre)); // Ordenar alfabéticamente
 
   return (
     <>
       <Navbar />
-      <div  className="min-h-screen flex flex-col items-center pt-24 bg-cover bg-center bg-no-repeat pl-4 md:pl-16 lg:pl-52 pr-6"
- style={{
-      }}>
-        <div className="w-full max-w-screen-xl mb-8 flex flex-col lg:flex-row justify-between items-center bg-opacity-80 backdrop-filter backdrop-blur-lg p-6 rounded-lg shadow-lg">
-          <h2 className="text-4xl font-bold text-white mb-4 lg:mb-0">Gestión de Profesores</h2>
+      <div className="min-h-screen flex flex-col items-center pt-24 bg-cover bg-center bg-no-repeat pl-4 md:pl-16 lg:pl-52 pr-6">
+        <div className="w-full max-w-screen-xl bg-gray-400 mb-5 flex flex-col lg:flex-row justify-between items-center bg-opacity-80 backdrop-filter backdrop-blur-lg p-6 rounded-lg shadow-lg">
+          <h2 className="text-4xl font-bold text-cyan-700 mb-4 lg:mb-0">Gestión de Profesores</h2>
           <div className="flex flex-col lg:flex-row gap-4 items-center">
             <input
               type="text"
@@ -67,7 +66,7 @@ export default function Profesores() {
                 {/* Aquí se muestra la imagen del profesor */}
                 {profe.image_path ? (
                   <img
-                    src={hostImg+profe.image_path} // Utiliza la URL de la imagen desde el objeto profesor
+                    src={hostImg + profe.image_path} // Utiliza la URL de la imagen desde el objeto profesor
                     alt="Perfil"
                     className="h-28 w-28 rounded-full border-4 border-green-600 mb-4"
                   />
@@ -94,22 +93,20 @@ export default function Profesores() {
                       className="bg-blue-600 text-white flex flex-row gap-2 items-center justify-center font-semibold px-5 py-2 rounded-lg hover:bg-blue-700 transition-all duration-300 w-full text-center"
                     >
                       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-pencil" viewBox="0 0 16 16">
-  <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325"/>
-</svg>
+                        <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325"/>
+                      </svg>
                     </Link>
                     <button
                       onClick={() => handleDelete(profe.id)}
                       className="bg-red-600 text-white font-semibold px-5 flex flex-row gap-2 items-center justify-center py-2 rounded-lg hover:bg-red-700 transition-all duration-300 w-full text-center"
                     >
                       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-trash3" viewBox="0 0 16 16">
-  <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5"/>
-</svg>
+                        <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47Z"/>
+                      </svg>
                     </button>
-
                   </div>
                 </div>
               </div>
-              
             </div>
           ))}
         </div>

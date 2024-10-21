@@ -65,7 +65,7 @@ export default function Login() {
           {error && <p className="text-red-500">{error}</p>}
           <button
             type="submit"
-            className="w-full py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-300"
+            className="w-full py-3 bg-lime-600 text-white rounded-lg hover:bg-blue-400 transition duration-300"
             disabled={loading}
           >
             iniciar
@@ -73,7 +73,7 @@ export default function Login() {
           <button
             type="button"
             onClick={handleRegister}
-            className="w-full py-3 border border-blue-600 text-blue-600 rounded-lg hover:bg-blue-600 hover:text-white transition duration-300"
+            className="w-full py-3 border border-blue-600 text-blue-600 rounded-lg hover:bg-lime-600 hover:text-white transition duration-300"
           >
             registrarse
           </button>
