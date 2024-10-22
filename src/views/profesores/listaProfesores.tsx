@@ -102,8 +102,8 @@ export default function Profesores() {
                 </button>
 
                 <section className="border rounded-md p-4 m-5 flex flex-col items-center w-2/3 bg-white shadow-lg">
-                  <h1 className='text-xl font-bold'>Materias que dicta</h1>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
+                 
+                  
                     {materias.map((materia) => (
                       <div key={materia.id} className="border rounded-md p-2 shadow-sm bg-gray-100">
                         <h3 className="font-semibold">{materia.nombre}</h3>
@@ -111,7 +111,7 @@ export default function Profesores() {
                         <p>Calificación Alumno: {materia.calificacion_alumno}</p>
                       </div>
                     ))}
-                  </div>
+                 
                 </section>
 
                 <div className="flex gap-4 w-full">
