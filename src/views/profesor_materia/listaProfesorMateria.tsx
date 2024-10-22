@@ -12,12 +12,25 @@ export default function VisualizarProfesorMateria() {
   const [mensaje, setMensaje] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
+  const [profesores, setProfesores] = useState([]);
+  const [materias, setMaterias] = useState([]);
+  
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
       try {
-        const response = await axios.get<ProfesorMateria[]>(`${host}/profesor_materia`);
-        setProfesorMaterias(response.data);
+        // Obtener las relaciones profesor-materia
+        const responseProfesorMateria = await axios.get<ProfesorMateria[]>(`${host}/profesor_materia`);
+        setProfesorMaterias(responseProfesorMateria.data);
+        
+        // Obtener los profesores
+        const responseProfesores = await axios.get(`${host}/profesores`);
+        setProfesores(responseProfesores.data);
+        
+        // Obtener las materias
+        const responseMaterias = await axios.get(`${host}/materias`);
+        setMaterias(responseMaterias.data);
+        
       } catch (error) {
         console.error('Error al cargar datos:', error);
         setMensaje('Error al cargar los datos');
@@ -28,6 +41,20 @@ export default function VisualizarProfesorMateria() {
     fetchData();
   }, []);
 
+
+  // Función para obtener el nombre del profesor
+const getProfesorNombre = (profesor_id: number) => {
+  const profesor = profesores.find(p => p.id === profesor_id);
+  return profesor ? profesor.nombre : 'Desconocido';
+};
+
+// Función para obtener el nombre de la materia
+const getMateriaNombre = (materia_id: number) => {
+  const materia = materias.find(m => m.id === materia_id);
+  return materia ? materia.nombre : 'Desconocido';
+};
+
+  
   const handleDelete = async (id: number) => {
     if (window.confirm('¿Estás seguro de que deseas eliminar esta relación profesor-materia?')) {
       try {
@@ -51,7 +78,7 @@ export default function VisualizarProfesorMateria() {
               <h2 className="text-3xl font-bold text-indigo-900">Visualizar Profesor-Materia</h2>
               <Link 
                 to="/profesormateria/crear" 
-                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out"
+                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-gray-800 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out"
               >
                 <PlusIcon className="-ml-1 mr-2 h-5 w-5" aria-hidden="true" />
                 Crear Profesor-Materia
@@ -95,45 +122,47 @@ export default function VisualizarProfesorMateria() {
                             </th>
                           </tr>
                         </thead>
-                        <tbody className="divide-y divide-gray-200 bg-white">
-                          {profesorMaterias.length > 0 ? (
-                            profesorMaterias.map((profesorMateria) => (
-                              <motion.tr 
-                                key={profesorMateria.id}
-                                initial={{ opacity: 0 }}
-                                animate={{ opacity: 1 }}
-                                exit={{ opacity: 0 }}
-                                transition={{ duration: 0.3 }}
-                              >
-                                <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">{profesorMateria.id}</td>
-                                <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{profesorMateria.profesor_id}</td>
-                                <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{profesorMateria.materia_id}</td>
-                                <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{profesorMateria.experiencia}</td>
-                                <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{profesorMateria.calificacion_alumno}</td>
-                                <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                                  <Link
-                                    to={`/profesor-materia/editar/${profesorMateria.id}`}
-                                    className="text-indigo-600 hover:text-indigo-900 mr-4 transition duration-150 ease-in-out"
-                                  >
-                                    <PencilIcon className="h-5 w-5 inline-block" aria-hidden="true" />
-                                    <span className="sr-only">Editar</span>
-                                  </Link>
-                                  <button
-                                    onClick={() => handleDelete(profesorMateria.id)}
-                                    className="text-red-600 hover:text-red-900 transition duration-150 ease-in-out"
-                                  >
-                                    <TrashIcon className="h-5 w-5 inline-block" aria-hidden="true" />
-                                    <span className="sr-only">Eliminar</span>
-                                  </button>
-                                </td>
-                              </motion.tr>
-                            ))
-                          ) : (
-                            <tr>
-                              <td colSpan={6} className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">No hay datos disponibles</td>
-                            </tr>
-                          )}
-                        </tbody>
+                            <tbody className="divide-y divide-gray-200 bg-white">
+                                  {profesorMaterias.length > 0 ? (
+                                    profesorMaterias.map((profesorMateria) => (
+                                      <motion.tr 
+                                        key={profesorMateria.id}
+                                        initial={{ opacity: 0 }}
+                                        animate={{ opacity: 1 }}
+                                        exit={{ opacity: 0 }}
+                                        transition={{ duration: 0.3 }}
+                                      >
+                                        <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">{profesorMateria.id}</td>
+                                        {/* Mostrar nombre del profesor */}
+                                        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{getProfesorNombre(profesorMateria.profesor_id)}</td>
+                                        {/* Mostrar nombre de la materia */}
+                                        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{getMateriaNombre(profesorMateria.materia_id)}</td>
+                                        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{profesorMateria.experiencia}</td>
+                                        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{profesorMateria.calificacion_alumno}</td>
+                                        <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
+                                          <Link
+                                            to={`/profesor-materia/editar/${profesorMateria.id}`}
+                                            className="text-indigo-600 hover:text-indigo-900 mr-4 transition duration-150 ease-in-out"
+                                          >
+                                            <PencilIcon className="h-5 w-5 inline-block" aria-hidden="true" />
+                                            <span className="sr-only">Editar</span>
+                                          </Link>
+                                          <button
+                                            onClick={() => handleDelete(profesorMateria.id)}
+                                            className="text-red-600 hover:text-red-900 transition duration-150 ease-in-out"
+                                          >
+                                            <TrashIcon className="h-5 w-5 inline-block" aria-hidden="true" />
+                                            <span className="sr-only">Eliminar</span>
+                                          </button>
+                                        </td>
+                                      </motion.tr>
+                                    ))
+                                  ) : (
+                                    <tr>
+                                      <td colSpan={6} className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">No hay datos disponibles</td>
+                                    </tr>
+                                  )}
+                            </tbody>
                       </table>
                     </div>
                   </div>

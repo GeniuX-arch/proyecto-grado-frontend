@@ -28,6 +28,10 @@ react-loader-spinner: Proporciona una variedad de spinners de carga personalizab
 react-router-dom: Biblioteca para manejar el enrutamiento en aplicaciones React.
 
 
+npm install lucide-react
+npm install @radix-ui/react-alert-dialog
+
+
 npm run dev
 
 Disfruta

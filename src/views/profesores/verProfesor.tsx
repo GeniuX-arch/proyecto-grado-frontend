@@ -4,113 +4,116 @@ import axios from 'axios';
 import Navbar from '../../components/Navbar';
 import { host, hostImg } from '../../data/server';
 import { Triangle } from 'react-loader-spinner';
-import { obtenerProfesor } from '../../data/profesores.conexion';
+
+interface Profesor {
+  id?: number;
+  tipo_cedula: string;
+  cedula: string;
+  nombre: string;
+  tipo_contrato: string;
+  estado: string;
+  image_path?: string;
+}
 
 export default function VerProfesor() {
-  const { id } = useParams();
-  const [profesor, setProfesor] = useState(null);
+  const { id } = useParams<{ id: string }>();
+  const [profesor, setProfesor] = useState<Profesor | null>(null);
   const [materias, setMaterias] = useState([]);
   const [horarios, setHorarios] = useState([]);
   const [clases, setClases] = useState([]);
-  const [newImage, setNewImage] = useState(null);
+  const [newImage, setNewImage] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null); // Nuevo estado para la vista previa
 
-  const obtenerNombreMateria = async (materiaId) => {
+  const obtenerProfesor = async () => {
     try {
-      const response = await axios.get(`${host}/materias/${materiaId}`);
-      return response.data.nombre;
+      const response = await axios.get(`${host}/profesores/${id}`);
+      setProfesor(response.data);
+      setImagePreview(response.data.image_path ? hostImg + response.data.image_path : null); // Actualizar vista previa
     } catch (error) {
-      console.error('Error al obtener el nombre de la materia:', error);
-      return 'Desconocido';
+      console.error('Error al obtener profesor:', error);
+    }
+  };
+
+  const obtenerMaterias = async () => {
+    try {
+      const response = await axios.get(`${host}/profesor_materia?profesor_id=${id}`);
+      setMaterias(response.data);
+    } catch (error) {
+      console.error('Error al obtener materias:', error);
+    }
+  };
+
+  const obtenerHorarios = async () => {
+    try {
+      const response = await axios.get(`${host}/horarios_disponibles?profesor_id=${id}`);
+      setHorarios(response.data);
+    } catch (error) {
+      console.error('Error al obtener horarios:', error);
+    }
+  };
+
+  const obtenerClases = async () => {
+    try {
+      const response = await axios.get(`${host}/clases?profesor_id=${id}`);
+      setClases(response.data);
+    } catch (error) {
+      console.error('Error al obtener clases:', error);
     }
   };
 
   useEffect(() => {
-    const obtenerProfesor = async () => {
-      try {
-        const response = await axios.get(`${host}/profesores/${id}`);
-        setProfesor(response.data);
-      } catch (error) {
-        console.error('Error al obtener profesor:', error);
-      }
-    };
-
-    const obtenerMaterias = async () => {
-      try {
-        const response = await axios.get(`${host}/profesor_materia?profesor_id=${id}`);
-        const materiasConNombre = await Promise.all(
-          response.data.map(async (materia) => {
-            const nombreMateria = await obtenerNombreMateria(materia.materia_id);
-            return { ...materia, nombreMateria };
-          })
-        );
-        setMaterias(materiasConNombre);
-      } catch (error) {
-        console.error('Error al obtener materias:', error);
-      }
-    };
-
-    const obtenerHorarios = async () => {
-      try {
-        const response = await axios.get(`${host}/horarios_disponibles?profesor_id=${id}`);
-        setHorarios(response.data);
-      } catch (error) {
-        console.error('Error al obtener horarios:', error);
-      }
-    };
-
-    const obtenerClases = async () => {
-      try {
-        const response = await axios.get(`${host}/clases?profesor_id=${id}`);
-        setClases(response.data);
-      } catch (error) {
-        console.error('Error al obtener clases:', error);
-      }
-    };
-
     obtenerProfesor();
     obtenerMaterias();
     obtenerHorarios();
     obtenerClases();
   }, [id]);
 
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      setNewImage(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result as string); 
+      };
+      reader.readAsDataURL(file); // Leer la imagen seleccionada
+    }
+  };
+
+  const handleImageUpload = async () => {
+    if (!newImage) return;
+
+    const formData = new FormData();
+    formData.append('image', newImage);
+
+    try {
+      await axios.put(`${host}/profesores/${id}`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      await obtenerProfesor(); // Actualizar profesor después de la carga
+      setNewImage(null); // Limpiar el archivo cargado
+      setImagePreview(null); // Limpiar la vista previa
+    } catch (error) {
+      console.error('Error al actualizar la imagen:', error);
+    }
+  };
 
   if (!profesor) {
     return <div className='flex flex-col items-center justify-center h-screen'><Triangle /> <p>Cargando...</p></div>;
   }
 
-  const handleImageChange = (e) => {
-    setNewImage(e.target.files[0]);
-  };
-
-  const handleImageUpload = async () => {
-    if (!newImage) return; // No hacer nada si no hay imagen
-
-    const formData = new FormData();
-    formData.append('image_path', newImage);
-
-    try {
-      await axios.post(`${host}/profesores/${id}/update-image`, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-      // Recargar la información del profesor después de la actualización
-      obtenerProfesor();
-    } catch (error) {
-      console.error('Error al actualizar la imagen:', error);
-    }
-  };
-  
   return (
     <div>
       <Navbar />
-      <div className='pt-16 pl-4 md:pl-16 lg:pl-52 pr-6 '>
+      <div className='pt-16 pl-4 md:pl-16 lg:pl-52 pr-6'>
         <div className="flex flex-row">
           {/* Información del profesor */}
           <section className="border rounded-md p-4 m-5 flex flex-col items-center w-1/3 bg-white shadow-lg">
             <div className='flex flex-col justify-center items-center'>
               <img
-                src={profesor.image_path ? hostImg + profesor.image_path : "/perfil.png"}
+                src={imagePreview || (profesor.image_path ? hostImg + profesor.image_path : "/perfil.png")}
                 alt="Perfil"
                 className="h-28 w-28 rounded-full border-4 border-green-600 mb-4"
               />
@@ -119,7 +122,6 @@ export default function VerProfesor() {
                 <p className='font-semibold'>Cédula:</p>
                 <p>{profesor.cedula}</p>
               </div>
-              {/* Input para seleccionar nueva imagen */}
               <input type="file" onChange={handleImageChange} className="mt-4" />
               <button
                 onClick={handleImageUpload}
@@ -136,7 +138,7 @@ export default function VerProfesor() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
               {materias.map((materia) => (
                 <div key={materia.id} className="border rounded-md p-2 shadow-sm bg-gray-100">
-                  <h3 className="font-semibold">{materia.nombreMateria}</h3>
+                  <h3 className="font-semibold">{materia.nombre}</h3>
                   <p>Experiencia: {materia.experiencia}</p>
                   <p>Calificación Alumno: {materia.calificacion_alumno}</p>
                 </div>

@@ -109,7 +109,7 @@ export default function Navbar() {
 
   const menuItems = [
     { to: '/', label: 'Profesores', icon: UsersIcon },
-    { to: '/clases', label: 'Clases', icon: BookOpenIcon },
+    { to: '/vistaClases', label: 'Clases', icon: BookOpenIcon },
     {
       title: 'Gestión',
       icon: AcademicCapIcon,
