@@ -110,7 +110,7 @@ export default function VerMaterias() {
                   >
                     <div className="p-6">
                       <div className="flex justify-between items-start mb-4">
-                        <h3 className="text-xl font-semibold text-white">{materia.nombre}</h3>
+                        <h3 className="text-xl font-semibold text-gray-900">{materia.nombre}</h3>
                         <span className="px-3 py-1 bg-white/20 rounded-full text-sm text-white">
                           {materia.codigo}
                         </span>
