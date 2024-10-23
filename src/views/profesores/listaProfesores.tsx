@@ -42,18 +42,18 @@ export default function Profesores() {
   return (
     <>
       <Navbar />
-      <div className="min-h-screen flex flex-col items-center pt-24 bg-cover bg-center bg-no-repeat pl-4 md:pl-16 lg:pl-52 pr-6">
-        <div className="w-full max-w-screen-xl bg-gray-400 mb-5 flex flex-col lg:flex-row justify-between items-center bg-opacity-80 backdrop-filter backdrop-blur-lg p-6 rounded-lg shadow-lg">
-          <h2 className="text-4xl font-bold text-cyan-700 mb-4 lg:mb-0">Gestión de Profesores</h2>
+      <div className="bg-gray-900 min-h-screen flex flex-col items-center pt-24 bg-cover bg-center bg-no-repeat pl-4 md:pl-16 lg:pl-52 pr-6">
+        <div className="w-full max-w-screen-xl bg-gray-800 mb-5 flex  flex-col lg:flex-row justify-between items-center  backdrop-filter backdrop-blur-lg p-6 rounded-lg shadow-lg">
+          <h2 className="text-4xl font-bold text-white mb-4 lg:mb-0">Gestión de Profesores</h2>
           <div className="flex flex-col lg:flex-row gap-4 items-center">
             <input
               type="text"
               placeholder="Buscar por nombre..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="bg-gray-800 text-white px-4 py-2 rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-green-500 transition-all duration-300"
+              className="bg-white text-gray-800 px-4 py-2 rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-green-500 transition-all duration-300"
             />
-            <Link to="/profesor/crear" className="bg-green-600 text-white font-semibold px-6 py-3 rounded-lg hover:bg-green-700 transition-all duration-300">
+            <Link to="/profesor/crear" className="bg-gray-900 text-white font-semibold px-6 py-3 rounded-lg hover:bg-green-700 transition-all duration-300">
               Crear Nuevo Profesor
             </Link>
           </div>
@@ -61,7 +61,7 @@ export default function Profesores() {
 
         <div className="w-full max-w-screen-xl grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 p-6">
           {filteredProfesores.map((profe) => (
-            <div className="bg-gray-900 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 p-6" key={profe.cedula}>
+            <div className="bg-gray-800 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 p-6" key={profe.cedula}>
               <div className="flex flex-col items-center">
                 {/* Aquí se muestra la imagen del profesor */}
                 {profe.image_path ? (

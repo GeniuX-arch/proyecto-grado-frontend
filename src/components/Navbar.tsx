@@ -125,7 +125,7 @@ export default function Navbar() {
   return (
     <>
       {/* Barra superior */}
-      <header className="bg-cyan-700 fixed top-0 left-0 right-0 h-16 z-50 flex items-center justify-between px-6 shadow-lg">
+      <header className="bg-gray-800 fixed top-0 left-0 right-0 h-16 z-50 flex items-center justify-between px-6 shadow-lg">
         <div className="flex items-center space-x-4">
           <button className="md:hidden text-white" onClick={toggleMenu}>
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
