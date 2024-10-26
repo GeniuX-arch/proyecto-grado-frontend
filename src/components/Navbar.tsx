@@ -181,7 +181,7 @@ export default function Navbar() {
       {/* Barra lateral */}
       <aside className={`bg-gray-900 fixed left-0 top-16 h-full w-48 z-40 flex flex-col transition-transform duration-300 transform ${isMenuOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0 shadow-xl`}>
         <div className="p-4 flex justify-center">
-          <img src={gestionutsLogo} alt="Logo Gestion UTS" className="h-20 mb-6" />
+          <img src={gestionutsLogo} alt="Logo Gestion UTS" className="h-32 mb-6" />
         </div>
         <nav className="flex-grow overflow-y-auto">
           <div className="flex flex-col space-y-2 p-4">
