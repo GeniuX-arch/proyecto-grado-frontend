@@ -71,6 +71,10 @@ function App() {
                     <CrearProfesor />
                     </ProtectedRoute>} />
 
+                    <Route path="/profesor/editar/:id" element={<ProtectedRoute allowedRoles={['admin']}>
+                    <CrearProfesor />
+                    </ProtectedRoute>} />
+
                 <Route path="/profesor/perfil/:id" element={<ProtectedRoute allowedRoles={['admin', 'profesor']}>
                     <Perfil />
                 </ProtectedRoute>} />
@@ -129,6 +133,11 @@ function App() {
                 <Route path="/horarios-disponibles/crear" element={<ProtectedRoute allowedRoles={['admin']}>
                     <CrearHorarioDisponible />
                 </ProtectedRoute>} />
+
+                <Route path="/horarios-disponibles/editar/:id" element={<ProtectedRoute allowedRoles={['admin']}>
+                    <CrearHorarioDisponible />
+                </ProtectedRoute>} />
+
 
                 <Route path="/clases" element={<ProtectedRoute allowedRoles={['admin']}>
                     <Clases />

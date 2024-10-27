@@ -186,6 +186,7 @@ export default function VerProfesor() {
       setNewImage(null);
       setFileName('');
       setMensaje('Imagen actualizada exitosamente');
+      
     } catch (error: any) {
       console.error('Error al actualizar la imagen:', error);
       setMensaje(error.response?.data?.message || 'Error al actualizar la imagen');
@@ -247,13 +248,21 @@ export default function VerProfesor() {
               />
               
               {/* Información detallada del profesor */}
-              <h3 className="text-2xl font-bold text-white mb-2">{profesor?.nombre}</h3>
+              <h3 className="text-2xl font-bold text-white mb-2">{profesor?.id}</h3>
               
               <div className="text-gray-300">
                 <p className="font-semibold">Cédula: <span className="font-normal">{profesor?.cedula}</span></p>
-                <p className="font-semibold">Tipo de Cédula: <span className="font-normal">{profesor?.tipo_cedula}</span></p>
+                <p className="font-semibold">nombre: <span className="font-normal">{profesor?.nombre}</span></p>
                 <p className="font-semibold">Tipo de Contrato: <span className="font-normal">{profesor?.tipo_contrato}</span></p>
                 <p className="font-semibold">Estado: <span className="font-normal">{profesor?.estado}</span></p>
+                <Link
+                          to={`/profesor/editar/${profesor?.id}`}
+                          className="flex items-center justify-center mt-4 p-2 rounded-lg bg-blue-600 hover:bg-blue-700 transition-colors duration-300 text-white"
+                        >
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-blue-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                          </svg>
+                        </Link>
               </div>
 
               {newImage && (

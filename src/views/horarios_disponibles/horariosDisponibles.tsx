@@ -1,13 +1,16 @@
 import axios from 'axios';
 import { useState, useEffect, ChangeEvent, FormEvent } from 'react';
+import { useParams } from 'react-router-dom';
 import Navbar from '../../components/Navbar';
 import { host } from '../../data/server';
 import { Profesor, HorarioDisponible } from '../../interfaces/interfaces';
 import { motion } from 'framer-motion';
-import { PlusIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline';
+import { PlusIcon, PencilIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 
 export default function CrearHorarioDisponible() {
+  const { id } = useParams<{ id: string }>();
   const [horarioDisponible, setHorarioDisponible] = useState<HorarioDisponible>({
+ 
     dia: '',
     hora_inicio: '',
     hora_fin: '',
@@ -19,19 +22,25 @@ export default function CrearHorarioDisponible() {
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredProfesores, setFilteredProfesores] = useState<Profesor[]>([]);
 
-  const fetchData = async () => {
-    try {
-      const profesoresResponse = await axios.get<Profesor[]>(`${host}/profesores`);
-      setProfesores(profesoresResponse.data);
-      setFilteredProfesores(profesoresResponse.data);
-    } catch (error) {
-      console.error('Error al cargar profesores:', error);
-    }
-  };
-
   useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const profesoresResponse = await axios.get<Profesor[]>(`${host}/profesores`);
+        setProfesores(profesoresResponse.data);
+        setFilteredProfesores(profesoresResponse.data);
+
+        if (id) {
+          const horarioResponse = await axios.get(`${host}/horarios_disponibles/${id}`);
+          setHorarioDisponible(horarioResponse.data);
+        }
+      } catch (error) {
+        console.error('Error al cargar datos:', error);
+        setMensaje('Error al cargar datos');
+      }
+    };
+
     fetchData();
-  }, []);
+  }, [id]);
 
   useEffect(() => {
     const filtered = profesores.filter(profesor =>
@@ -70,7 +79,7 @@ export default function CrearHorarioDisponible() {
     const fin = new Date(`1970-01-01T${horarioDisponible.hora_fin}:00`);
 
     if (inicio >= fin) {
-      alert("La hora de inicio debe ser anterior a la hora de fin y no pueden ser iguales.");
+      setMensaje("La hora de inicio debe ser anterior a la hora de fin y no pueden ser iguales.");
       return;
     }
 
@@ -79,18 +88,31 @@ export default function CrearHorarioDisponible() {
         ...horarioDisponible,
         profesor_id: Number(horarioDisponible.profesor_id),
       };
-      
-      await axios.post(`${host}/horarios_disponibles`, horarioData);
-      setMensaje('Horario creado con éxito.');
-      setHorarioDisponible({
-        dia: '',
-        hora_inicio: '',
-        hora_fin: '',
-        profesor_id: '',
-      });
-    } catch (error) {
-      console.error('Error al crear horario:', error);
-      setMensaje('Error al crear horario.');
+
+      if (id) {
+        await axios.put(`${host}/horarios_disponibles/${id}`, horarioData);
+        setMensaje('Horario actualizado exitosamente');
+      } else {
+        await axios.post(`${host}/horarios_disponibles`, horarioData);
+        setMensaje('Horario creado exitosamente');
+      }
+
+      if (!id) {
+        setHorarioDisponible({
+          id: 0,
+          dia: '',
+          hora_inicio: '',
+          hora_fin: '',
+          profesor_id: '',
+        });
+      }
+    } catch (error: any) {
+      console.error('Error:', error);
+      if (error.response) {
+        setMensaje(`Error: ${error.response.data.message || 'Error al procesar la solicitud'}`);
+      } else {
+        setMensaje('Error al procesar la solicitud');
+      }
     }
   };
 
@@ -105,14 +127,18 @@ export default function CrearHorarioDisponible() {
         transition={{ duration: 0.7 }}
         className="w-full max-w-lg p-10 bg-gray-800 bg-opacity-90 backdrop-blur-lg rounded-xl shadow-lg"
       >
-        <h2 className="text-3xl font-bold text-cyan-400 mb-6 text-center">Crear Horario Disponible</h2>
+        <h2 className="text-3xl font-bold text-cyan-400 mb-6 text-center">
+          {id ? 'Editar Horario Disponible' : 'Crear Horario Disponible'}
+        </h2>
 
         {mensaje && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className={`mb-4 p-4 text-center text-white rounded ${mensaje.includes('Error') ? 'bg-red-600' : 'bg-green-600'}`}
+            className={`mb-4 p-4 text-center text-white rounded ${
+              mensaje.includes('Error') ? 'bg-red-600' : 'bg-green-600'
+            }`}
           >
             {mensaje}
           </motion.div>
@@ -140,7 +166,7 @@ export default function CrearHorarioDisponible() {
             </select>
           </div>
 
-          {/* Hora de inicio */}
+          {/* Hora de inicio, se buguea al actualizar */}
           <div className="mb-6">
             <label htmlFor="hora_inicio" className="block text-cyan-300 font-medium mb-2">Hora de inicio:</label>
             <select
@@ -212,12 +238,20 @@ export default function CrearHorarioDisponible() {
             </select>
           </div>
 
-          <div className="text-center">
+          <div className="flex justify-between items-center">
             <button
               type="submit"
-              className="w-full bg-green-700 hover:bg-green-800 text-white font-bold py-2 px-4 rounded transition duration-300"
+              className="w-full bg-cyan-600 hover:bg-cyan-700 text-white font-bold py-2 px-4 rounded-lg transition duration-300"
             >
-              {horarioDisponible.profesor_id ? 'Actualizar' : 'Enviar'}
+              {id ? (
+                <span className="flex items-center justify-center">
+                  <PencilIcon className="h-5 w-5 mr-2" /> Actualizar
+                </span>
+              ) : (
+                <span className="flex items-center justify-center">
+                  <PlusIcon className="h-5 w-5 mr-2" /> Guardar
+                </span>
+              )}
             </button>
           </div>
         </form>
