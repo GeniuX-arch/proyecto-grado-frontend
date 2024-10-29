@@ -37,15 +37,20 @@ export const crearProfesor = async (nuevoProfesor: Profesor): Promise<any> => {
     }
 }
 
-export const actualizarProfesor = async (cedula: number, profesorActualizado: Profesor): Promise<any> => {
+export const actualizarProfesor = async (id: number, profesorActualizado: FormData): Promise<any> => {
     try {
-        const response = await axios.put(`${host}/${profesor}/${cedula}`, profesorActualizado);
+        const response = await axios.post(`${host}/${profesor}/${id}?_method=PUT`, profesorActualizado, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+        });
         return response.data;
     } catch (error) {
         console.error('Error al actualizar al profesor: ', error);
         throw new Error('No se pudo actualizar al profesor');
     }
 }
+
 
 export const eliminarProfesor = async (cedula: number): Promise<any> => {
     try {

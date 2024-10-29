@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import Navbar from '../../components/Navbar';
 import { host } from '../../data/server';
+import { actualizarProfesor, crearProfesor } from '../../data/profesores.conexion';
 
 interface Profesor {
   id?: number;
@@ -13,6 +14,8 @@ interface Profesor {
   estado: string;
   image_path?: string;
 }
+
+
 
 export default function CrearProfesor() {
   const { id } = useParams<{ id: string }>();
@@ -91,31 +94,25 @@ export default function CrearProfesor() {
     e.preventDefault();
 
     const data = new FormData();
-    data.append('tipo_cedula', profesor.tipo_cedula);
-    data.append('cedula', profesor.cedula);
-    data.append('nombre', profesor.nombre);
-    data.append('tipo_contrato', profesor.tipo_contrato);
-    data.append('estado', profesor.estado);
-    if (image) {
-      data.append('image', image);
-    }
+data.append('tipo_cedula', profesor.tipo_cedula);
+data.append('cedula', profesor.cedula);
+data.append('nombre', profesor.nombre);
+data.append('tipo_contrato', profesor.tipo_contrato);
+data.append('estado', profesor.estado);
+if (image) {
+    data.append('image', image);
+}
 
     try {
+
+      
       if (id) {
-        await axios.put(`${host}/profesores/${id}`, data, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        });
+        await actualizarProfesor(Number(id), data);
         setMensaje('Profesor actualizado exitosamente');
-      } else {
-        await axios.post(`${host}/profesores`, data, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        });
+    } else {
+        await crearProfesor(data);
         setMensaje('Profesor creado exitosamente');
-      }
+    }
 
       setProfesor({
         tipo_cedula: '',
