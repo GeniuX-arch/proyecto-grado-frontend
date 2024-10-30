@@ -69,7 +69,7 @@ const getMateriaNombre = (materia_id: number) => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-500 via-blue-500 to-gray-200 pl-4 md:pl-16 lg:pl-52 pr-6 pt-10">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-cyan-700 pl-4 md:pl-16 lg:pl-52 pr-6 pt-10">
       <Navbar />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="bg-white bg-opacity-90 backdrop-filter backdrop-blur-lg rounded-lg shadow-xl overflow-hidden">

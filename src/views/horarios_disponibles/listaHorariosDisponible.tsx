@@ -78,7 +78,7 @@ export default function ListaHorariosDisponibles() {
   });
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-500 via-blue-500 to-gray-200 pl-4 md:pl-16 lg:pl-52 pr-6 pt-10">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-cyan-700 pl-4 md:pl-16 lg:pl-52 pr-6 pt-10">
       <Navbar />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="bg-white bg-opacity-90 backdrop-filter backdrop-blur-lg rounded-lg shadow-xl overflow-hidden">
@@ -173,7 +173,7 @@ export default function ListaHorariosDisponibles() {
                                 
                                 <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                                   <Link
-                                    to={`/horarios/editar/${horario.id}`}
+                                    to={`/horarios-disponibles/editar/${horario.id}`}
                                     className="text-indigo-600 hover:text-indigo-900 mr-4 transition duration-150 ease-in-out"
                                   >
                                     <PencilIcon className="h-5 w-5 inline-block" aria-hidden="true" />

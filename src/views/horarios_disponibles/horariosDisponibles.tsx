@@ -1,41 +1,54 @@
 import axios from 'axios';
 import { useState, useEffect, ChangeEvent, FormEvent } from 'react';
+import { useParams } from 'react-router-dom';
 import Navbar from '../../components/Navbar';
 import { host } from '../../data/server';
 import { Profesor, HorarioDisponible } from '../../interfaces/interfaces';
-
-
+import { motion } from 'framer-motion';
+import { PlusIcon, PencilIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 
 export default function CrearHorarioDisponible() {
-  // Tipado del estado para el formulario del horario
+  const { id } = useParams<{ id: string }>();
   const [horarioDisponible, setHorarioDisponible] = useState<HorarioDisponible>({
+ 
     dia: '',
     hora_inicio: '',
     hora_fin: '',
     profesor_id: '',
   });
-  
-
 
   const [mensaje, setMensaje] = useState<string>('');
   const [profesores, setProfesores] = useState<Profesor[]>([]);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filteredProfesores, setFilteredProfesores] = useState<Profesor[]>([]);
 
-  // Función para obtener datos
-  const fetchData = async () => {
-    try {
-      const profesoresResponse = await axios.get<Profesor[]>(`${host}/profesores`);
-      setProfesores(profesoresResponse.data);
-    } catch (error) {
-      console.error('Error al cargar profesores:', error);
-    }
-  };
-
-  // Uso de useEffect para cargar los profesores al montar el componente
   useEffect(() => {
-    fetchData();
-  }, []);
+    const fetchData = async () => {
+      try {
+        const profesoresResponse = await axios.get<Profesor[]>(`${host}/profesores`);
+        setProfesores(profesoresResponse.data);
+        setFilteredProfesores(profesoresResponse.data);
 
-  // Manejo de cambios en el formulario (tipado de los eventos de cambio)
+        if (id) {
+          const horarioResponse = await axios.get(`${host}/horarios_disponibles/${id}`);
+          setHorarioDisponible(horarioResponse.data);
+        }
+      } catch (error) {
+        console.error('Error al cargar datos:', error);
+        setMensaje('Error al cargar datos');
+      }
+    };
+
+    fetchData();
+  }, [id]);
+
+  useEffect(() => {
+    const filtered = profesores.filter(profesor =>
+      profesor.nombre.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    setFilteredProfesores(filtered);
+  }, [searchTerm, profesores]);
+
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setHorarioDisponible((prev) => ({
@@ -44,179 +57,205 @@ export default function CrearHorarioDisponible() {
     }));
   };
 
-  // Manejo del envío del formulario (tipado del evento de envío)
+  const generateTimeSlots = () => {
+    const slots = [];
+    for (let hour = 6; hour < 24; hour++) {
+      slots.push({
+        value: `${String(hour).padStart(2, '0')}:00`,
+        display: `${hour % 12 === 0 ? 12 : hour % 12}:00 ${hour < 12 ? 'AM' : 'PM'}`
+      });
+      slots.push({
+        value: `${String(hour).padStart(2, '0')}:45`,
+        display: `${hour % 12 === 0 ? 12 : hour % 12}:45 ${hour < 12 ? 'AM' : 'PM'}`
+      });
+    }
+    return slots;
+  };
+
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    
+
     const inicio = new Date(`1970-01-01T${horarioDisponible.hora_inicio}:00`);
     const fin = new Date(`1970-01-01T${horarioDisponible.hora_fin}:00`);
 
-    // Validar que la hora_inicio es anterior a la hora_fin y que no sean iguales
     if (inicio >= fin) {
-      alert("La hora de inicio debe ser anterior a la hora de fin y no pueden ser iguales.");
+      setMensaje("La hora de inicio debe ser anterior a la hora de fin y no pueden ser iguales.");
       return;
     }
 
-
     try {
       const horarioData = {
-    ...horarioDisponible,
-    profesor_id: Number(horarioDisponible.profesor_id),
+        ...horarioDisponible,
+        profesor_id: Number(horarioDisponible.profesor_id),
       };
-      console.log(horarioData);
-      
-      const response = await axios.post(`${host}/horarios_disponibles`, horarioData);
-      console.log('Horario creado con éxito:', response.data);
-      setMensaje('Horario creado con éxito.');
-      // Restablecer el formulario si es necesario
-      setHorarioDisponible({
-        id: '',
-        dia: '',
-        hora_inicio: '',
-        hora_fin: '',
-        profesor_id: '',
-      });
-    } catch (error) {
-      console.error('Error al crear horario:', error);
-      setMensaje('Error al crear horario.');
+
+      if (id) {
+        await axios.put(`${host}/horarios_disponibles/${id}`, horarioData);
+        setMensaje('Horario actualizado exitosamente');
+      } else {
+        await axios.post(`${host}/horarios_disponibles`, horarioData);
+        setMensaje('Horario creado exitosamente');
+      }
+
+      if (!id) {
+        setHorarioDisponible({
+          id: 0,
+          dia: '',
+          hora_inicio: '',
+          hora_fin: '',
+          profesor_id: '',
+        });
+      }
+    } catch (error: any) {
+      console.error('Error:', error);
+      if (error.response) {
+        setMensaje(`Error: ${error.response.data.message || 'Error al procesar la solicitud'}`);
+      } else {
+        setMensaje('Error al procesar la solicitud');
+      }
     }
   };
 
+  const timeSlots = generateTimeSlots();
+
   return (
-    <div className="min-h-screen bg-cover bg-center bg-no-repeat pl-4 md:pl-16 lg:pl-52 pr-6"
-         style={{
-           backgroundImage: `url('https://c.wallhere.com/photos/64/fc/3840x2160_px_animals_artwork_Clear_Sky_Deer_digital_art_drawing_Firewatch-516653.jpg!d')`,
-         }}>
+    <div className="bg-gradient-to-br from-gray-900 via-blue-900 to-cyan-700 min-h-screen bg-cover bg-center flex flex-col items-center justify-center pl-4 md:pl-16 lg:pl-52 pr-6 pt-16">
       <Navbar />
-      <div className="relative min-h-screen flex flex-col items-center pt-32">
-        <div className="w-full max-w-md p-6 bg-white bg-opacity-70 backdrop-filter backdrop-blur-lg rounded-lg shadow-md">
-          <h2 className="text-2xl font-bold text-green-700 mb-6 text-center">Crear Horario Disponible</h2>
+      <motion.div
+        initial={{ opacity: 0, y: 50 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.7 }}
+        className="w-full max-w-lg p-10 bg-gray-800 bg-opacity-90 backdrop-blur-lg rounded-xl shadow-lg"
+      >
+        <h2 className="text-3xl font-bold text-cyan-400 mb-6 text-center">
+          {id ? 'Editar Horario Disponible' : 'Crear Horario Disponible'}
+        </h2>
 
-          {mensaje && (
-            <div className={`mb-4 p-4 text-center text-white rounded ${mensaje.includes('Error') ? 'bg-red-500' : 'bg-green-500'}`}>
-              {mensaje}
-            </div>
-          )}
+        {mensaje && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className={`mb-4 p-4 text-center text-white rounded ${
+              mensaje.includes('Error') ? 'bg-red-600' : 'bg-green-600'
+            }`}
+          >
+            {mensaje}
+          </motion.div>
+        )}
 
-          <form onSubmit={handleSubmit}>
-            {/* Día */}
-            
-
-            <div className="mb-4">
-              <label htmlFor="dia" className="block text-green-700 font-medium mb-2">Día de la Semana:</label>
-              <select
-                id="dia"
-                name="dia"
-                value={horarioDisponible.dia}
-                onChange={handleChange}
-                className="w-full px-3 py-2 border border-green-300 rounded focus:outline-none focus:border-green-500"
-                required
-              >
-                <option value="">Selecciona una opcion</option>
-                <option value="lunes">Lunes</option>
-                <option value="martes">Martes</option>
-                <option value="miercoles">Miércoles</option>
-                <option value="jueves">Jueves</option>
-                <option value="viernes">Viernes</option>
-                <option value="sabado">Sábado</option>
-              </select>
-            </div>
-
-
-            <div className="mb-4">
-              <label htmlFor="hora_inicio" className="block text-green-700 font-medium mb-2">Hora de inicio:</label>
-              <select
-                id="hora_inicio"
-                name="hora_inicio"
-                value={horarioDisponible.hora_inicio}
-                onChange={handleChange}
-                className="w-full px-3 py-2 border border-green-300 rounded focus:outline-none focus:border-green-500"
-                required
-              >
-                <option value="">Selecciona una opcion</option>
-                <option value="06:00">6:00 AM</option>
-                <option value="06:45">6:45 AM</option>
-                <option value="07:30">7:30 AM</option>
-                <option value="08:15">8:15 AM</option>
-                <option value="09:00">9:00 AM</option>
-                <option value="09:45">9:45 AM</option>
-                <option value="10:30">10:30 AM</option>
-                <option value="11:15">11:15 AM</option>
-                <option value="12:00">12:00 PM</option>
-                <option value="12:45">12:45 PM</option>
-                <option value="13:30">1:30 PM</option>
-                <option value="14:15">2:15 PM</option>
-                <option value="15:00">3:00 PM</option>
-                <option value="15:45">3:45 PM</option>
-                <option value="16:30">4:30 PM</option>
-                <option value="17:15">5:15 PM</option>
-                <option value="18:00">6:00 PM</option>
-              </select>
+        <form onSubmit={handleSubmit}>
+          {/* Día */}
+          <div className="mb-6">
+            <label htmlFor="dia" className="block text-cyan-300 font-medium mb-2">Día de la Semana:</label>
+            <select
+              id="dia"
+              name="dia"
+              value={horarioDisponible.dia}
+              onChange={handleChange}
+              className="w-full px-4 py-2 border border-gray-700 bg-gray-900 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-400"
+              required
+            >
+              <option value="">Selecciona una opción</option>
+              <option value="lunes">Lunes</option>
+              <option value="martes">Martes</option>
+              <option value="miercoles">Miércoles</option>
+              <option value="jueves">Jueves</option>
+              <option value="viernes">Viernes</option>
+              <option value="sabado">Sábado</option>
+            </select>
           </div>
 
+          {/* Hora de inicio, se buguea al actualizar */}
+          <div className="mb-6">
+            <label htmlFor="hora_inicio" className="block text-cyan-300 font-medium mb-2">Hora de inicio:</label>
+            <select
+              id="hora_inicio"
+              name="hora_inicio"
+              value={horarioDisponible.hora_inicio}
+              onChange={handleChange}
+              className="w-full px-4 py-2 border border-gray-700 bg-gray-900 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-400"
+              required
+            >
+              <option value="">Selecciona una opción</option>
+              {timeSlots.map((slot, index) => (
+                <option key={index} value={slot.value}>{slot.display}</option>
+              ))}
+            </select>
+          </div>
 
-            <div className="mb-4">
-              <label htmlFor="hora_fin" className="block text-green-700 font-medium mb-2">Hora de Fin:</label>
-              <select
-                id="hora_fin"
-                name="hora_fin"
-                value={horarioDisponible.hora_fin}
-                onChange={handleChange}
-                className="w-full px-3 py-2 border border-green-300 rounded focus:outline-none focus:border-green-500"
-                required
-              >
-                <option value="">Selecciona una opcion</option>
-                <option value="06:00">6:00 AM</option>
-                <option value="06:45">6:45 AM</option>
-                <option value="07:30">7:30 AM</option>
-                <option value="08:15">8:15 AM</option>
-                <option value="09:00">9:00 AM</option>
-                <option value="09:45">9:45 AM</option>
-                <option value="10:30">10:30 AM</option>
-                <option value="11:15">11:15 AM</option>
-                <option value="12:00">12:00 PM</option>
-                <option value="12:45">12:45 PM</option>
-                <option value="13:30">1:30 PM</option>
-                <option value="14:15">2:15 PM</option>
-                <option value="15:00">3:00 PM</option>
-                <option value="15:45">3:45 PM</option>
-                <option value="16:30">4:30 PM</option>
-                <option value="17:15">5:15 PM</option>
-                <option value="18:00">6:00 PM</option>
-              </select>
-            </div>
+          {/* Hora de fin */}
+          <div className="mb-6">
+            <label htmlFor="hora_fin" className="block text-cyan-300 font-medium mb-2">Hora de Fin:</label>
+            <select
+              id="hora_fin"
+              name="hora_fin"
+              value={horarioDisponible.hora_fin}
+              onChange={handleChange}
+              className="w-full px-4 py-2 border border-gray-700 bg-gray-900 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-400"
+              required
+            >
+              <option value="">Selecciona una opción</option>
+              {timeSlots.map((slot, index) => (
+                <option key={index} value={slot.value}>{slot.display}</option>
+              ))}
+            </select>
+          </div>
 
-            {/* Profesor */}
-            <div className="mb-4">
-              <label htmlFor="profesor_id" className="block text-green-700 font-medium mb-2">Profesor:</label>
-              <select
-                id="profesor_id"
-                name="profesor_id"
-                value={horarioDisponible.profesor_id}
-                onChange={handleChange}
-                className="w-full px-3 py-2 border border-green-300 rounded focus:outline-none focus:border-green-500"
-                required
-              >
-                <option value="">Seleccione un profesor</option>
-                {profesores.map((profesor) => (
-                  <option key={profesor.id} value={profesor.id}>
-                    {profesor.nombre}
-                  </option>
-                ))}
-              </select>
+          {/* Buscador de Profesores */}
+          <div className="mb-4">
+            <label htmlFor="search" className="block text-cyan-300 font-medium mb-2">Buscar Profesor:</label>
+            <div className="relative">
+              <input
+                type="text"
+                id="search"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full px-4 py-2 pl-10 border border-gray-700 bg-gray-900 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-400"
+                placeholder="Buscar profesor..."
+              />
+              <MagnifyingGlassIcon className="h-5 w-5 text-gray-400 absolute left-3 top-3" />
             </div>
+          </div>
 
-            <div className="text-center">
-              <button
-                type="submit"
-                className="w-full bg-green-700 hover:bg-green-800 text-white font-bold py-2 px-4 rounded transition duration-300"
-              >
-                Crear Horario
-              </button>
-            </div>
-          </form>
-        </div>
-      </div>
+          {/* Profesor */}
+          <div className="mb-6">
+            <label htmlFor="profesor_id" className="block text-cyan-300 font-medium mb-2">Profesor:</label>
+            <select
+              id="profesor_id"
+              name="profesor_id"
+              value={horarioDisponible.profesor_id}
+              onChange={handleChange}
+              className="w-full px-4 py-2 border border-gray-700 bg-gray-900 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-400"
+              required
+            >
+              <option value="">Seleccione un profesor</option>
+              {filteredProfesores.map((profesor) => (
+                <option key={profesor.id} value={profesor.id}>
+                  {profesor.nombre}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className="flex justify-between items-center">
+            <button
+              type="submit"
+              className="w-full bg-cyan-600 hover:bg-cyan-700 text-white font-bold py-2 px-4 rounded-lg transition duration-300"
+            >
+              {id ? (
+                <span className="flex items-center justify-center">
+                  <PencilIcon className="h-5 w-5 mr-2" /> Actualizar
+                </span>
+              ) : (
+                <span className="flex items-center justify-center">
+                  <PlusIcon className="h-5 w-5 mr-2" /> Guardar
+                </span>
+              )}
+            </button>
+          </div>
+        </form>
+      </motion.div>
     </div>
   );
 }

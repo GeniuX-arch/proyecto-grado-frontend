@@ -1,8 +1,9 @@
 import axios from 'axios';
 import { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom'; // Import useParams to get the ID from the URL
+import { useParams } from 'react-router-dom';
 import Navbar from '../../components/Navbar';
 import { host } from '../../data/server';
+import { actualizarProfesor, crearProfesor } from '../../data/profesores.conexion';
 
 interface Profesor {
   id?: number;
@@ -14,8 +15,10 @@ interface Profesor {
   image_path?: string;
 }
 
+
+
 export default function CrearProfesor() {
-  const { id } = useParams<{ id: string }>(); // Get the ID from the URL
+  const { id } = useParams<{ id: string }>();
   const [profesor, setProfesor] = useState<Profesor>({
     tipo_cedula: '',
     cedula: '',
@@ -29,7 +32,6 @@ export default function CrearProfesor() {
   const [mensaje, setMensaje] = useState<string>('');
   const [fileName, setFileName] = useState<string>('');
 
-  // Fetch profesor data if ID is present
   useEffect(() => {
     const fetchProfesorData = async () => {
       if (id) {
@@ -43,7 +45,7 @@ export default function CrearProfesor() {
             tipo_contrato: profesorData.tipo_contrato,
             estado: profesorData.estado,
           });
-          setImagePreview(profesorData.image_path); // Set image preview if available
+          setImagePreview(profesorData.image_path);
         } catch (error) {
           console.error('Error fetching profesor data:', error);
           setMensaje('Error al cargar los datos del profesor');
@@ -92,33 +94,26 @@ export default function CrearProfesor() {
     e.preventDefault();
 
     const data = new FormData();
-    data.append('tipo_cedula', profesor.tipo_cedula);
-    data.append('cedula', profesor.cedula);
-    data.append('nombre', profesor.nombre);
-    data.append('tipo_contrato', profesor.tipo_contrato);
-    data.append('estado', profesor.estado);
-    if (image) {
-      data.append('image', image);
-    }
+data.append('tipo_cedula', profesor.tipo_cedula);
+data.append('cedula', profesor.cedula);
+data.append('nombre', profesor.nombre);
+data.append('tipo_contrato', profesor.tipo_contrato);
+data.append('estado', profesor.estado);
+if (image) {
+    data.append('image', image);
+}
 
     try {
-      if (id) {
-        await axios.put(`${host}/profesores/${id}`, data, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        });
-        setMensaje('Profesor actualizado exitosamente');
-      } else {
-        await axios.post(`${host}/profesores`, data, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        });
-        setMensaje('Profesor creado exitosamente');
-      }
+
       
-      // Reset form after submission
+      if (id) {
+        await actualizarProfesor(Number(id), data);
+        setMensaje('Profesor actualizado exitosamente');
+    } else {
+        await crearProfesor(data);
+        setMensaje('Profesor creado exitosamente');
+    }
+
       setProfesor({
         tipo_cedula: '',
         cedula: '',
@@ -135,23 +130,23 @@ export default function CrearProfesor() {
   };
 
   return (
-    <div className="min-h-screen bg-cover bg-center bg-no-repeat pl-4 md:pl-16 lg:pl-52 pr-6">
+    <div className="min-h-screen bg-gray-900 pl-0 md:pl-16 lg:pl-52 pr-6">
       <Navbar />
       <div className="relative min-h-screen flex flex-col items-center pt-32">
-        <div className="w-full max-w-md p-6 bg-white bg-opacity-70 backdrop-filter backdrop-blur-lg rounded-lg shadow-md">
-          <h2 className="text-2xl font-bold text-green-700 mb-6 text-center">
+        <div className="w-full max-w-md p-6 bg-gray-800 rounded-lg shadow-md">
+          <h2 className="text-2xl font-bold text-green-400 mb-6 text-center">
             {id ? 'Editar Profesor' : 'Crear Profesor'}
           </h2>
 
           {mensaje && (
-            <div className={`mb-4 p-4 text-center text-white rounded ${mensaje.includes('Error') ? 'bg-red-500' : 'bg-green-500'}`}>
+            <div className={`mb-4 p-4 text-center text-white rounded ${mensaje.includes('Error') ? 'bg-red-600' : 'bg-green-600'}`}>
               {mensaje}
             </div>
           )}
 
           <form onSubmit={handleSubmit}>
             <div className="mb-4">
-              <label htmlFor="tipo_cedula" className="block mb-1 text-sm text-green-700">
+              <label htmlFor="tipo_cedula" className="block mb-1 text-sm text-green-400">
                 Tipo de Cédula:
               </label>
               <div className="relative">
@@ -160,7 +155,7 @@ export default function CrearProfesor() {
                   name="tipo_cedula"
                   value={profesor.tipo_cedula}
                   onChange={handleChange}
-                  className="w-full h-10 bg-transparent placeholder:text-slate-400 text-black text-sm border border-green-300 rounded px-3 py-2 transition duration-300 ease focus:outline-none focus:border-green-500 hover:border-green-500 shadow-sm focus:shadow-md appearance-none cursor-pointer"
+                  className="w-full h-10 bg-gray-700 placeholder:text-gray-400 text-white text-sm border border-green-500 rounded px-3 py-2 transition duration-300 ease focus:outline-none focus:border-green-400 hover:border-green-400 shadow-sm cursor-pointer"
                   required
                 >
                   <option value="" disabled>Seleccione un tipo de cédula</option>
@@ -176,7 +171,7 @@ export default function CrearProfesor() {
                   viewBox="0 0 24 24" 
                   strokeWidth="1.2" 
                   stroke="currentColor" 
-                  className="h-5 w-5 ml-1 absolute top-2.5 right-2.5 text-green-700"
+                  className="h-5 w-5 ml-1 absolute top-2.5 right-2.5 text-green-400"
                 >
                   <path 
                     strokeLinecap="round" 
@@ -194,13 +189,13 @@ export default function CrearProfesor() {
                 name="cedula"
                 value={profesor.cedula}
                 onChange={handleChange}
-                className="peer h-full w-full border-b border-green-300 bg-transparent pt-4 pb-1.5 font-sans text-sm font-normal text-black outline-none transition-all placeholder-shown:border-green-300 focus:border-green-500 disabled:border-0 disabled:bg-green-50"
+                className="peer h-full w-full border-b border-green-500 bg-gray-700 pt-4 pb-1.5 font-sans text-sm font-normal text-white outline-none transition-all placeholder-shown:border-green-500 focus:border-green-400 disabled:border-0 disabled:bg-green-50"
                 placeholder=" "
                 required
               />
               <label
                 htmlFor="cedula"
-                className="after:content[' '] pointer-events-none absolute left-0 -top-1.5 flex h-full w-full select-none text-[11px] font-normal leading-tight text-green-500 transition-all after:absolute after:-bottom-1.5 after:block after:w-full after:scale-x-0 after:border-b-2 after:border-green-500 after:transition-transform after:duration-300 peer-placeholder-shown:text-sm peer-placeholder-shown:leading-[4.25] peer-placeholder-shown:text-green-500 peer-focus:text-[11px] peer-focus:leading-tight peer-focus:text-green-500 peer-focus:after:scale-x-100 peer-focus:after:border-green-500 peer-disabled:text-transparent peer-disabled:peer-placeholder-shown:text-green-500"
+                className="after:content[' '] pointer-events-none absolute left-0 -top-1.5 flex h-full w-full select-none text-[11px] font-normal leading-tight text-green-400 transition-all after:absolute after:-bottom-1.5 after:block after:w-full after:scale-x-0 after:border-b-2 after:border-green-400 after:transition-transform after:duration-300 peer-placeholder-shown:text-sm peer-placeholder-shown:leading-[4.25] peer-placeholder-shown:text-green-400 peer-focus:text-[11px] peer-focus:leading-tight peer-focus:text-green-400 peer-focus:after:scale-x-100 peer-focus:after:border-green-400 peer-disabled:text-transparent peer-disabled:peer-placeholder-shown:text-green-400"
               >
                 Cédula
               </label>
@@ -213,20 +208,20 @@ export default function CrearProfesor() {
                 name="nombre"
                 value={profesor.nombre}
                 onChange={handleChange}
-                className="peer h-full w-full border-b border-green-300 bg-transparent pt-4 pb-1.5 font-sans text-sm font-normal text-black outline-none transition-all placeholder-shown:border-green-300 focus:border-green-500 disabled:border-0 disabled:bg-green-50"
+                className="peer h-full w-full border-b border-green-500 bg-gray-700 pt-4 pb-1.5 font-sans text-sm font-normal text-white outline-none transition-all placeholder-shown:border-green-500 focus:border-green-400 disabled:border-0 disabled:bg-green-50"
                 placeholder=" "
                 required
               />
               <label
                 htmlFor="nombre"
-                className="after:content[' '] pointer-events-none absolute left-0 -top-1.5 flex h-full w-full select-none text-[11px] font-normal leading-tight text-green-500 transition-all after:absolute after:-bottom-1.5 after:block after:w-full after:scale-x-0 after:border-b-2 after:border-green-500 after:transition-transform after:duration-300 peer-placeholder-shown:text-sm peer-placeholder-shown:leading-[4.25] peer-placeholder-shown:text-green-500 peer-focus:text-[11px] peer-focus:leading-tight peer-focus:text-green-500 peer-focus:after:scale-x-100 peer-focus:after:border-green-500 peer-disabled:text-transparent peer-disabled:peer-placeholder-shown:text-green-500"
+                className="after:content[' '] pointer-events-none absolute left-0 -top-1.5 flex h-full w-full select-none text-[11px] font-normal leading-tight text-green-400 transition-all after:absolute after:-bottom-1.5 after:block after:w-full after:scale-x-0 after:border-b-2 after:border-green-400 after:transition-transform after:duration-300 peer-placeholder-shown:text-sm peer-placeholder-shown:leading-[4.25] peer-placeholder-shown:text-green-400 peer-focus:text-[11px] peer-focus:leading-tight peer-focus:text-green-400 peer-focus:after:scale-x-100 peer-focus:after:border-green-400 peer-disabled:text-transparent peer-disabled:peer-placeholder-shown:text-green-400"
               >
                 Nombre
               </label>
             </div>
 
             <div className="mb-4">
-              <label htmlFor="tipo_contrato" className="block mb-1 text-sm text-green-700">
+              <label htmlFor="tipo_contrato" className="block mb-1 text-sm text-green-400">
                 Tipo de Contrato:
               </label>
               <div className="relative">
@@ -235,7 +230,7 @@ export default function CrearProfesor() {
                   name="tipo_contrato"
                   value={profesor.tipo_contrato}
                   onChange={handleChange}
-                  className="w-full h-10 bg-transparent placeholder:text-slate-400 text-black text-sm border border-green-300 rounded px-3 py-2 transition duration-300 ease focus:outline-none focus:border-green-500 hover:border-green-500 shadow-sm focus:shadow-md appearance-none cursor-pointer"
+                  className="w-full h-10 bg-gray-700 placeholder:text-gray-400 text-white text-sm border border-green-500 rounded px-3 py-2 transition duration-300 ease focus:outline-none focus:border-green-400 hover:border-green-400 shadow-sm cursor-pointer"
                   required
                 >
                   <option value="" disabled>Seleccione un tipo de contrato</option>
@@ -249,7 +244,7 @@ export default function CrearProfesor() {
                   viewBox="0 0 24 24" 
                   strokeWidth="1.2" 
                   stroke="currentColor" 
-                  className="h-5 w-5 ml-1 absolute top-2.5 right-2.5 text-green-700"
+                  className="h-5 w-5 ml-1 absolute top-2.5 right-2.5 text-green-400"
                 >
                   <path 
                     strokeLinecap="round" 
@@ -261,7 +256,7 @@ export default function CrearProfesor() {
             </div>
 
             <div className="mb-4">
-              <label htmlFor="estado" className="block mb-1 text-sm text-green-700">
+              <label htmlFor="estado" className="block mb-1 text-sm text-green-400">
                 Estado:
               </label>
               <div className="relative">
@@ -270,7 +265,7 @@ export default function CrearProfesor() {
                   name="estado"
                   value={profesor.estado}
                   onChange={handleChange}
-                  className="w-full h-10 bg-transparent placeholder:text-slate-400 text-black text-sm border border-green-300 rounded px-3 py-2 transition duration-300 ease focus:outline-none focus:border-green-500 hover:border-green-500 shadow-sm focus:shadow-md appearance-none cursor-pointer"
+                  className="w-full h-10 bg-gray-700 placeholder:text-gray-400 text-white text-sm border border-green-500 rounded px-3 py-2 transition duration-300 ease focus:outline-none focus:border-green-400 hover:border-green-400 shadow-sm cursor-pointer"
                   required
                 >
                   <option value="" disabled>Seleccione un estado</option>
@@ -284,7 +279,7 @@ export default function CrearProfesor() {
                   viewBox="0 0 24 24" 
                   strokeWidth="1.2" 
                   stroke="currentColor" 
-                  className="h-5 w-5 ml-1 absolute top-2.5 right-2.5 text-green-700"
+                  className="h-5 w-5 ml-1 absolute top-2.5 right-2.5 text-green-400"
                 >
                   <path 
                     strokeLinecap="round" 
@@ -295,11 +290,12 @@ export default function CrearProfesor() {
               </div>
             </div>
 
-            <div className="mb-6">
+{/*imagen*/}
+<div className="mb-6">
               <label htmlFor="image" className="block text-lg font-semibold text-green-600 mb-3">
                 Subir Foto de Perfil:
               </label>
-              <div className="relative w-full h-44 flex items-center justify-center border-2 border-dashed border-green-400 rounded-lg bg-gray-100 hover:bg-gray-50 focus-within:border-green-500 transition-all duration-300">
+              <div className="relative w-full h-44 flex items-center justify-center border-2 border-dashed border-green-400 rounded-lg bg-gray-800 hover:bg-gray-500 focus-within:border-green-500 transition-all duration-300">
                 <input
                   type="file"
                   id="image"
@@ -323,7 +319,7 @@ export default function CrearProfesor() {
                       d="M3 16l5.5-5.5a2.5 2.5 0 013.5 0l4 4 6-6"
                     />
                   </svg>
-                  <span className="block text-sm font-medium text-gray-500">
+                  <span className="block text-sm font-medium text-gray-200">
                     Arrastra una imagen aquí o haz clic para seleccionar
                   </span>
                   <span className="block text-xs text-gray-400 mt-1">
