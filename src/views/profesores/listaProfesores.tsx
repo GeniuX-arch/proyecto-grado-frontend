@@ -59,7 +59,7 @@ export default function Profesores() {
           </div>
         </div>
 
-        <div className="w-full max-w-screen-xl grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 p-6">
+        <div className="w-full max-w-screen-xl grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 py-6">
           {filteredProfesores.map((profe) => (
             <div className="bg-gray-800 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 p-6" key={profe.cedula}>
               <div className="flex flex-col items-center">

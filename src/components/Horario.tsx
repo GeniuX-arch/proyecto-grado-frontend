@@ -89,6 +89,7 @@ export default function Horario({ listadoClases }: { listadoClases: Horario[] })
         </div>
       )}
 
+
       <div className="min-h-screen bg-fixed bg-cover bg-center text-white pt-24"
         style={{ backgroundImage: 'url(https://motionbgs.com/media/490/alone-hollow-knight.jpg)' }}>
         <div className="container mx-auto px-4">

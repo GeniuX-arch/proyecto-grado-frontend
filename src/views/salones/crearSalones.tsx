@@ -62,10 +62,10 @@ export default function CrearSalon() {
       };
 
       if (id) {
-        await axios.put(`${host}/salones/${id}, salon`); // Use PUT if ID is present
+        await axios.put(`${host}/salones/${id}`, salon); // Use PUT if ID is present
         setMensaje('Salón actualizado exitosamente');
       } else {
-        await axios.post(`${host}/salones, salon`); // Use POST if no ID
+        await axios.post(`${host}/salones`, salon); // Use POST if no ID
         setMensaje('Salón creado exitosamente');
       }
 
