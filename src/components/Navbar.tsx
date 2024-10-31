@@ -15,10 +15,12 @@ import {
 import { motion, AnimatePresence } from 'framer-motion';
 import gestionutsLogo from '../../public/gestionuts.png';
 
+
+
 const MenuItem = ({ to, icon: Icon, children }) => {
   const location = useLocation();
   const isActive = location.pathname === to;
-
+ 
   return (
     <Link 
       to={to} 
@@ -36,7 +38,6 @@ const MenuItem = ({ to, icon: Icon, children }) => {
 
 const SubMenu = ({ title, items, icon: Icon }) => {
   const [isOpen, setIsOpen] = useState(false);
-
   return (
     <div>
       <button
@@ -77,6 +78,10 @@ const SubMenu = ({ title, items, icon: Icon }) => {
 export default function Navbar() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const handleRegister = () => {
+    navigate("/register");
+  };
+  
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [notifications, setNotifications] = useState([]);
@@ -123,6 +128,7 @@ export default function Navbar() {
   ];
 
   return (
+
     <>
       {/* Barra superior */}
       <header className="bg-gray-800 fixed top-0 left-0 right-0 h-16 z-50 flex items-center justify-between px-6 shadow-lg">
@@ -179,7 +185,8 @@ export default function Navbar() {
       </header>
 
       {/* Barra lateral */}
-      <aside className={`bg-gray-900 fixed left-0 top-16 h-full w-48 z-40 flex flex-col transition-transform duration-300 transform ${isMenuOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0 shadow-xl`}>
+      {user.rol=='admin' && (
+      <aside className={`bg-gray-900 fixed left-0 top-16 h-full w-48 z-40 flex flex-col transition-transform duration-300 transform ${isMenuOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 shadow-xl`}>
         <div className="p-4 flex justify-center">
           <img src={gestionutsLogo} alt="Logo Gestion UTS" className="h-32 mb-6" />
         </div>
@@ -195,8 +202,16 @@ export default function Navbar() {
               )
             )}
           </div>
+          <button
+            type="button"
+            onClick={handleRegister}
+            className="w-full py-3 border border-blue-600 text-blue-600 rounded-lg hover:bg-lime-600 hover:text-white transition duration-300"
+          >
+            registrar
+          </button>
         </nav>
       </aside>
+      )}
     </>
   );
 }

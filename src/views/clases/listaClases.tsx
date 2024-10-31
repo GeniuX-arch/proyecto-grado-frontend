@@ -1,9 +1,12 @@
 import Navbar from '../../components/Navbar';
 import { Link } from 'react-router-dom';
 import { listarClases, eliminarClase } from '../../data/clases.conexion'; 
-import { Clase } from '../../interfaces/interfaces'; 
+import { Clase, Materia, Profesor, Salon } from '../../interfaces/interfaces'; 
 import { useEffect, useState } from 'react';
 import Horario from '../../components/Horario'; // Asegúrate de que el componente Horario esté bien implementado
+import { listarMaterias } from '../../data/materias.conexion';
+import { listarProfesores } from '../../data/profesores.conexion';
+import { listarSalones } from '../../data/salones.conexion';
 
 export default function Clases() {
   const [searchTerm, setSearchTerm] = useState<string>('');
@@ -30,23 +33,37 @@ interface Horario {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const lista  = await listarClases();
-        
-        console.log(lista)
-        const horarios = await lista.map((item) => ({
-          id: item.id,
-          descripcion:"descripcion",
-          titulo: item.grupo,
-          dia: item.dia_semana, // Asumiendo que el campo original es 'dia_semana'
-          horaInicio: item.hora_inicio, // Cambiar nombre de 'hora_inicio' a 'horaInicio'
-          horaFin: item.hora_fin,
-        }));
+        const lista: Clase[] = await listarClases(); // Assuming listarClases returns Clase[]
+        const materias: Materia[] = await listarMaterias(); // Assuming it returns Materia[]
+        const profesores: Profesor[] = await listarProfesores(); // Assuming it returns Profesor[]
+        const salones: Salon[] = await listarSalones(); // Assuming it returns Salon[]
 
-        setHorario(horarios)
-        console.log(horario)
+        console.log(lista);
 
+        const horarios = lista.map((item) => {
+          const materia = materias.find(m => m.id === item.materia_id);
+          const profesor = profesores.find(p => p.id === item.profesor_id);
+          const salon = salones.find(s => s.id === item.salon_id);
+
+            const descripcion = `
+            ${materia ? materia.nombre : 'Materia no encontrada'}, 
+            ${profesor ? profesor.nombre : 'Profesor no encontrado'}, 
+            ${salon ? salon.codigo : 'Salón no encontrado'}
+          `;
+
+          return {
+            id: item.id,
+            titulo: item.grupo,
+            dia: item.dia_semana,
+            horaInicio: item.hora_inicio,
+            horaFin: item.hora_fin,
+            descripcion: descripcion.trim(),
+          };
+        });
+
+        setHorario(horarios); // Update state with the fetched horarios
       } catch (error) {
-        console.error('Error al obtener la lista de clases:', error);
+        console.error("Error fetching data:", error);
       }
     };
 

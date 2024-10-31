@@ -31,10 +31,9 @@ const DragClase: React.FC<DragComponentProps> = ({ dia, idd, horaInicio, horaFin
         color: "black",
         margin: '4px',
       }}
-      className="bg-green-200 rounded-md"
+      className="bg-gray-100 text-center text-sm rounded-md"
       onClick={onClick} // Usa la prop onClick
     >
-      <p>{idd}</p>
       <p>{titulo}</p>
       <p>{descripcion}</p>
     </div>

@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom';
 import Navbar from '../../components/Navbar';
 import { host } from '../../data/server';
 import { actualizarProfesor, crearProfesor } from '../../data/profesores.conexion';
+import { useAuth } from '../../context/AuthContext';
 
 interface Profesor {
   id?: number;
@@ -18,6 +19,7 @@ interface Profesor {
 
 
 export default function CrearProfesor() {
+    const { user } = useAuth();
   const { id } = useParams<{ id: string }>();
   const [profesor, setProfesor] = useState<Profesor>({
     tipo_cedula: '',
@@ -130,7 +132,7 @@ if (image) {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 pl-0 md:pl-16 lg:pl-52 pr-6">
+    <div className={`min-h-screen bg-gray-900 pl-0  ${user.rol=='admin' ? "md:pl-16 lg:pl-52" : ""} pr-6`}  >
       <Navbar />
       <div className="relative min-h-screen flex flex-col items-center pt-32">
         <div className="w-full max-w-md p-6 bg-gray-800 rounded-lg shadow-md">

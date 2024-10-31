@@ -2,7 +2,7 @@ import axios from "axios";
 import { host } from "./server";
 import { Salon } from "../interfaces/interfaces";
 
-const salon = 'salon'; // Variable definida fuera de las funciones
+const salon = 'salones'; // Variable definida fuera de las funciones
 
 export const listarSalones = async (): Promise<any[]> => {
     try {

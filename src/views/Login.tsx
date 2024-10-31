@@ -11,18 +11,21 @@ export default function Login() {
   const navigate = useNavigate();
   const { login } = useAuth();
 
-  const handleRegister = () => {
-    navigate("/register");
-  };
-
   
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError("");
     try {
-      await login(email, password);
+      const rol= await login(email, password);
+      console.log(rol)
+      if(rol=='admin'){
       navigate("/");
+      }else{
+      navigate("/profesor/perfil/1");
+
+      }
+      
     } catch (err) {
       setError("Failed to login. Please check your credentials.");
     } finally {
@@ -70,13 +73,7 @@ export default function Login() {
           >
             iniciar
           </button>
-          <button
-            type="button"
-            onClick={handleRegister}
-            className="w-full py-3 border border-blue-600 text-blue-600 rounded-lg hover:bg-lime-600 hover:text-white transition duration-300"
-          >
-            registrarse
-          </button>
+        
         </form>
         <div className="w-1/2 hidden md:flex items-center justify-center bg-gray-200">
           <img

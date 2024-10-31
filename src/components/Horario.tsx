@@ -4,6 +4,10 @@ import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import DragClase from "./DragClase";
 import { Triangle } from "react-loader-spinner";
+import { HorarioDisponible, Clase } from "../interfaces/interfaces";
+import axios from "axios";
+import { host } from "../data/server";
+import { Link } from "react-router-dom";
 
 interface Horario {
   id?: number;
@@ -19,10 +23,10 @@ export default function Horario({ listadoClases }: { listadoClases: Horario[] })
   const dias = ["lunes", "martes", "miercoles", "jueves", "viernes", "sabado"];
   const [clases, setClases] = useState<Horario[]>([]);
   const [horarioo, setHorarioo] = useState<Array<Array<Array<Horario>>>>([[]]);
-  const [selectedClase, setSelectedClase] = useState<Horario | null>(null);
+  const [selectedClase, setSelectedClase] = useState<Clase | null>(null);
   const [isLoaded, setIsLoaded] = useState(false);
 
-  // Array quemado de horas de 45 en 45 minutos
+  // Array de horas de 45 en 45 minutos
   const horas = [
     "06:00", "06:45", "07:30", "08:15", "09:00", "09:45",
     "10:30", "11:15", "12:00", "12:45", "13:30", "14:15",
@@ -42,13 +46,11 @@ export default function Horario({ listadoClases }: { listadoClases: Horario[] })
         const newHorarioo: Array<Array<Array<Horario>>> = horas.map((hora, index) => {
           const horaFin = horas[index + 1] || "N/A"; // Obtener la siguiente hora como hora de fin
 
-          const updatedHorarioo = dias.map((dia) => {
+          return dias.map((dia) => {
             return clases.filter(
               (clase) => clase.dia === dia && clase.horaInicio === hora && clase.horaFin === horaFin
             );
           });
-
-          return updatedHorarioo;
         });
 
         setHorarioo(newHorarioo);
@@ -58,40 +60,93 @@ export default function Horario({ listadoClases }: { listadoClases: Horario[] })
     }
   }, [clases, isLoaded]);
 
-  const handleOpenModal = (clase: Horario) => {
-    setSelectedClase(clase);
+  const fetchClassDetails = async (claseId: number) => {
+    try {
+      const response = await axios.get(`${host}/clases/${claseId}`);
+      const clase = response.data;
+
+      // Fetch related data based on IDs
+      const [materiaResponse, salonResponse, profesorResponse] = await Promise.all([
+        axios.get(`${host}/materias/${clase.materia_id}`),
+        axios.get(`${host}/salones/${clase.salon_id}`),
+        axios.get(`${host}/profesores/${clase.profesor_id}`)
+      ]);
+
+      setSelectedClase({
+        ...clase,
+        materiaNombre: materiaResponse.data.nombre, // Assuming `nombre` is the name field
+        salonCodigo: salonResponse.data.codigo, // Assuming `codigo` is the code field
+        profesorNombre: profesorResponse.data.nombre // Assuming `nombre` is the name field
+      });
+    } catch (error) {
+      console.error("Error al obtener la clase:", error);
+    }
+  };
+
+  const handleOpenModal = async (clase: Horario) => {
+    await fetchClassDetails(clase.id);
   };
 
   const handleCloseModal = () => {
     setSelectedClase(null);
   };
 
+  const handleUpdateHorario = async (updatedClase: Horario) => {
+    try {
+      const response = await axios.get(`${host}/clases/${updatedClase.id}`);
+      const existingClase = response.data;
+      existingClase.dia_semana = updatedClase.dia;
+      existingClase.hora_inicio = updatedClase.horaInicio;
+      existingClase.hora_fin = updatedClase.horaFin;
+
+      await axios.put(`${host}/clases/${updatedClase.id}`, existingClase);
+      console.log("Clase actualizada correctamente");
+    } catch (error) {
+      console.error("Error al actualizar la clase:", error);
+    }
+  };
+
   if (!isLoaded) {
-    return <div className='flex flex-col items-center justify-center h-screen'><Triangle /> <p>Cargando...</p></div>
+    return (
+      <div className='flex flex-col items-center justify-center h-screen'>
+        <Triangle />
+        <p>Cargando...</p>
+      </div>
+    );
   }
 
   return (
     <>
       {selectedClase && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg max-w-md mx-auto">
-            <h2 className="text-xl font-bold mb-4">Información de la Materia</h2>
-            <p><strong>Día:</strong> {selectedClase.dia}</p>
-            <p><strong>Hora Inicio:</strong> {selectedClase.horaInicio}</p>
-            <p><strong>Hora Fin:</strong> {selectedClase.horaFin}</p>
-            <button
-              className="mt-4 bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600"
-              onClick={handleCloseModal}
-            >
-              Cerrar
-            </button>
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70"
+          onClick={handleCloseModal} // Close modal on outside click
+        >
+          <div
+            className="bg-white p-6 rounded-lg shadow-xl max-w-md mx-auto text-center"
+            onClick={(e) => e.stopPropagation()} // Prevent event bubbling to the overlay
+          >
+            <h2 className="text-2xl font-bold mb-4 ">Información de la clase</h2>
+            <p className="text-lg"><strong>Día:</strong> {selectedClase.dia_semana}</p>
+            <p className="text-lg"><strong>Hora Inicio:</strong> {selectedClase.hora_inicio}</p>
+            <p className="text-lg"><strong>Hora Fin:</strong> {selectedClase.hora_fin}</p>
+            <p className="text-lg"><strong>Materia:</strong> {selectedClase.materiaNombre}</p>
+            <p className="text-lg"><strong>Salón:</strong> {selectedClase.salonCodigo}</p>
+            <p className="text-lg"><strong>Profesor:</strong> {selectedClase.profesorNombre}</p>
+            <div className="flex flex-row justify-center items-center gap-3">
+              <button
+                className="mt-4 bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700 transition duration-200 "
+                onClick={handleCloseModal}
+              >
+                Cerrar
+              </button>
+              <Link to={`/editar-clase/${selectedClase.id}`} className="py-2 px-4 bg-blue-700 mt-4 rounded-lg text-white">editar</Link>
+            </div>
           </div>
         </div>
       )}
 
-
-      <div className="min-h-screen bg-fixed bg-cover bg-center text-white pt-24"
-        style={{ backgroundImage: 'url(https://motionbgs.com/media/490/alone-hollow-knight.jpg)' }}>
+      <div className="min-h-screen bg-transparent bg-fixed bg-cover bg-center text-white pt-24">
         <div className="container mx-auto px-4">
           <table className="table-auto border-collapse border border-gray-700 w-full bg-gray-800 bg-opacity-70 rounded-lg shadow-lg">
             <thead>
@@ -105,7 +160,7 @@ export default function Horario({ listadoClases }: { listadoClases: Horario[] })
             <tbody>
               <DndProvider backend={HTML5Backend}>
                 {horarioo.map((horaRow, rowIndex) => {
-                  const hora = horas[rowIndex]; // Obtener la hora del array
+                  const hora = horas[rowIndex];
                   const currentHora = horas[rowIndex + 1] || "N/A"; // Obtener la siguiente hora
                   return (
                     <tr key={rowIndex} className="hover:bg-gray-700 transition duration-200">
@@ -141,6 +196,7 @@ export default function Horario({ listadoClases }: { listadoClases: Horario[] })
                                   horaFin: props.horaFin,
                                 };
                                 setClases(updatedClases);
+                                handleUpdateHorario(updatedClases[index]); // Call the update function
                               } else {
                                 console.error("No se encontró el elemento en listadoClases");
                               }
@@ -149,12 +205,7 @@ export default function Horario({ listadoClases }: { listadoClases: Horario[] })
                             {diaClases.map((clase, claseIndex) => (
                               <DragClase
                                 key={claseIndex}
-                                dia={clase.dia}
-                                idd={clase.id}
-                                horaInicio={clase.horaInicio}
-                                horaFin={clase.horaFin}
-                                titulo={clase.titulo}
-                                descripcion={clase.descripcion}
+                                {...clase}
                                 onClick={() => handleOpenModal(clase)}
                               />
                             ))}

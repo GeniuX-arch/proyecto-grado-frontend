@@ -3,7 +3,7 @@ import axios from "axios";
 import { Materia } from "../interfaces/interfaces";
 
 // Listar todas las materias
-const materia = 'materia'; // Variable definida fuera de las funciones
+const materia = 'materias'; // Variable definida fuera de las funciones
 
 export const listarMaterias = async () => {
     try {

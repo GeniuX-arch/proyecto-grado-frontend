@@ -91,6 +91,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         // Guarda los datos del usuario y el token en el localStorage
         setUser(data.user);
         localStorage.setItem('token', data.token);
+        return data.user.rol;
 
     } catch (error: any) {
         // Manejo de errores con `axios`

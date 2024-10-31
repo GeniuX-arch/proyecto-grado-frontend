@@ -2,9 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import axios from 'axios';
 import Navbar from '../../components/Navbar';
+import { useAuth } from '../../context/AuthContext';
 import { host, hostImg } from '../../data/server';
 import { Triangle } from 'react-loader-spinner';
 import { Upload, X } from 'lucide-react';
+
+import HorarioDispoible from '../../components/HorarioDisponible';
 
 interface Profesor {
   id?: number;
@@ -77,7 +80,10 @@ const obtenerNombreMateria = async (materiaId) => {
 };
 
 export default function VerProfesor() {
+  const { user } = useAuth();
+  
   const { id } = useParams<{ id: string }>();
+  const idNumber = Number(id)
   const [profesor, setProfesor] = useState<Profesor | null>(null);
   const [materias, setMaterias] = useState<Materia[]>([]);
   const [horarios, setHorarios] = useState<Horario[]>([]);
@@ -87,6 +93,15 @@ export default function VerProfesor() {
   const [fileName, setFileName] = useState<string>('');
   const [mensaje, setMensaje] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
+
+  const [mostrarHorarios, setMostrarHorarios] = useState(false);
+  const [mostrarClases, setMostrarClases] = useState(false);
+  const handleHorarios = () => {
+    setMostrarHorarios((prev) => !prev);
+  };
+  const handleClases = () => {
+    setMostrarClases((prev) => !prev);
+  };
 
   const obtenerProfesor = async () => {
     try {
@@ -98,6 +113,7 @@ export default function VerProfesor() {
       setMensaje('Error al cargar los datos del profesor');
     }
   };
+
 
   const obtenerMaterias = async () => {
     try {
@@ -141,59 +157,8 @@ export default function VerProfesor() {
     }
   }, [id]);
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    
-    if (file) {
-      // Validar el tamaño del archivo (por ejemplo, máximo 5MB)
-      if (file.size > 5 * 1024 * 1024) {
-        setMensaje('La imagen no debe superar los 5MB');
-        return;
-      }
 
-      // Validar el tipo de archivo
-      if (!file.type.startsWith('image/')) {
-        setMensaje('Por favor, selecciona un archivo de imagen válido');
-        return;
-      }
 
-      setNewImage(file);
-      setFileName(file.name);
-      
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImagePreview(reader.result as string);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const handleRemoveImage = () => {
-    setNewImage(null);
-    setImagePreview(profesor?.image_path ? `${hostImg}${profesor.image_path}` : null);
-    setFileName('');
-  };
-
-  const handleImageUpload = async () => {
-    if (!newImage || !id) return;
-  
-    setLoading(true);
-    setMensaje('');
-  
-    try {
-      await actualizarImagenProfesor(id, newImage, setImagePreview);
-      await obtenerProfesor();
-      setNewImage(null);
-      setFileName('');
-      setMensaje('Imagen actualizada exitosamente');
-      
-    } catch (error: any) {
-      console.error('Error al actualizar la imagen:', error);
-      setMensaje(error.response?.data?.message || 'Error al actualizar la imagen');
-    } finally {
-      setLoading(false);
-    }
-  };
   
   const handleDelete = async (id: number) => {
     if (window.confirm('¿Estás seguro de que deseas eliminar esta materia?')) {
@@ -215,7 +180,7 @@ export default function VerProfesor() {
   return (
     <div className="min-h-screen bg-gray-900">
       <Navbar />
-      <div className="pt-24 pl-4 md:pl-16 lg:pl-52 pr-6 pb-5">
+      <div className={`pt-24 pl-4 ${user.rol=='admin' ? "md:pl-16 lg:pl-52" : ""} pr-6 pb-5`}>
         <div className="flex flex-col lg:flex-row gap-5">
                  
           <section className="lg:w-1/3 rounded-xl p-6 bg-gray-800 shadow-lg border border-gray-700">
@@ -230,31 +195,20 @@ export default function VerProfesor() {
             <div className="flex flex-col justify-center items-center w-full">
               <div className="relative group cursor-pointer" onClick={handleImageClick}>
                 <img
-                  src={imagePreview || (profesor?.image_path ? `${hostImg}${profesor.image_path}` : "/perfil.png")}
+                  src={imagePreview || (profesor?.image_path ? `${hostImg}${profesor.image_path}` : "/perfil.jpg")}
                   alt="Perfil"
                   className="h-32 w-32 rounded-full border-4 border-green-500 mb-4 object-cover transition-transform duration-300 group-hover:scale-105"
                 />
-                <div className="absolute inset-0 flex items-center justify-center rounded-full bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-all duration-300">
-                  <Upload className="w-8 h-8 text-white" />
-                </div>
+              
               </div>
               
-              <input
-                type="file"
-                id="imageInput"
-                className="hidden"
-                accept="image/*"
-                onChange={handleImageChange}
-              />
-              
               {/* Información detallada del profesor */}
-              <h3 className="text-2xl font-bold text-white mb-2">{profesor?.id}</h3>
               
               <div className="text-gray-300">
-                <p className="font-semibold">Cédula: <span className="font-normal">{profesor?.cedula}</span></p>
-                <p className="font-semibold">nombre: <span className="font-normal">{profesor?.nombre}</span></p>
-                <p className="font-semibold">Tipo de Contrato: <span className="font-normal">{profesor?.tipo_contrato}</span></p>
-                <p className="font-semibold">Estado: <span className="font-normal">{profesor?.estado}</span></p>
+                <p className="font-bold">Cédula: <span className="font-normal">{profesor?.cedula}</span></p>
+                <p className="font-bold">Nombre: <span className="font-normal">{profesor?.nombre}</span></p>
+                <p className="font-bold">Tipo de Contrato: <span className="font-normal">{profesor?.tipo_contrato}</span></p>
+                <p className="font-bold">Estado: <span className="font-normal">{profesor?.estado}</span></p>
                 <Link
                           to={`/profesor/editar/${profesor?.id}`}
                           className="flex items-center justify-center mt-4 p-2 rounded-lg bg-blue-600 hover:bg-blue-700 transition-colors duration-300 text-white"
@@ -265,77 +219,41 @@ export default function VerProfesor() {
                         </Link>
               </div>
 
-              {newImage && (
-                <div className="mt-4 w-full max-w-sm">
-                  <div className="bg-gray-700 rounded-lg p-4">
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-sm text-gray-300 truncate">{fileName}</span>
-                      <button
-                        onClick={handleRemoveImage}
-                        className="text-red-400 hover:text-red-500 transition-colors"
-                      >
-                        <X className="w-5 h-5" />
-                      </button>
-                    </div>
-                    
-                    <button
-                      onClick={handleImageUpload}
-                      disabled={loading}
-                      className="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-300 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                      {loading ? (
-                        <>
-                          <Triangle color="#ffffff" height={16} width={16} />
-                          <span>Subiendo...</span>
-                        </>
-                      ) : (
-                        <>
-                          <Upload className="w-4 h-4" />
-                          <span>Guardar imagen</span>
-                        </>
-                      )}
-                    </button>
-                  </div>
-                </div>
-              )}
+           
             </div>
           </section>
 
 
-                {/* Materias */}
-                <section className="border rounded-md p-4 m-5 flex flex-col items-center w-2/3 bg-gray-800 shadow-lg pt-4">
-            <h1 className='text-xl font-bold text-white'>Materias que dicta</h1>
 
-            <div className="pt-8 grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
+          {/* Sección de materias */}
+          <section className="lg:w-2/3 rounded-xl p-6 bg-gray-800 shadow-lg border border-gray-700">
+            <h2 className="text-2xl font-bold text-white mb-4">Materias Asignadas</h2>
+            
+            <ul className="grid gap-3 sm:grid-cols-2 sm:gap-3">
               {materias.map((materia) => (
-               <div key={materia.id} className="border rounded-md p-2 shadow-sm bg-gray-700">
-                  <h3 className="font-semibold text-white">{materia.nombreMateria}</h3>
-                  <p>Experiencia: {materia.experiencia}</p>
-                  <p>Calificación Alumno: {materia.calificacion_alumno}</p>
-                  <Link
-                          to={`/materias/editar/${materia.id}`}
-                          className="flex items-center justify-center mt-4 p-2 rounded-lg bg-blue-600 hover:bg-blue-700 transition-colors duration-300 text-white"
-                        >
-                          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-blue-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                          </svg>
-                        </Link>
-                        <button
-            onClick={() => handleDelete(materia.id)}
-            className="flex items-center justify-center p-2 rounded-lg bg-red-600 hover:bg-red-700 transition-colors duration-300 text-white"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-            </svg>
-          </button>
-                </div>
+                <li key={materia.id} className="flex justify-between items-center bg-gray-700 p-4 rounded-lg">
+                  <div>
+                    <p className="text-lg text-white">{materia.nombreMateria}</p>
+                    <p className="text-gray-400">Experiencia: {materia.experiencia} años</p>
+                    <p className="text-gray-400">Calificación de alumno: {materia.calificacion_alumno}</p>
+                  </div>
+                  <div className='flex flex-row justify-center items-center'>
+                      <Link
+                          to={`/profesor-materia/editar/${materia.id}`}
+                          className="flex items-center justify-center mt-4 p-2 rounded-lg text-blue-500 hover:bg-blue-900 transition-colors duration-300">
+                            Editar
+                          </Link>
+                  <button onClick={() => handleDelete(materia.id)} className="text-red-500 flex items-center justify-center mt-4 p-2 rounded-lg  hover:bg-red-900 transition-colors duration-300">
+                    Eliminar
+                  </button>
+                  </div>
+                </li>
               ))}
-            </div>
-            <div>
-              
-            </div>
+              {materias.length === 0 && <li className="text-gray-300">No hay materias asignadas.</li>}
+            </ul>
           </section>
         </div>
+ 
 
         {/* Clases */}
         <section className="mt-5 rounded-xl p-6 bg-gray-800 shadow-lg border border-gray-700">
@@ -366,8 +284,17 @@ export default function VerProfesor() {
         </section>
 
         {/* Horarios disponibles */}
+
         <section className="mt-5 mb-5 rounded-xl p-6 bg-gray-800 shadow-lg border border-gray-700">
-          <h2 className='text-xl font-bold text-white mb-4'>Horarios Disponibles</h2>
+          <h2 className='text-xl font-bold text-white mb-4'>Horas Disponibles</h2>
+          <button onClick={handleHorarios} className="bg-blue-500 text-white p-2 rounded">
+            {mostrarHorarios ? "Mostrar tabla" : "Mostrar horario"}
+          </button> 
+          {mostrarHorarios && (
+          <HorarioDispoible profesorId={idNumber} />
+          )}
+
+          {!mostrarHorarios && (
           <div className="overflow-x-auto rounded-lg border border-gray-700">
             <table className="min-w-full divide-y divide-gray-700">
               <thead className="bg-gray-700">
@@ -387,8 +314,11 @@ export default function VerProfesor() {
                 ))}
               </tbody>
             </table>
+            
           </div>
+            )}
         </section>
+
       </div>
     </div>
   );

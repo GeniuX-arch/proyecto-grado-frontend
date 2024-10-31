@@ -58,12 +58,16 @@ function App() {
         <AuthProvider>
             <Routes>
                 <Route path="/login" element={<Login />} />
-                <Route path="/register" element={<Register />} /> 
                 <Route path="/unauthorized" element={<Unauthorized />} />
 
                 {/* profesores */}
+                <Route path="/register" element={
+                    <ProtectedRoute allowedRoles={['admin']}>
+                        <Register />
+                    </ProtectedRoute>} />
+
                 <Route path="/" element={
-                    <ProtectedRoute allowedRoles={['admin', 'profesor']}>
+                    <ProtectedRoute allowedRoles={['admin']}>
                         <Profesores />
                     </ProtectedRoute>} />
 
@@ -71,7 +75,7 @@ function App() {
                     <CrearProfesor />
                     </ProtectedRoute>} />
 
-                    <Route path="/profesor/editar/:id" element={<ProtectedRoute allowedRoles={['admin']}>
+                    <Route path="/profesor/editar/:id" element={<ProtectedRoute allowedRoles={['admin','profesor']}>
                     <CrearProfesor />
                     </ProtectedRoute>} />
 
@@ -100,11 +104,11 @@ function App() {
                 </ProtectedRoute>} />
 
                 <Route path="/profesormateria/crear" element={
-                <ProtectedRoute allowedRoles={['admin']}>
+                <ProtectedRoute allowedRoles={['admin','profesor']}>
                     <CrearProfesorMateria />
                 </ProtectedRoute>} />
                 <Route path="/profesor-materia/editar/:id" element={
-                <ProtectedRoute allowedRoles={['admin']}>
+                <ProtectedRoute allowedRoles={['admin','profesor']}>
                     <CrearProfesorMateria />
                 </ProtectedRoute>} />
 
@@ -140,6 +144,10 @@ function App() {
 
 
                 <Route path="/clases" element={<ProtectedRoute allowedRoles={['admin']}>
+                    <Clases />
+                </ProtectedRoute>} />
+
+                <Route path="/editar-clase/:id" element={<ProtectedRoute allowedRoles={['admin']}>
                     <Clases />
                 </ProtectedRoute>} />
 
