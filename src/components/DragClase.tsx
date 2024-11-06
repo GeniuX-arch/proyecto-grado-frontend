@@ -35,7 +35,8 @@ const DragClase: React.FC<DragComponentProps> = ({ dia, idd, horaInicio, horaFin
       onClick={onClick} // Usa la prop onClick
     >
       <p>{titulo}</p>
-      <p>{descripcion}</p>
+      <p>{descripcion}
+      </p>
     </div>
   );
 };

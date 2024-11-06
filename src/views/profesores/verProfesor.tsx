@@ -8,6 +8,10 @@ import { Triangle } from 'react-loader-spinner';
 import { Upload, X } from 'lucide-react';
 
 import HorarioDispoible from '../../components/HorarioDisponible';
+import Horario from '../../components/Horario';
+import { listarMaterias } from '../../data/materias.conexion';
+import { listarSalones } from '../../data/salones.conexion';
+import { listarProfesores } from '../../data/profesores.conexion';
 
 interface Profesor {
   id?: number;
@@ -88,11 +92,13 @@ export default function VerProfesor() {
   const [materias, setMaterias] = useState<Materia[]>([]);
   const [horarios, setHorarios] = useState<Horario[]>([]);
   const [clases, setClases] = useState<Clase[]>([]);
+  const [clasesHorario, setClasesHoraio] = useState<Clase[]>([]);
   const [newImage, setNewImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [fileName, setFileName] = useState<string>('');
   const [mensaje, setMensaje] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
+
 
   const [mostrarHorarios, setMostrarHorarios] = useState(false);
   const [mostrarClases, setMostrarClases] = useState(false);
@@ -138,15 +144,43 @@ export default function VerProfesor() {
       console.error('Error al obtener horarios:', error);
     }
   };
+const obtenerClases = async () => {
+  try {
+    const response = await axios.get(`${host}/clases?profesor_id=${id}`);
+    const clasesData = response.data; // Aquí recibimos el array de clases
+    setClases(clasesData)
 
-  const obtenerClases = async () => {
-    try {
-      const response = await axios.get(`${host}/clases?profesor_id=${id}`);
-      setClases(response.data);
-    } catch (error) {
-      console.error('Error al obtener clases:', error);
-    }
-  };
+    const materias: Materia[] = await listarMaterias(); // Asumimos que retorna un array de Materia
+    const profesores: Profesor[] = await listarProfesores(); // Asumimos que retorna un array de Profesor
+    const salones: Salon[] = await listarSalones(); // Asumimos que retorna un array de Salon
+
+    const horarios = clasesData.map((clase: any) => {
+      const materia = materias.find(m => m.id === clase.materia_id);
+      const profesor = profesores.find(p => p.id === clase.profesor_id);
+      const salon = salones.find(s => s.id === clase.salon_id);
+
+      const descripcion = `
+        ${materia ? materia.nombre : 'Materia no encontrada'}, 
+        ${profesor ? profesor.nombre : 'Profesor no encontrado'}, 
+        ${salon ? salon.codigo : 'Salón no encontrado'}
+      `.trim();
+
+      return {
+        id: clase.id,
+        titulo: clase.grupo,
+        dia: clase.dia_semana,
+        horaInicio: clase.hora_inicio,
+        horaFin: clase.hora_fin,
+        descripcion: descripcion,
+      };
+    });
+
+    setClasesHoraio(horarios);
+  } catch (error) {
+    console.error('Error al obtener clases:', error);
+  }
+};
+
 
   useEffect(() => {
     if (id) {
@@ -256,8 +290,14 @@ export default function VerProfesor() {
  
 
         {/* Clases */}
+
         <section className="mt-5 rounded-xl p-6 bg-gray-800 shadow-lg border border-gray-700">
+
           <h2 className='text-xl font-bold text-white mb-4'>Clases Asignadas</h2>
+          <button onClick={handleClases} className="bg-blue-500 text-white p-2 rounded">
+            {mostrarClases ? "Mostrar tabla" : "Mostrar horario"}
+          </button> 
+          {!mostrarClases && (
           <div className="overflow-x-auto rounded-lg border border-gray-700">
             <table className="min-w-full divide-y divide-gray-700">
               <thead className="bg-gray-700">
@@ -281,6 +321,12 @@ export default function VerProfesor() {
             </table>
            
           </div>
+          )}
+
+          {mostrarClases && (
+            <Horario listadoClases={clasesHorario} />
+          )}
+
         </section>
 
         {/* Horarios disponibles */}

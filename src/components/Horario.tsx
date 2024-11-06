@@ -33,7 +33,11 @@ export default function Horario({ listadoClases }: { listadoClases: Horario[] })
     "15:00", "15:45", "16:30", "17:15", "18:00", "18:45"
   ];
 
+
+
+
   useEffect(() => {
+
     if (listadoClases.length > 0) {
       setClases(listadoClases);
       setIsLoaded(true);
@@ -54,7 +58,9 @@ export default function Horario({ listadoClases }: { listadoClases: Horario[] })
         });
 
         setHorarioo(newHorarioo);
+        
       };
+
 
       updateHorarioo();
     }
@@ -91,6 +97,7 @@ export default function Horario({ listadoClases }: { listadoClases: Horario[] })
     setSelectedClase(null);
   };
 
+
   const handleUpdateHorario = async (updatedClase: Horario) => {
     try {
       const response = await axios.get(`${host}/clases/${updatedClase.id}`);
@@ -106,11 +113,38 @@ export default function Horario({ listadoClases }: { listadoClases: Horario[] })
     }
   };
 
+   useEffect(() => {
+    // Check if listadoClases is undefined, null, empty, or contains only NaN
+    const isEmptyOrInvalid = 
+      !listadoClases || 
+      listadoClases.length === 0 || 
+      listadoClases.every(item => item === null || item === undefined || Number.isNaN(item));
+
+    if (isEmptyOrInvalid) {
+      setClases([]);
+      setIsLoaded(true);
+    } else {
+      setClases(listadoClases);
+      setIsLoaded(true);
+    }
+  }, [listadoClases]);
+
   if (!isLoaded) {
     return (
       <div className='flex flex-col items-center justify-center h-screen'>
         <Triangle />
         <p>Cargando...</p>
+      </div>
+    );
+  }
+    if (clases.length === 0) {
+    return (
+      <div className="min-h-screen bg-transparent bg-fixed bg-cover bg-center text-white pt-24 flex items-center justify-center">
+        <div className="bg-gray-800 bg-opacity-70 p-8 rounded-lg shadow-xl text-center">
+          <h2 className="text-2xl font-bold mb-4 text-white">No se encontraron clases</h2>
+          <p className="text-gray-300 mb-4">No hay clases disponibles en este momento.</p>
+         
+        </div>
       </div>
     );
   }
