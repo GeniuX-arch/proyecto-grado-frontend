@@ -5,6 +5,7 @@ import Navbar from '../../components/Navbar';
 import { host } from '../../data/server';
 import { actualizarProfesor, crearProfesor } from '../../data/profesores.conexion';
 import { useAuth } from '../../context/AuthContext';
+import { motion } from 'framer-motion';
 
 interface Profesor {
   id?: number;
@@ -16,10 +17,8 @@ interface Profesor {
   image_path?: string;
 }
 
-
-
 export default function CrearProfesor() {
-    const { user } = useAuth();
+  const { user } = useAuth();
   const { id } = useParams<{ id: string }>();
   const [profesor, setProfesor] = useState<Profesor>({
     tipo_cedula: '',
@@ -96,25 +95,23 @@ export default function CrearProfesor() {
     e.preventDefault();
 
     const data = new FormData();
-data.append('tipo_cedula', profesor.tipo_cedula);
-data.append('cedula', profesor.cedula);
-data.append('nombre', profesor.nombre);
-data.append('tipo_contrato', profesor.tipo_contrato);
-data.append('estado', profesor.estado);
-if (image) {
-    data.append('image', image);
-}
+    data.append('tipo_cedula', profesor.tipo_cedula);
+    data.append('cedula', profesor.cedula);
+    data.append('nombre', profesor.nombre);
+    data.append('tipo_contrato', profesor.tipo_contrato);
+    data.append('estado', profesor.estado);
+    if (image) {
+      data.append('image', image);
+    }
 
     try {
-
-      
       if (id) {
         await actualizarProfesor(Number(id), data);
         setMensaje('Profesor actualizado exitosamente');
-    } else {
+      } else {
         await crearProfesor(data);
         setMensaje('Profesor creado exitosamente');
-    }
+      }
 
       setProfesor({
         tipo_cedula: '',
@@ -132,235 +129,269 @@ if (image) {
   };
 
   return (
-    <div className={`min-h-screen bg-gray-900 pl-0  ${user.rol=='admin' ? "md:pl-16 lg:pl-52" : ""} pr-6`}  >
+    <div className="bg-gradient-to-br from-gray-900 via-blue-900 to-cyan-700 min-h-screen bg-cover bg-center flex flex-col items-center justify-center pl-4 md:pl-16 lg:pl-52 pr-6 pt-16">
       <Navbar />
-      <div className="relative min-h-screen flex flex-col items-center pt-32">
-        <div className="w-full max-w-md p-6 bg-gray-800 rounded-lg shadow-md">
-          <h2 className="text-2xl font-bold text-green-400 mb-6 text-center">
-            {id ? 'Editar Profesor' : 'Crear Profesor'}
-          </h2>
+      <motion.div
+        initial={{ opacity: 0, y: 50 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.7 }}
+        className="w-full max-w-md p-6 bg-gray-800 bg-opacity-90 backdrop-blur-lg rounded-lg shadow-lg"
+      >
+        <h2 className="text-3xl font-bold text-cyan-400 mb-6 text-center">
+          {id ? 'Editar Profesor' : 'Crear Profesor'}
+        </h2>
 
-          {mensaje && (
-            <div className={`mb-4 p-4 text-center text-white rounded ${mensaje.includes('Error') ? 'bg-red-600' : 'bg-green-600'}`}>
-              {mensaje}
+        {mensaje && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className={`mb-4 p-4 text-center text-white rounded ${mensaje.includes('Error') ? 'bg-red-600' : 'bg-green-600'}`}
+          >
+            {mensaje}
+          </motion.div>
+        )}
+
+        <form onSubmit={handleSubmit}>
+          {/* Tipo de Cédula */}
+          <div className="mb-4 relative">
+  <select
+    id="tipo_cedula"
+    name="tipo_cedula"
+    value={profesor.tipo_cedula}
+    onChange={handleChange}
+    className="peer h-full w-full border-b border-cyan-300 bg-transparent pt-4 pb-1.5 font-sans text-sm font-normal text-white outline-none transition-all placeholder-shown:border-cyan-300 focus:border-cyan-500"
+    required
+  >
+    <option
+      value=""
+      disabled
+      className="bg-gray-800 text-white"
+    >
+      Seleccione un tipo de cédula
+    </option>
+    <option
+      value="cc"
+      className="bg-gray-800 text-white"
+    >
+      Cédula de Ciudadanía
+    </option>
+    <option
+      value="ce"
+      className="bg-gray-800 text-white"
+    >
+      Cédula de Extranjería
+    </option>
+    <option
+      value="ti"
+      className="bg-gray-800 text-white"
+    >
+      Tarjeta de Identidad
+    </option>
+    <option
+      value="rc"
+      className="bg-gray-800 text-white"
+    >
+      Registro Civil
+    </option>
+    <option
+      value="pasaporte"
+      className="bg-gray-800 text-white"
+    >
+      Pasaporte
+    </option>
+  </select>
+  <label className="after:content[' '] pointer-events-none absolute left-0 -top-1.5 flex h-full w-full select-none text-[11px] font-normal leading-tight text-cyan-300 transition-all after:absolute after:-bottom-1.5 after:block after:w-full after:scale-x-0 after:border-b-2 after:border-cyan-500 after:transition-transform after:duration-300 peer-placeholder-shown:text-sm peer-placeholder-shown:leading-[4.25] peer-placeholder-shown:text-cyan-300 peer-focus:text-[11px] peer-focus:leading-tight peer-focus:text-cyan-300 peer-focus:after:scale-x-100 peer-focus:after:border-cyan-500">
+    Tipo de Cédula:
+  </label>
+</div>
+
+          {/* Cédula */}
+          <div className="mb-4 relative">
+            <input
+              type="text"
+              id="cedula"
+              name="cedula"
+              value={profesor.cedula}
+              onChange={handleChange}
+              className="peer h-full w-full border-b border-cyan-300 bg-transparent pt-4 pb-1.5 font-sans text-sm font-normal text-white outline-none transition-all placeholder-shown:border-cyan-300 focus:border-cyan-500"
+              placeholder=" "
+              required
+            />
+            <label className="after:content[' '] pointer-events-none absolute left-0 -top-1.5 flex h-full w-full select-none text-[11px] font-normal leading-tight text-cyan-300 transition-all after:absolute after:-bottom-1.5 after:block after:w-full after:scale-x-0 after:border-b-2 after:border-cyan-500 after:transition-transform after:duration-300 peer-placeholder-shown:text-sm peer-placeholder-shown:leading-[4.25] peer-placeholder-shown:text-cyan-300 peer-focus:text-[11px] peer-focus:leading-tight peer-focus:text-cyan-300 peer-focus:after:scale-x-100 peer-focus:after:border-cyan-500">
+              Cédula:
+            </label>
+          </div>
+
+          {/* Nombre */}
+          <div className="mb-4 relative">
+            <input
+              type="text"
+              id="nombre"
+              name="nombre"
+              value={profesor.nombre}
+              onChange={handleChange}
+              className="peer h-full w-full border-b border-cyan-300 bg-transparent pt-4 pb-1.5 font-sans text-sm font-normal text-white outline-none transition-all placeholder-shown:border-cyan-300 focus:border-cyan-500"
+              placeholder=" "
+              required
+            />
+            <label className="after:content[' '] pointer-events-none absolute left-0 -top-1.5 flex h-full w-full select-none text-[11px] font-normal leading-tight text-cyan-300 transition-all after:absolute after:-bottom-1.5 after:block after:w-full after:scale-x-0 after:border-b-2 after:border-cyan-500 after:transition-transform after:duration-300 peer-placeholder-shown:text-sm peer-placeholder-shown:leading-[4.25] peer-placeholder-shown:text-cyan-300 peer-focus:text-[11px] peer-focus:leading-tight peer-focus:text-cyan-300 peer-focus:after:scale-x-100 peer-focus:after:border-cyan-500">
+              Nombre:
+            </label>
+          </div>
+
+          {/* Tipo de Contrato */}
+          <div className="mb-4 relative">
+  <select
+    id="tipo_contrato"
+    name="tipo_contrato"
+    value={profesor.tipo_contrato}
+    onChange={handleChange}
+    className="peer h-full w-full border-b border-cyan-300 bg-transparent pt-4 pb-1.5 font-sans text-sm font-normal text-white outline-none transition-all placeholder-shown:border-cyan-300 focus:border-cyan-500"
+    required
+  >
+    <option
+      value=""
+      disabled
+      className="bg-gray-800 text-white"
+    >
+      Seleccione un tipo de contrato
+    </option>
+    <option
+      value="catedra"
+      className="bg-gray-800 text-white"
+    >
+      Cátedra
+    </option>
+    <option
+      value="planta"
+      className="bg-gray-800 text-white"
+    >
+      Planta
+    </option>
+    <option
+      value="tiempo_completo"
+      className="bg-gray-800 text-white"
+    >
+      Tiempo Completo
+    </option>
+  </select>
+  <label className="after:content[' '] pointer-events-none absolute left-0 -top-1.5 flex h-full w-full select-none text-[11px] font-normal leading-tight text-cyan-300 transition-all after:absolute after:-bottom-1.5 after:block after:w-full after:scale-x-0 after:border-b-2 after:border-cyan-500 after:transition-transform after:duration-300 peer-placeholder-shown:text-sm peer-placeholder-shown:leading-[4.25] peer-placeholder-shown:text-cyan-300 peer-focus:text-[11px] peer-focus:leading-tight peer-focus:text-cyan-300 peer-focus:after:scale-x-100 peer-focus:after:border-cyan-500">
+    Tipo de Contrato:
+  </label>
+</div>
+
+
+          {/* Estado */}
+         <div className="mb-4 relative">
+  <select
+    id="estado"
+    name="estado"
+    value={profesor.estado}
+    onChange={handleChange}
+    className="peer h-full w-full border-b border-cyan-300 bg-transparent pt-4 pb-1.5 font-sans text-sm font-normal text-white outline-none transition-all placeholder-shown:border-cyan-300 focus:border-cyan-500"
+    required
+  >
+    <option
+      value=""
+      disabled
+      className="bg-gray-800 text-white"
+    >
+      Seleccione un estado
+    </option>
+    <option
+      value="inactivo"
+      className="bg-gray-800 text-white"
+    >
+      Inactivo
+    </option>
+    <option
+      value="en_proceso"
+      className="bg-gray-800 text-white"
+    >
+      En Proceso
+    </option>
+    <option
+      value="activo"
+      className="bg-gray-800 text-white"
+    >
+      Activo
+    </option>
+  </select>
+  <label className="after:content[' '] pointer-events-none absolute left-0 -top-1.5 flex h-full w-full select-none text-[11px] font-normal leading-tight text-cyan-300 transition-all after:absolute after:-bottom-1.5 after:block after:w-full after:scale-x-0 after:border-b-2 after:border-cyan-500 after:transition-transform after:duration-300 peer-placeholder-shown:text-sm peer-placeholder-shown:leading-[4.25] peer-placeholder-shown:text-cyan-300 peer-focus:text-[11px] peer-focus:leading-tight peer-focus:text-cyan-300 peer-focus:after:scale-x-100 peer-focus:after:border-cyan-500">
+    Estado:
+  </label>
+</div>
+
+
+          {/* Imagen */}
+          <div className="mb-6">
+            <label className="block text-sm font-medium text-cyan-300 mb-2">
+              Foto de Perfil:
+            </label>
+            <div className="relative w-full h-44 flex items-center justify-center border-2 border-dashed border-cyan-300 rounded-lg bg-transparent hover:bg-gray-700/50 transition-all duration-300">
+              <input
+                type="file"
+                id="image"
+                accept="image/*"
+                onChange={handleImageChange}
+                className="absolute inset-0 opacity-0 cursor-pointer"
+                required={!id}
+              />
+              <div className="text-center">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-12 w-12 text-cyan-400 mx-auto mb-2"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M3 16l5.5-5.5a2.5 2.5 0 013.5 0l4 4 6-6"
+                  />
+                </svg>
+                <span className="block text-sm font-medium text-cyan-300">
+                  Arrastra una imagen aquí o haz clic para seleccionar
+                </span>
+                <span className="block text-xs text-cyan-400/70 mt-1">
+                  (Formatos: JPG, PNG, GIF)
+                </span>
+              </div>
+            </div>
+          </div>
+          {imagePreview && (
+            <div className="flex flex-col items-center p-4 mb-4">
+              <img
+                src={imagePreview}
+                alt="Preview"
+                className="h-32 w-32 object-cover rounded-full mb-4 border-4 border-cyan-500"
+              />
+              <span className="block text-sm font-medium text-cyan-300 mb-2">
+                {fileName}
+              </span>
+              <button
+                type="button"
+                onClick={handleRemoveImages}
+                className="bg-cyan-600 hover:bg-cyan-700 text-white font-bold py-2 px-4 rounded transition duration-300"
+              >
+                Quitar Imagen
+              </button>
             </div>
           )}
 
-          <form onSubmit={handleSubmit}>
-            <div className="mb-4">
-              <label htmlFor="tipo_cedula" className="block mb-1 text-sm text-green-400">
-                Tipo de Cédula:
-              </label>
-              <div className="relative">
-                <select
-                  id="tipo_cedula"
-                  name="tipo_cedula"
-                  value={profesor.tipo_cedula}
-                  onChange={handleChange}
-                  className="w-full h-10 bg-gray-700 placeholder:text-gray-400 text-white text-sm border border-green-500 rounded px-3 py-2 transition duration-300 ease focus:outline-none focus:border-green-400 hover:border-green-400 shadow-sm cursor-pointer"
-                  required
-                >
-                  <option value="" disabled>Seleccione un tipo de cédula</option>
-                  <option value="cc">Cédula de Ciudadanía</option>
-                  <option value="ce">Cédula de Extranjería</option>
-                  <option value="ti">Tarjeta de Identidad</option>
-                  <option value="rc">Registro Civil</option>
-                  <option value="pasaporte">Pasaporte</option>
-                </select>
-                <svg 
-                  xmlns="http://www.w3.org/2000/svg" 
-                  fill="none" 
-                  viewBox="0 0 24 24" 
-                  strokeWidth="1.2" 
-                  stroke="currentColor" 
-                  className="h-5 w-5 ml-1 absolute top-2.5 right-2.5 text-green-400"
-                >
-                  <path 
-                    strokeLinecap="round" 
-                    strokeLinejoin="round" 
-                    d="M8.25 15 12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9" 
-                  />
-                </svg>
-              </div>
-            </div>
-
-            <div className="mb-4 relative">
-              <input
-                type="number"
-                id="cedula"
-                name="cedula"
-                value={profesor.cedula}
-                onChange={handleChange}
-                className="peer h-full w-full border-b border-green-500 bg-gray-700 pt-4 pb-1.5 font-sans text-sm font-normal text-white outline-none transition-all placeholder-shown:border-green-500 focus:border-green-400 disabled:border-0 disabled:bg-green-50"
-                placeholder=" "
-                required
-              />
-              <label
-                htmlFor="cedula"
-                className="after:content[' '] pointer-events-none absolute left-0 -top-1.5 flex h-full w-full select-none text-[11px] font-normal leading-tight text-green-400 transition-all after:absolute after:-bottom-1.5 after:block after:w-full after:scale-x-0 after:border-b-2 after:border-green-400 after:transition-transform after:duration-300 peer-placeholder-shown:text-sm peer-placeholder-shown:leading-[4.25] peer-placeholder-shown:text-green-400 peer-focus:text-[11px] peer-focus:leading-tight peer-focus:text-green-400 peer-focus:after:scale-x-100 peer-focus:after:border-green-400 peer-disabled:text-transparent peer-disabled:peer-placeholder-shown:text-green-400"
-              >
-                Cédula
-              </label>
-            </div>
-
-            <div className="mb-4 relative">
-              <input
-                type="text"
-                id="nombre"
-                name="nombre"
-                value={profesor.nombre}
-                onChange={handleChange}
-                className="peer h-full w-full border-b border-green-500 bg-gray-700 pt-4 pb-1.5 font-sans text-sm font-normal text-white outline-none transition-all placeholder-shown:border-green-500 focus:border-green-400 disabled:border-0 disabled:bg-green-50"
-                placeholder=" "
-                required
-              />
-              <label
-                htmlFor="nombre"
-                className="after:content[' '] pointer-events-none absolute left-0 -top-1.5 flex h-full w-full select-none text-[11px] font-normal leading-tight text-green-400 transition-all after:absolute after:-bottom-1.5 after:block after:w-full after:scale-x-0 after:border-b-2 after:border-green-400 after:transition-transform after:duration-300 peer-placeholder-shown:text-sm peer-placeholder-shown:leading-[4.25] peer-placeholder-shown:text-green-400 peer-focus:text-[11px] peer-focus:leading-tight peer-focus:text-green-400 peer-focus:after:scale-x-100 peer-focus:after:border-green-400 peer-disabled:text-transparent peer-disabled:peer-placeholder-shown:text-green-400"
-              >
-                Nombre
-              </label>
-            </div>
-
-            <div className="mb-4">
-              <label htmlFor="tipo_contrato" className="block mb-1 text-sm text-green-400">
-                Tipo de Contrato:
-              </label>
-              <div className="relative">
-                <select
-                  id="tipo_contrato"
-                  name="tipo_contrato"
-                  value={profesor.tipo_contrato}
-                  onChange={handleChange}
-                  className="w-full h-10 bg-gray-700 placeholder:text-gray-400 text-white text-sm border border-green-500 rounded px-3 py-2 transition duration-300 ease focus:outline-none focus:border-green-400 hover:border-green-400 shadow-sm cursor-pointer"
-                  required
-                >
-                  <option value="" disabled>Seleccione un tipo de contrato</option>
-                  <option value="catedra">Cátedra</option>
-                  <option value="planta">Planta</option>
-                  <option value="tiempo_completo">Tiempo Completo</option>
-                </select>
-                <svg 
-                  xmlns="http://www.w3.org/2000/svg" 
-                  fill="none" 
-                  viewBox="0 0 24 24" 
-                  strokeWidth="1.2" 
-                  stroke="currentColor" 
-                  className="h-5 w-5 ml-1 absolute top-2.5 right-2.5 text-green-400"
-                >
-                  <path 
-                    strokeLinecap="round" 
-                    strokeLinejoin="round" 
-                    d="M8.25 15 12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9" 
-                  />
-                </svg>
-              </div>
-            </div>
-
-            <div className="mb-4">
-              <label htmlFor="estado" className="block mb-1 text-sm text-green-400">
-                Estado:
-              </label>
-              <div className="relative">
-                <select
-                  id="estado"
-                  name="estado"
-                  value={profesor.estado}
-                  onChange={handleChange}
-                  className="w-full h-10 bg-gray-700 placeholder:text-gray-400 text-white text-sm border border-green-500 rounded px-3 py-2 transition duration-300 ease focus:outline-none focus:border-green-400 hover:border-green-400 shadow-sm cursor-pointer"
-                  required
-                >
-                  <option value="" disabled>Seleccione un estado</option>
-                  <option value="inactivo">Inactivo</option>
-                  <option value="en_proceso">En Proceso</option>
-                  <option value="activo">Activo</option>
-                </select>
-                <svg 
-                  xmlns="http://www.w3.org/2000/svg" 
-                  fill="none" 
-                  viewBox="0 0 24 24" 
-                  strokeWidth="1.2" 
-                  stroke="currentColor" 
-                  className="h-5 w-5 ml-1 absolute top-2.5 right-2.5 text-green-400"
-                >
-                  <path 
-                    strokeLinecap="round" 
-                    strokeLinejoin="round" 
-                    d="M8.25 15 12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9" 
-                  />
-                </svg>
-              </div>
-            </div>
-
-{/*imagen*/}
-<div className="mb-6">
-              <label htmlFor="image" className="block text-lg font-semibold text-green-600 mb-3">
-                Subir Foto de Perfil:
-              </label>
-              <div className="relative w-full h-44 flex items-center justify-center border-2 border-dashed border-green-400 rounded-lg bg-gray-800 hover:bg-gray-500 focus-within:border-green-500 transition-all duration-300">
-                <input
-                  type="file"
-                  id="image"
-                  accept="image/*"
-                  onChange={handleImageChange}
-                  className="absolute inset-0 opacity-0 cursor-pointer"
-                  required={!id} // Make required only if not editing
-                />
-                <div className="text-center">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-12 w-12 text-green-400 mx-auto mb-2"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M3 16l5.5-5.5a2.5 2.5 0 013.5 0l4 4 6-6"
-                    />
-                  </svg>
-                  <span className="block text-sm font-medium text-gray-200">
-                    Arrastra una imagen aquí o haz clic para seleccionar
-                  </span>
-                  <span className="block text-xs text-gray-400 mt-1">
-                    (Formatos: JPG, PNG, GIF)
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            {imagePreview && (
-              <div className="flex flex-col items-center p-4">
-                <img
-                  src={imagePreview}
-                  alt="Preview"
-                  className="h-32 w-32 object-cover rounded-full mb-4 border-4 border-green-500"
-                />
-                <span className="block text-sm font-medium text-gray-500">
-                  {fileName}
-                </span>
-                <button
-                  onClick={handleRemoveImages}
-                  className="mt-3 bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-all duration-300"
-                >
-                  Quitar Imagen
-                </button>
-              </div>
-            )}
-
-            <div className="text-center">
-              <button
-                type="submit"
-                className="w-full bg-green-700 hover:bg-green-800 text-white font-bold py-2 px-4 rounded transition duration-300"
-              >
-                {id ? 'Actualizar' : 'Enviar'}
-              </button>
-            </div>
-          </form>
-        </div>
-      </div>
+          <div className="flex justify-between items-center">
+            <button
+              type="submit"
+              className="w-full bg-cyan-600 hover:bg-cyan-700 text-white font-bold py-2 px-4 rounded-lg transition duration-300"
+            >
+              {id ? 'Actualizar Profesor' : 'Guardar Profesor'}
+            </button>
+          </div>
+        </form>
+      </motion.div>
     </div>
   );
 }
