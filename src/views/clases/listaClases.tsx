@@ -34,21 +34,15 @@ interface Horario {
     const fetchData = async () => {
       try {
         const lista: Clase[] = await listarClases(); // Assuming listarClases returns Clase[]
-        const materias: Materia[] = await listarMaterias(); // Assuming it returns Materia[]
-        const profesores: Profesor[] = await listarProfesores(); // Assuming it returns Profesor[]
-        const salones: Salon[] = await listarSalones(); // Assuming it returns Salon[]
 
         console.log(lista);
 
         const horarios = lista.map((item) => {
-          const materia = materias.find(m => m.id === item.materia_id);
-          const profesor = profesores.find(p => p.id === item.profesor_id);
-          const salon = salones.find(s => s.id === item.salon_id);
 
             const descripcion = `
-            ${materia ? materia.nombre : 'Materia no encontrada'}, 
-            ${profesor ? profesor.nombre : 'Profesor no encontrado'}, 
-            ${salon ? salon.codigo : 'Salón no encontrado'}
+            ${item.profesor_nombre}, 
+            ${item.materia_nombre}, 
+            ${item.salon_codigo}
           `;
 
           return {

@@ -7,7 +7,7 @@ const clase = "clases"; // Variable clase definida fuera de las funciones
 
 export const listarClases = async (): Promise<any[]> => {
     try {
-        const response = await axios.get(`${host}/${clase}`);
+        const response = await axios.get(`${host}/${clase}?name=true`);
         return response.data;
     } catch (error) {
         console.error('Error al listar las clases: ', error);

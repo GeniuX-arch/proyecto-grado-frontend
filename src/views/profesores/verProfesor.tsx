@@ -73,15 +73,6 @@ const actualizarImagenProfesor = async (id: string, archivoImagen: File, setImag
 
 
 
-const obtenerNombreMateria = async (materiaId) => {
-  try {
-    const response = await axios.get(`${host}/materias/${materiaId}`);
-    return response.data.nombre;
-  } catch (error) {
-    console.error('Error al obtener el nombre de la materia:', error);
-    return 'Desconocido';
-  }
-};
 
 export default function VerProfesor() {
   const { user } = useAuth();
@@ -123,11 +114,10 @@ export default function VerProfesor() {
 
   const obtenerMaterias = async () => {
     try {
-      const response = await axios.get(`${host}/profesor_materia?profesor_id=${id}`);
+      const response = await axios.get(`${host}/profesor_materia?profesor_id=${id}&name=true`);
       const materiasConNombre = await Promise.all(
         response.data.map(async (materia) => {
-          const nombreMateria = await obtenerNombreMateria(materia.materia_id);
-          return { ...materia, nombreMateria };
+          return { ...materia };
         })
       );
       setMaterias(materiasConNombre);
@@ -138,7 +128,7 @@ export default function VerProfesor() {
 
   const obtenerHorarios = async () => {
     try {
-      const response = await axios.get(`${host}/horarios_disponibles?profesor_id=${id}`);
+      const response = await axios.get(`${host}/horarios_disponibles?profesor_id=${id}&name=true`);
       setHorarios(response.data);
     } catch (error) {
       console.error('Error al obtener horarios:', error);
@@ -146,23 +136,16 @@ export default function VerProfesor() {
   };
 const obtenerClases = async () => {
   try {
-    const response = await axios.get(`${host}/clases?profesor_id=${id}`);
+    const response = await axios.get(`${host}/clases?profesor_id=${id}&name=true`);
     const clasesData = response.data; // Aquí recibimos el array de clases
     setClases(clasesData)
 
-    const materias: Materia[] = await listarMaterias(); // Asumimos que retorna un array de Materia
-    const profesores: Profesor[] = await listarProfesores(); // Asumimos que retorna un array de Profesor
-    const salones: Salon[] = await listarSalones(); // Asumimos que retorna un array de Salon
-
     const horarios = clasesData.map((clase: any) => {
-      const materia = materias.find(m => m.id === clase.materia_id);
-      const profesor = profesores.find(p => p.id === clase.profesor_id);
-      const salon = salones.find(s => s.id === clase.salon_id);
-
+      
       const descripcion = `
-        ${materia ? materia.nombre : 'Materia no encontrada'}, 
-        ${profesor ? profesor.nombre : 'Profesor no encontrado'}, 
-        ${salon ? salon.codigo : 'Salón no encontrado'}
+        ${clase.profesor_nombre}, 
+        ${clase.materia_nombre}, 
+        ${clase.salon_codigo}
       `.trim();
 
       return {
@@ -267,7 +250,7 @@ const obtenerClases = async () => {
               {materias.map((materia) => (
                 <li key={materia.id} className="flex justify-between items-center bg-gray-700 p-4 rounded-lg">
                   <div>
-                    <p className="text-lg text-white">{materia.nombreMateria}</p>
+                    <p className="text-lg text-white">{materia.materia_nombre}</p>
                     <p className="text-gray-400">Experiencia: {materia.experiencia} años</p>
                     <p className="text-gray-400">Calificación de alumno: {materia.calificacion_alumno}</p>
                   </div>

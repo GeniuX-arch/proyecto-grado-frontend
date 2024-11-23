@@ -23,7 +23,6 @@ interface Profesor {
 
 export default function ListaHorariosDisponibles() {
   const [horarios, setHorarios] = useState<Horario[]>([]);
-  const [profesores, setProfesores] = useState<Profesor[]>([]);
   const [mensaje, setMensaje] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [filtroProfesor, setFiltroProfesor] = useState<number | null>(null);
@@ -33,11 +32,9 @@ export default function ListaHorariosDisponibles() {
     const fetchData = async () => {
       setIsLoading(true);
       try {
-        const responseHorarios = await axios.get<Horario[]>(`${host}/horarios_disponibles`);
+        const responseHorarios = await axios.get<Horario[]>(`${host}/horarios_disponibles?name=true`);
         setHorarios(responseHorarios.data);
         
-        const responseProfesores = await axios.get<Profesor[]>(`${host}/profesores`);
-        setProfesores(responseProfesores.data);
       } catch (error) {
         console.error('Error al cargar datos:', error);
         setMensaje('Error al cargar los datos');
@@ -48,10 +45,26 @@ export default function ListaHorariosDisponibles() {
     fetchData();
   }, []);
 
-  const getProfesorNombre = (profesor_id: number) => {
-    const profesor = profesores.find(p => p.id === profesor_id);
-    return profesor ? profesor.nombre : 'Desconocido';
+
+  useEffect(() => {
+  const fetchHorarios = async () => {
+    setIsLoading(true);
+    try {
+      const response = await axios.get<Horario[]>(
+        `${host}/horarios_disponibles?profesor_nombre=${busquedaProfesor}&name=true`
+      );
+      
+      setHorarios(response.data);
+    } catch (error) {
+      console.error("Error al cargar datos:", error);
+      setMensaje("Error al cargar los datos");
+    } finally {
+      setIsLoading(false);
+    }
   };
+
+  fetchHorarios();
+}, [busquedaProfesor]);
 
   const handleDelete = async (id: number) => {
     if (window.confirm('¿Estás seguro de que deseas eliminar este horario?')) {
@@ -67,15 +80,7 @@ export default function ListaHorariosDisponibles() {
   };
 
   // Filtrar y buscar horarios
-  const horariosFiltrados = horarios.filter(horario => {
-    const profesor = profesores.find(p => p.id === horario.profesor_id);
-    const nombreProfesor = profesor ? profesor.nombre.toLowerCase() : '';
 
-    return (
-      (!filtroProfesor || horario.profesor_id === filtroProfesor) &&
-      nombreProfesor.includes(busquedaProfesor.toLowerCase())
-    );
-  });
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-cyan-700 pl-4 md:pl-16 lg:pl-52 pr-6 pt-10">
@@ -157,8 +162,8 @@ export default function ListaHorariosDisponibles() {
                           </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-200 bg-white">
-                          {horariosFiltrados.length > 0 ? (
-                            horariosFiltrados.map((horario) => (
+                          {horarios.length > 0 ? (
+                            horarios.map((horario) => (
                               <motion.tr 
                                 key={horario.id}
                                 initial={{ opacity: 0 }}
@@ -166,7 +171,7 @@ export default function ListaHorariosDisponibles() {
                                 exit={{ opacity: 0 }}
                                 transition={{ duration: 0.3 }}
                               >
-                                <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{getProfesorNombre(horario.profesor_id)}</td>
+                                <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{horario.profesor_nombre}</td>
                                 <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm text-gray-500 sm:pl-6">{horario.dia}</td>
                                 <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{horario.hora_inicio}</td>
                                 <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{horario.hora_fin}</td>

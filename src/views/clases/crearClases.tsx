@@ -98,9 +98,9 @@ export default function CrearClase() {
         hora_inicio: '',
         hora_fin: '',
         alumnos: 0,
-        materia_id: 0,
-        profesor_id: 0,
-        salon_id: 0,
+        materia_nombre: '',
+        profesor_nombre: '',
+        salon_codigo: '',
       });
     } catch (error) {
       console.error('Error al enviar los datos:', error);

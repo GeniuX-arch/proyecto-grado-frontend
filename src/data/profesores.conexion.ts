@@ -4,9 +4,10 @@ import { Profesor } from "../interfaces/interfaces";
 
 const profesor = 'profesores'; // Variable definida fuera de las funciones
 
-export const listarProfesores = async (): Promise<any[]> => {
+export const listarProfesores = async (page:number): Promise<any[]> => {
     try {
-        const response= await axios.get(`${host}/${profesor}`);
+        console.log(page)
+        const response= await axios.get(`${host}/${profesor}?page=${page}&name=true`);
         return response.data;
     } catch (error) {
         console.error('Error al listar los profesores: ', error);

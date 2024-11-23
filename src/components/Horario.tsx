@@ -10,7 +10,7 @@ import { host } from "../data/server";
 import { Link } from "react-router-dom";
 
 interface Horario {
-  id?: number;
+  id: number;
   titulo?: string;
   descripcion?: string;
   dia: string;
@@ -68,21 +68,14 @@ export default function Horario({ listadoClases }: { listadoClases: Horario[] })
 
   const fetchClassDetails = async (claseId: number) => {
     try {
-      const response = await axios.get(`${host}/clases/${claseId}`);
+      
+      const response = await axios.get(`${host}/clases/${claseId}`);//
       const clase = response.data;
 
       // Fetch related data based on IDs
-      const [materiaResponse, salonResponse, profesorResponse] = await Promise.all([
-        axios.get(`${host}/materias/${clase.materia_id}`),
-        axios.get(`${host}/salones/${clase.salon_id}`),
-        axios.get(`${host}/profesores/${clase.profesor_id}`)
-      ]);
 
       setSelectedClase({
         ...clase,
-        materiaNombre: materiaResponse.data.nombre, // Assuming `nombre` is the name field
-        salonCodigo: salonResponse.data.codigo, // Assuming `codigo` is the code field
-        profesorNombre: profesorResponse.data.nombre // Assuming `nombre` is the name field
       });
     } catch (error) {
       console.error("Error al obtener la clase:", error);
@@ -91,6 +84,7 @@ export default function Horario({ listadoClases }: { listadoClases: Horario[] })
 
   const handleOpenModal = async (clase: Horario) => {
     await fetchClassDetails(clase.id);
+    console.log(clase)
   };
 
   const handleCloseModal = () => {
@@ -164,9 +158,9 @@ export default function Horario({ listadoClases }: { listadoClases: Horario[] })
             <p className="text-lg"><strong>Día:</strong> {selectedClase.dia_semana}</p>
             <p className="text-lg"><strong>Hora Inicio:</strong> {selectedClase.hora_inicio}</p>
             <p className="text-lg"><strong>Hora Fin:</strong> {selectedClase.hora_fin}</p>
-            <p className="text-lg"><strong>Materia:</strong> {selectedClase.materiaNombre}</p>
-            <p className="text-lg"><strong>Salón:</strong> {selectedClase.salonCodigo}</p>
-            <p className="text-lg"><strong>Profesor:</strong> {selectedClase.profesorNombre}</p>
+            <p className="text-lg"><strong>Materia:</strong> {selectedClase.materia_nombre}</p>
+            <p className="text-lg"><strong>Salón:</strong> {selectedClase.salon_codigo}</p>
+            <p className="text-lg"><strong>Profesor:</strong> {selectedClase.profesor_nombre}</p>
             <div className="flex flex-row justify-center items-center gap-3">
               <button
                 className="mt-4 bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700 transition duration-200 "
@@ -236,7 +230,8 @@ export default function Horario({ listadoClases }: { listadoClases: Horario[] })
                               }
                             }}
                           >
-                            {diaClases.map((clase, claseIndex) => (
+                            {
+                            diaClases.map((clase, claseIndex) => (
                               <DragClase
                                 key={claseIndex}
                                 {...clase}
