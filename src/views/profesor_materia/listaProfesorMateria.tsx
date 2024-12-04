@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { PlusIcon, PencilIcon, TrashIcon } from '@heroicons/react/24/outline';
+import { PlusIcon, PencilIcon, TrashIcon, ArrowsUpDownIcon } from '@heroicons/react/24/outline';
+
 import Navbar from '../../components/Navbar';
 import { host } from '../../data/server';
 import { ProfesorMateria } from '../../interfaces/interfaces';
@@ -11,27 +12,48 @@ export default function VisualizarProfesorMateria() {
   const [profesorMaterias, setProfesorMaterias] = useState<ProfesorMateria[]>([]);
   const [mensaje, setMensaje] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [busquedaProfesor, setBusquedaProfesor] = useState<string>(''); // State for professor name search
+  
+  // New state to track search type
+  const [searchType, setSearchType] = useState<'profesor_nombre' | 'materia_codigo'>('profesor_nombre');
+  const [searchInput, setSearchInput] = useState<string>('');
 
-  useEffect(() => {
-    const fetchData = async () => {
-      setIsLoading(true);
-      try {
-        // Fetch filtered data based on professor name
-        const responseProfesorMateria = await axios.get<ProfesorMateria[]>(
-          `${host}/profesor_materia?name=true&profesor_nombre=${busquedaProfesor}`
-        );
-        setProfesorMaterias(responseProfesorMateria.data);
-      } catch (error) {
-        console.error('Error al cargar datos:', error);
-        setMensaje('Error al cargar los datos');
-      } finally {
-        setIsLoading(false);
-      }
-    };
+useEffect(() => {
+  const fetchData = async () => {
+    setIsLoading(true);
+    try {
+      // Construir el endpoint de búsqueda según el tipo o hacer consulta general
+      const searchParam = searchInput 
+        ? searchType === 'profesor_nombre'
+          ? `profesor_nombre=${searchInput}`
+          : `materia_nombre=${searchInput}`
+        : '';
 
-    fetchData();
-  }, [busquedaProfesor]); // Re-fetch data when search input changes
+      const responseProfesorMateria = await axios.get<ProfesorMateria[]>(
+        `${host}/profesor_materia?name=true&${searchParam}`
+      );
+      setProfesorMaterias(responseProfesorMateria.data);
+      setMensaje(''); // Limpiar mensaje de error si la consulta es exitosa
+    } catch (error) {
+      console.error('Error al cargar datos:', error);
+      setMensaje('Error al cargar los datos');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Realizar la consulta en cualquier caso
+  fetchData();
+}, [searchInput, searchType]);
+
+
+  // Toggle between search types
+  const toggleSearchType = () => {
+    setSearchType(prevType => 
+      prevType === 'profesor_nombre' ? 'materia_codigo' : 'profesor_nombre'
+    );
+    // Clear input when switching search type
+    setSearchInput('');
+  };
 
   const handleDelete = async (id: number) => {
     if (window.confirm('¿Estás seguro de que deseas eliminar esta relación profesor-materia?')) {
@@ -63,17 +85,32 @@ export default function VisualizarProfesorMateria() {
               </Link>
             </div>
 
-            {/* Search input for filtering by professor name */}
-            <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700 mb-1">Buscar por nombre del profesor:</label>
+            {/* Search input with toggle */}
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              {searchType === 'profesor_nombre' 
+                ? 'Buscar por nombre del profesor:' 
+                : 'Buscar por código de materia:'}
+            </label>
+            <div className="flex items-center">
               <input 
                 type="text" 
-                value={busquedaProfesor} 
-                onChange={(e) => setBusquedaProfesor(e.target.value)} 
-                className="block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 text-base focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                placeholder="Buscar profesor..."
+                value={searchInput} 
+                onChange={(e) => setSearchInput(e.target.value)} 
+                className="block flex-grow border border-gray-300 rounded-l-md shadow-sm py-2 px-3 text-base focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                placeholder={searchType === 'profesor_nombre' 
+                  ? 'Buscar profesor...' 
+                  : 'Buscar código de materia...'}
               />
+              <button 
+                onClick={toggleSearchType}
+                className="inline-flex items-center px-4 py-2 border border-l-0 border-gray-300 bg-gray-50 text-sm font-medium text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 rounded-r-md"
+                title="Cambiar tipo de búsqueda"
+              >
+                <ArrowsUpDownIcon className="h-5 w-5" />
+              </button>
             </div>
+          </div>
 
             <AnimatePresence>
               {mensaje && (
