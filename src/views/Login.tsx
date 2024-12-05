@@ -19,7 +19,7 @@ export default function Login() {
     try {
       const rol= await login(email, password);
       console.log(rol)
-      if(rol=='admin'){
+      if(rol==='admin'){
       navigate("/");
       }else{
       navigate("/profesor/perfil/1");

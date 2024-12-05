@@ -26,7 +26,6 @@ export default function CrearClase() {
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredProfesores, setFilteredProfesores] = useState<Profesor[]>([]);
     const [showListProfesores, setShowListProfesores] = useState(true);
-      const [showListMaterias, setShowListMaterias] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {

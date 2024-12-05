@@ -15,7 +15,44 @@ import {
 import { motion, AnimatePresence } from 'framer-motion';
 import gestionutsLogo from '../../public/logo.png';
 
-const MenuItem = ({ to, icon: Icon, children }) => {
+// Types
+interface User {
+  email: string;
+  rol: string;
+}
+
+interface Notification {
+  id: number;
+  message: string;
+}
+
+interface MenuItemProps {
+  to: string;
+  icon: React.ComponentType<{ className?: string }>;
+  children: React.ReactNode;
+}
+
+interface SubMenuItem {
+  to: string;
+  label: string;
+  icon: React.ComponentType<{ className?: string }>;
+}
+
+interface SubMenuProps {
+  title: string;
+  items: SubMenuItem[];
+  icon: React.ComponentType<{ className?: string }>;
+}
+
+interface MenuItem {
+  to?: string;
+  title?: string;
+  label?: string;
+  icon: React.ComponentType<{ className?: string }>;
+  items?: SubMenuItem[];
+}
+
+const MenuItem: React.FC<MenuItemProps> = ({ to, icon: Icon, children }) => {
   const location = useLocation();
   const isActive = location.pathname === to;
 
@@ -34,7 +71,7 @@ const MenuItem = ({ to, icon: Icon, children }) => {
   );
 };
 
-const SubMenu = ({ title, items, icon: Icon }) => {
+const SubMenu: React.FC<SubMenuProps> = ({ title, items, icon: Icon }) => {
   const [isOpen, setIsOpen] = useState(false);
   return (
     <div>
@@ -74,13 +111,13 @@ const SubMenu = ({ title, items, icon: Icon }) => {
   );
 };
 
-export default function Navbar() {
+export default function Navbar(): React.JSX.Element {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [notifications, setNotifications] = useState([]);
-  const profileMenuRef = useRef(null);
+  const [notifications, setNotifications] = useState<Notification[]>([]);
+  const profileMenuRef = useRef<HTMLDivElement>(null);
 
   const handleLogout = useCallback(async () => {
     try {
@@ -93,8 +130,11 @@ export default function Navbar() {
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
-  const handleClickOutside = (event) => {
-    if (profileMenuRef.current && !profileMenuRef.current.contains(event.target)) {
+  const handleClickOutside = (event: MouseEvent) => {
+    if (
+      profileMenuRef.current && 
+      !profileMenuRef.current.contains(event.target as Node)
+    ) {
       setIsProfileOpen(false);
     }
   };
@@ -108,7 +148,7 @@ export default function Navbar() {
 
   useEffect(() => {
     const fetchNotifications = async () => {
-      const mockNotifications = [
+      const mockNotifications: Notification[] = [
         { id: 1, message: 'Nueva clase asignada' },
         { id: 2, message: 'Recordatorio: Reunión de algo' },
       ];
@@ -117,7 +157,7 @@ export default function Navbar() {
     fetchNotifications();
   }, []);
 
-  const menuItems = [
+  const menuItems: MenuItem[] = [
     { to: '/', label: 'Profesores', icon: UsersIcon },
     { to: '/vistaClases', label: 'Clases', icon: BookOpenIcon },
     {
@@ -141,10 +181,11 @@ export default function Navbar() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16m-7 6h7" />
             </svg>
           </button>
-          <h1>  <img src={gestionutsLogo} alt="Logo Gestion UTS" className="h-14 " /></h1>
+          <h1>
+            <img src={gestionutsLogo} alt="Logo Gestion UTS" className="h-14" />
+          </h1>
         </div>
         <div className="flex items-center space-x-6">
-          
           <div className="relative" ref={profileMenuRef}>
             <UserIcon
               className="h-8 w-8 text-white hover:text-indigo-300 transition-transform duration-300 hover:scale-110 cursor-pointer"
@@ -163,7 +204,12 @@ export default function Navbar() {
                   <div className="px-4 py-2 text-sm text-gray-700">
                     {user ? `Hola, ${user.email}` : 'Iniciar Sesión'}
                   </div>
-                  <button onClick={handleLogout} className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-indigo-100 transition-colors duration-300">Cerrar Sesión</button>
+                  <button 
+                    onClick={handleLogout} 
+                    className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-indigo-100 transition-colors duration-300"
+                  >
+                    Cerrar Sesión
+                  </button>
                 </motion.div>
               )}
             </AnimatePresence>
@@ -171,18 +217,31 @@ export default function Navbar() {
         </div>
       </header>
 
-      {user.rol === 'admin' && (
-        <aside className={`bg-gray-900 fixed left-0 top-16 h-full w-48 z-40 flex flex-col transition-transform duration-300 transform ${isMenuOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 shadow-xl`}>
+      {user?.rol === 'admin' && (
+        <aside 
+          className={`bg-gray-900 fixed left-0 top-16 h-full w-48 z-40 flex flex-col transition-transform duration-300 transform ${
+            isMenuOpen ? 'translate-x-0' : '-translate-x-full'
+          } lg:translate-x-0 shadow-xl`}
+        >
           <div className="p-4 flex justify-center">
-            
+            {/* Optional: Additional content */}
           </div>
           <nav className="flex-grow overflow-y-auto">
             <div className="flex flex-col space-y-2 p-4">
               {menuItems.map((item) => 
                 item.items ? (
-                  <SubMenu key={item.title} title={item.title} items={item.items} icon={item.icon} />
+                  <SubMenu 
+                    key={item.title} 
+                    title={item.title || ''} 
+                    items={item.items} 
+                    icon={item.icon} 
+                  />
                 ) : (
-                  <MenuItem key={item.to} to={item.to} icon={item.icon}>
+                  <MenuItem 
+                    key={item.to} 
+                    to={item.to || ''} 
+                    icon={item.icon}
+                  >
                     {item.label}
                   </MenuItem>
                 )
@@ -193,4 +252,4 @@ export default function Navbar() {
       )}
     </>
   );
-    }
+}

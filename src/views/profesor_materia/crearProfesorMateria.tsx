@@ -85,7 +85,7 @@ export default function CrearProfesorMateria() {
   };
 
   return (
-    <div className={`bg-gradient-to-br from-gray-900 via-blue-900 to-cyan-700 min-h-screen bg-cover bg-center flex flex-col items-center justify-center pl-4 ${user.rol=='admin' ? "md:pl-16 lg:pl-52" : ""} pr-6 pt-16`}>
+    <div className={`bg-gradient-to-br from-gray-900 via-blue-900 to-cyan-700 min-h-screen bg-cover bg-center flex flex-col items-center justify-center pl-4 ${user?.rol==='admin' ? "md:pl-16 lg:pl-52" : ""} pr-6 pt-16`}>
       <Navbar />
       <motion.div
         initial={{ opacity: 0, y: 50 }}

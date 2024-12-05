@@ -4,12 +4,20 @@ import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import DragClase from "./DragClase";
 import { Triangle } from "react-loader-spinner";
-import { HorarioDisponible, Clase } from "../interfaces/interfaces";
+import {  Clase } from "../interfaces/interfaces";
 import axios from "axios";
 import { host } from "../data/server";
 import { Link } from "react-router-dom";
 
 interface Horario {
+  id?: number;
+  titulo?: string;
+  descripcion?: string;
+  dia: string;
+  horaInicio: string;
+  horaFin: string;
+}
+interface Clases {
   id: number;
   titulo?: string;
   descripcion?: string;
@@ -82,7 +90,7 @@ export default function Horario({ listadoClases }: { listadoClases: Horario[] })
     }
   };
 
-  const handleOpenModal = async (clase: Horario) => {
+  const handleOpenModal = async (clase: Clases) => {
     await fetchClassDetails(clase.id);
     console.log(clase)
   };

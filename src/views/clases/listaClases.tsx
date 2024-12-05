@@ -1,13 +1,9 @@
 import Navbar from '../../components/Navbar';
 import { Link } from 'react-router-dom';
-import { listarClases, eliminarClase } from '../../data/clases.conexion'; 
-import { Clase, Materia, Profesor, Salon } from '../../interfaces/interfaces'; 
+import { listarClases } from '../../data/clases.conexion'; 
+import { Clase  } from '../../interfaces/interfaces'; 
 import { useEffect, useState } from 'react';
 import Horario from '../../components/Horario';
-import { listarMaterias } from '../../data/materias.conexion';
-import { listarProfesores } from '../../data/profesores.conexion';
-import { listarSalones } from '../../data/salones.conexion';
-
 export default function Clases() {
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [horario, setHorario] = useState<HorarioDisponible[]>([]);
@@ -21,6 +17,8 @@ export default function Clases() {
     horaInicio: string;
     horaFin: string;
     profesor_nombre?: string;
+    materia_nombre?: string;
+    salon_codigo?: string;
   }
 
   useEffect(() => {
