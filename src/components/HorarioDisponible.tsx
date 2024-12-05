@@ -65,6 +65,7 @@ export default function HorarioDisponible({
     if (profesorId) fetchSchedule();
   }, [profesorId]);
 
+
   const handleCellClick = async (diaIndex: number, horaIndex: number) => {
     const claseSeleccionada = horarioo[horaIndex][diaIndex];
     const nuevoSeleccionado = !claseSeleccionada.seleccionado;
@@ -86,12 +87,14 @@ export default function HorarioDisponible({
           hora_inicio: claseSeleccionada.hora_inicio, // Correct property naming
           hora_fin: claseSeleccionada.hora_fin,       // Correct property naming
           profesorId});
+
         const response = await axios.post(`${host}/horarios_disponibles`, {
           dia: claseSeleccionada.dia,
           hora_inicio: claseSeleccionada.hora_inicio,
           hora_fin: claseSeleccionada.hora_fin,
           profesor_id:profesorId,
         });
+
         setHorarioo((prevHorarioo) =>
           prevHorarioo.map((horaRow, hIndex) =>
             horaRow.map((clase, dIndex) =>

@@ -163,7 +163,6 @@ export default function Navbar() {
                   <div className="px-4 py-2 text-sm text-gray-700">
                     {user ? `Hola, ${user.email}` : 'Iniciar Sesión'}
                   </div>
-                  <Link to="/perfil" className="block px-4 py-2 text-sm text-gray-700 hover:bg-indigo-100 transition-colors duration-300">Perfil</Link>
                   <button onClick={handleLogout} className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-indigo-100 transition-colors duration-300">Cerrar Sesión</button>
                 </motion.div>
               )}
