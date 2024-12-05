@@ -20,7 +20,7 @@ interface Horario {
 
 export default function Horario({ listadoClases }: { listadoClases: Horario[] }) {
   const [props, setProps] = useState<Horario | null>(null);
-  const dias = ["lunes", "martes", "miercoles", "jueves", "viernes", "sabado"];
+  const dias = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sabado"];
   const [clases, setClases] = useState<Horario[]>([]);
   const [horarioo, setHorarioo] = useState<Array<Array<Array<Horario>>>>([[]]);
   const [selectedClase, setSelectedClase] = useState<Clase | null>(null);

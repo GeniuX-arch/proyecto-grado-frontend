@@ -18,7 +18,7 @@ export default function HorarioDisponible({
   profesorId: number;
 }) {
   const [isLoaded, setIsLoaded] = useState(false);
-  const dias = ["lunes", "martes", "miercoles", "jueves", "viernes", "sabado"];
+  const dias = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sabado"];
   const horas = [
     "06:00", "06:45", "07:30", "08:15", "09:00", "09:45",
     "10:30", "11:15", "12:00", "12:45", "13:30", "14:15",

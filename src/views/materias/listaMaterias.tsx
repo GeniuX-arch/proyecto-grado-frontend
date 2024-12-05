@@ -44,8 +44,12 @@ export default function VerMaterias() {
   };
 
   const materiasFiltradas = materias.filter((materia) =>
-    materia.nombre.toLowerCase().includes(busqueda.toLowerCase())
+    materia.nombre.toLowerCase().includes(busqueda.toLowerCase().trim())
   );
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setBusqueda(e.target.value);
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-cyan-700 pl-4 md:pl-16 lg:pl-52 pr-6 pt-10">
@@ -61,8 +65,8 @@ export default function VerMaterias() {
                     type="text"
                     placeholder="Buscar materia..."
                     value={busqueda}
-                    onChange={(e) => setBusqueda(e.target.value)}
-                    className="pl-4 pr-10 py-2 rounded-md border border-gray-300 focus:ring-indigo-500 focus:border-indigo-500"
+                    onChange={handleSearchChange}
+                    className="pl-4 pr-10 py-2 rounded-md border border-gray-300 focus:ring-indigo-500 focus:border-indigo-500 w-64"
                   />
                   <svg 
                     className="w-5 h-5 text-gray-400 absolute right-3 top-2.5" 
@@ -162,7 +166,7 @@ export default function VerMaterias() {
                           ) : (
                             <tr>
                               <td colSpan={5} className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
-                                No hay materias disponibles
+                                No se encontraron materias
                               </td>
                             </tr>
                           )}

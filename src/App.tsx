@@ -107,7 +107,7 @@ function App() {
                 <ProtectedRoute allowedRoles={['admin','profesor']}>
                     <CrearProfesorMateria />
                 </ProtectedRoute>} />
-                <Route path="/profesor-materia/editar/:id" element={
+                <Route path="/profesormateria/editar/:id" element={
                 <ProtectedRoute allowedRoles={['admin','profesor']}>
                     <CrearProfesorMateria />
                 </ProtectedRoute>} />
@@ -123,7 +123,7 @@ function App() {
                     <CrearSalon />
                 </ProtectedRoute>} />
 
-                <Route path="/salones/new/:id" element={<ProtectedRoute allowedRoles={['admin']}>
+                <Route path="/salones/editar/:id" element={<ProtectedRoute allowedRoles={['admin']}>
                     <CrearSalon />
                 </ProtectedRoute>} />
 
