@@ -13,10 +13,7 @@ interface Profesor {
   image_path: string | null;
 }
 
-interface PaginatedResponse {
-  data: Profesor[];
-  last_page: number;
-}
+
 
 export default function Profesores() {
   const [profesores, setProfesores] = useState<Profesor[]>([]);
@@ -29,7 +26,7 @@ export default function Profesores() {
     try {
       setIsLoading(true);
       const response = await listarProfesores(pageNum);
-      const { data, last_page }: PaginatedResponse = response;
+      const { data, last_page }: any = response;//Type any[]
       setProfesores(data);
       setLastPage(last_page);
     } catch (error) {

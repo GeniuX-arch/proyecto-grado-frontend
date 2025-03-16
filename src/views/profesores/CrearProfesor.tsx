@@ -109,7 +109,7 @@ export default function CrearProfesor() {
         await actualizarProfesor(Number(id), data);
         setMensaje('Profesor actualizado exitosamente');
       } else {
-        await crearProfesor(data);
+        await crearProfesor(data); //argument of type FormData error is not assignable to parameter of type 'Profesor'
         setMensaje('Profesor creado exitosamente');
       }
 

@@ -28,15 +28,18 @@ export const obtenerProfesor = async (id: number): Promise<any> => {
     }
 }
 
-export const crearProfesor = async (nuevoProfesor: Profesor): Promise<any> => {
-    try {
-        const response = await axios.post(`${host}/${profesor}`, nuevoProfesor);
-        return response.data;
-    } catch (error) {
-        console.error('Error al crear al profesor: ', error);
-        throw new Error("No se pudo crear al profesor");
-    }
-}
+export const crearProfesor = async (data: Profesor | FormData): Promise<Profesor> => {
+  try {
+    const response = await axios.post(`${host}/${profesor}`, data, {
+      headers: {
+        'Content-Type': data instanceof FormData ? 'multipart/form-data' : 'application/json'
+      }
+    });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
 
 export const actualizarProfesor = async (id: number, profesorActualizado: FormData): Promise<any> => {
     try {

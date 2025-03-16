@@ -26,7 +26,7 @@ const MenuItem = ({ to, icon: Icon, children }) => {
       className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-all duration-300 ${
         isActive 
           ? 'bg-[#0B4A75] text-white' 
-          : 'text-white hover:bg-[#BFD730] hover:text-white'
+          : 'text-white hover:bg-green-600 hover:text-white'
       }`}
     >
       <Icon className="w-5 h-5" />

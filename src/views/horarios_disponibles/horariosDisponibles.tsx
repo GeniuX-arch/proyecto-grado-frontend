@@ -9,7 +9,7 @@ import { PlusIcon, PencilIcon, MagnifyingGlassIcon } from '@heroicons/react/24/o
 import { useAuth } from '../../context/AuthContext';
 
 export default function CrearHorarioDisponible() {
-  const user = useAuth()
+  const {user} = useAuth()
   const { id } = useParams<{ id: string }>();
   const [horarioDisponible, setHorarioDisponible] = useState<HorarioDisponible>({
  
@@ -101,7 +101,7 @@ export default function CrearHorarioDisponible() {
 
       if (!id) {
         setHorarioDisponible({
-          id: 0,
+          id: '',
           dia: '',
           hora_inicio: '',
           hora_fin: '',
@@ -121,7 +121,7 @@ export default function CrearHorarioDisponible() {
   const timeSlots = generateTimeSlots();
 
   return (
-    <div className={`bg-gradient-to-br from-gray-900 via-blue-900 to-cyan-700 min-h-screen bg-cover bg-center flex flex-col items-center justify-center pl-4 ${user.rol=='admin' ? "md:pl-16 lg:pl-52" : ""} pr-6 pt-16`}>
+    <div className={`bg-gradient-to-br from-gray-900 via-blue-900 to-cyan-700 min-h-screen bg-cover bg-center flex flex-col items-center justify-center pl-4 ${user?.rol==='admin' ? "md:pl-16 lg:pl-52" : ""} pr-6 pt-16`}>
       <Navbar />
       <motion.div
         initial={{ opacity: 0, y: 50 }}
