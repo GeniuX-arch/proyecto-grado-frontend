@@ -157,13 +157,13 @@ const VerProfesor: React.FC = () => {
   }, [id]);
 
   return (
-    <div className="min-h-screen bg-gray-900">
+    <div className="min-h-screen bg-green-200">
       <Navbar />
       <div className={`pt-24 pl-4 ${user.rol === 'admin' ? "md:pl-16 lg:pl-52" : ""} pr-6 pb-5`}>
         <div className="flex flex-col lg:flex-row gap-5">
-          <section className="lg:w-1/3 rounded-xl p-6 bg-gray-800 shadow-lg border border-gray-700">
+          <section className="lg:w-1/3 rounded-xl p-6 bg-white shadow-lg border border-gray-900  text-gray-800">
             {mensaje && (
-              <div className={`mb-4 p-4 text-center text-white rounded-lg w-full ${
+              <div className={`mb-4 p-4 text-center text-gray-900 rounded-lg w-full ${
                 mensaje.includes('Error') ? 'bg-red-500/80' : 'bg-green-500/80'
               }`}>
                 {mensaje}
@@ -179,7 +179,7 @@ const VerProfesor: React.FC = () => {
                 />
               </div>
               
-              <div className="text-gray-300">
+              <div className="text-gray-900">
                 <p className="font-bold">Cédula: <span className="font-normal">{profesor?.cedula}</span></p>
                 <p className="font-bold">Nombre: <span className="font-normal">{profesor?.nombre}</span></p>
                 <p className="font-bold">Tipo de Contrato: <span className="font-normal">{profesor?.tipo_contrato}</span></p>
@@ -196,12 +196,12 @@ const VerProfesor: React.FC = () => {
             </div>
           </section>
 
-          <section className="lg:w-2/3 rounded-xl p-6 bg-gray-800 shadow-lg border border-gray-700">
-            <h2 className="text-2xl font-bold text-white mb-4">Materias Asignadas</h2>
+          <section className="lg:w-2/3 rounded-xl p-6 bg-white shadow-lg border border-gray-700">
+            <h2 className="text-2xl font-bold text-green-900 mb-4">Materias Asignadas</h2>
             
             <ul className="grid gap-3 sm:grid-cols-2 sm:gap-3">
               {materias.map((materia) => (
-                <li key={materia.id} className="flex justify-between items-center bg-gray-700 p-4 rounded-lg">
+                <li key={materia.id} className="flex justify-between items-center bg-blue-800 p-4 rounded-lg">
                   <div>
                     <p className="text-lg text-white">{materia.materia_nombre}</p>
                     <p className="text-gray-400">Experiencia: {materia.experiencia} años</p>
@@ -228,8 +228,8 @@ const VerProfesor: React.FC = () => {
           </section>
         </div>
 
-        <section className="mt-5 rounded-xl p-6 bg-gray-800 shadow-lg border border-gray-700">
-          <h2 className='text-xl font-bold text-white mb-4'>Clases Asignadas</h2>
+        <section className="mt-5 rounded-xl p-6 bg-white shadow-lg border border-gray-700">
+          <h2 className='text-xl font-bold text-gray-500 mb-4'>Clases Asignadas</h2>
           <button onClick={handleClases} className="bg-blue-500 text-white p-2 rounded">
             {mostrarClases ? "Mostrar tabla" : "Mostrar horario"}
           </button> 
@@ -238,9 +238,9 @@ const VerProfesor: React.FC = () => {
               <table className="min-w-full divide-y divide-gray-700">
                 <thead className="bg-gray-700">
                   <tr>
-                    <th className="py-3 px-6 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Clase</th>
-                    <th className="py-3 px-6 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Hora Inicio</th>
-                    <th className="py-3 px-6 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Hora Fin</th>
+                    <th className="py-3 px-6 text-left text-xs font-medium text-black uppercase tracking-wider">Clase</th>
+                    <th className="py-3 px-6 text-left text-xs font-medium text-black uppercase tracking-wider">Hora Inicio</th>
+                    <th className="py-3 px-6 text-left text-xs font-medium text-black uppercase tracking-wider">Hora Fin</th>
                   </tr>
                 </thead>
                 <tbody className="bg-gray-800 divide-y divide-gray-700">

@@ -62,7 +62,7 @@ export default function Clases() {
   return (
     <>
       <Navbar />
-      <div className="bg-gradient-to-br from-gray-900 via-gray-900 to-cyan-700 relative min-h-screen px-0 pt-28 pl-4 md:pl-16 lg:pl-52 pr-6">
+      <div className="bg-gradient-to-br bg-white relative min-h-screen px-0 pt-28 pl-4 md:pl-16 lg:pl-52 pr-6">
         <div className="flex gap-4 ml-10 mt-2">
           <Link
             to="/clases"
