@@ -157,7 +157,7 @@ const VerProfesor: React.FC = () => {
   }, [id]);
 
   return (
-    <div className="min-h-screen bg-green-200">
+    <div className="min-h-screen bg-[#F8F9FA]">
       <Navbar />
       <div className={`pt-24 pl-4 ${user.rol === 'admin' ? "md:pl-16 lg:pl-52" : ""} pr-6 pb-5`}>
         <div className="flex flex-col lg:flex-row gap-5">
@@ -186,7 +186,7 @@ const VerProfesor: React.FC = () => {
                 <p className="font-bold">Estado: <span className="font-normal">{profesor?.estado}</span></p>
                 <Link
                   to={`/profesor/editar/${profesor?.id}`}
-                  className="flex items-center justify-center mt-4 p-2 rounded-lg bg-blue-600 hover:bg-blue-700 transition-colors duration-300 text-white"
+                  className="flex items-center justify-center mt-4 p-3 rounded-xl bg-[#0B4A75] hover:bg-[#C2D172] text-black hover:text-white transition-colors duration-300 shadow-md cursor-pointer"
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-blue-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
@@ -201,15 +201,16 @@ const VerProfesor: React.FC = () => {
             
             <ul className="grid gap-3 sm:grid-cols-2 sm:gap-3">
               {materias.map((materia) => (
-                <li key={materia.id} className="flex justify-between items-center bg-blue-800 p-4 rounded-lg">
+                <li key={materia.id} className="flex justify-between items-center bg-white p-4 rounded-lg border border-gray-700
+">
                   <div>
-                    <p className="text-lg text-white">{materia.materia_nombre}</p>
+                    <p className="text-lg text-green-950">{materia.materia_nombre}</p>
                     <p className="text-gray-400">Experiencia: {materia.experiencia} años</p>
                     <p className="text-gray-400">Calificación de alumno: {materia.calificacion_alumno}</p>
                   </div>
                   <div className='flex flex-row justify-center items-center'>
                     <Link
-                      to={`/profesor-materia/editar/${materia.id}`}
+                      to={`/profesormateria/editar/${materia.id}`}
                       className="flex items-center justify-center mt-4 p-2 rounded-lg text-blue-500 hover:bg-blue-900 transition-colors duration-300"
                     >
                       Editar
@@ -230,25 +231,25 @@ const VerProfesor: React.FC = () => {
 
         <section className="mt-5 rounded-xl p-6 bg-white shadow-lg border border-gray-700">
           <h2 className='text-xl font-bold text-gray-500 mb-4'>Clases Asignadas</h2>
-          <button onClick={handleClases} className="bg-blue-500 text-white p-2 rounded">
+          <button onClick={handleClases} className="bg-[#0B4A75] text-white p-2 rounded">
             {mostrarClases ? "Mostrar tabla" : "Mostrar horario"}
           </button> 
           {!mostrarClases && (
             <div className="overflow-x-auto rounded-lg border border-gray-700">
               <table className="min-w-full divide-y divide-gray-700">
-                <thead className="bg-gray-700">
+                <thead className="bg-[#ABC44D]">
                   <tr>
                     <th className="py-3 px-6 text-left text-xs font-medium text-black uppercase tracking-wider">Clase</th>
                     <th className="py-3 px-6 text-left text-xs font-medium text-black uppercase tracking-wider">Hora Inicio</th>
                     <th className="py-3 px-6 text-left text-xs font-medium text-black uppercase tracking-wider">Hora Fin</th>
                   </tr>
                 </thead>
-                <tbody className="bg-gray-800 divide-y divide-gray-700">
+                <tbody className="bg-white divide-y divide-gray-700">
                   {clases.map((clase) => (
-                    <tr key={clase.id} className="hover:bg-gray-700 transition-colors duration-200">
-                      <td className="py-4 px-6 text-sm text-gray-300">{clase.dia_semana}</td>
-                      <td className="py-4 px-6 text-sm text-gray-300">{clase.hora_inicio}</td>
-                      <td className="py-4 px-6 text-sm text-gray-300">{clase.hora_fin}</td>
+                    <tr key={clase.id} className="hover:bg-[#5f9fc9] transition-colors duration-200">
+                      <td className="py-4 px-6 text-sm text-gray-800">{clase.dia_semana}</td>
+                      <td className="py-4 px-6 text-sm text-gray-800">{clase.hora_inicio}</td>
+                      <td className="py-4 px-6 text-sm text-gray-800">{clase.hora_fin}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -261,8 +262,8 @@ const VerProfesor: React.FC = () => {
           )}
         </section>
 
-        <section className="mt-5 mb-5 rounded-xl p-6 bg-gray-800 shadow-lg border border-gray-700">
-          <h2 className='text-xl font-bold text-white mb-4'>Horas Disponibles</h2>
+        <section className="mt-5 mb-5 rounded-xl p-6 bg-white shadow-lg border border-gray-700">
+          <h2 className='text-xl font-bold text-green-900 mb-4'>Horas Disponibles</h2>
           <button onClick={handleHorarios} className="bg-blue-500 text-white p-2 rounded">
             {mostrarHorarios ? "Mostrar tabla" : "Mostrar horario"}
           </button> 
@@ -273,19 +274,19 @@ const VerProfesor: React.FC = () => {
           {!mostrarHorarios && (
             <div className="overflow-x-auto rounded-lg border border-gray-700">
               <table className="min-w-full divide-y divide-gray-700">
-                <thead className="bg-gray-700">
+                <thead className="bg-[#ABC44D]">
                   <tr>
-                    <th className="py-3 px-6 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Día</th>
-                    <th className="py-3 px-6 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Hora Inicio</th>
-                    <th className="py-3 px-6 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Hora Fin</th>
+                    <th className="py-3 px-6 text-left text-xs font-medium text-black uppercase tracking-wider">Día</th>
+                    <th className="py-3 px-6 text-left text-xs font-medium text-black uppercase tracking-wider">Hora Inicio</th>
+                    <th className="py-3 px-6 text-left text-xs font-medium text-black uppercase tracking-wider">Hora Fin</th>
                   </tr>
                 </thead>
-                <tbody className="bg-gray-800 divide-y divide-gray-700">
+                <tbody className="bg-white divide-y divide-gray-700">
                   {horarios.map((horario) => (
-                    <tr key={horario.id} className="hover:bg-gray-700 transition-colors duration-200">
-                      <td className="py-4 px-6 text-sm text-gray-300">{horario.dia}</td>
-                      <td className="py-4 px-6 text-sm text-gray-300">{horario.hora_inicio}</td>
-                      <td className="py-4 px-6 text-sm text-gray-300">{horario.hora_fin}</td>
+                    <tr key={horario.id} className="hover:bg-[#5f9fc9] transition-colors duration-200">
+                      <td className="py-4 px-6 text-sm text-gray-800">{horario.dia}</td>
+                      <td className="py-4 px-6 text-sm text-gray-800">{horario.hora_inicio}</td>
+                      <td className="py-4 px-6 text-sm text-gray-800">{horario.hora_fin}</td>
                     </tr>
                   ))}
                 </tbody>

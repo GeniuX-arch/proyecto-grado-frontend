@@ -85,39 +85,39 @@ export default function CrearProfesorMateria() {
   };
 
   return (
-    <div className={`bg-gradient-to-br from-gray-900 via-blue-900 to-cyan-700 min-h-screen bg-cover bg-center flex flex-col items-center justify-center pl-4 ${user?.rol==='admin' ? "md:pl-16 lg:pl-52" : ""} pr-6 pt-16`}>
+    <div className={`bg-gradient-to-br from-white via-blue-100 to-blue-200 min-h-screen bg-cover bg-center flex flex-col items-center justify-center pl-4 ${user?.rol === 'admin' ? "md:pl-16 lg:pl-52" : ""} pr-6 pt-16`}>
       <Navbar />
       <motion.div
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.7 }}
-        className="w-full max-w-lg p-10 bg-gray-800 bg-opacity-90 backdrop-blur-lg rounded-xl shadow-lg"
+        className="w-full max-w-lg p-10 bg-white bg-opacity-90 backdrop-blur-lg rounded-xl shadow-md"
       >
-        <h2 className="text-3xl font-bold text-cyan-400 mb-6 text-center">
+        <h2 className="text-3xl font-bold text-[#BFD730] mb-6 text-center">
           {id ? 'Editar Profesor-Materia' : 'Crear Profesor-Materia'}
         </h2>
-
+  
         {mensaje && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className={`mb-4 p-4 text-center text-white rounded ${mensaje.includes('Error') ? 'bg-red-600' : 'bg-green-600'}`}
+            className={`mb-4 p-4 text-center text-white rounded ${mensaje.includes('Error') ? 'bg-red-500' : 'bg-green-500'}`}
           >
             {mensaje}
           </motion.div>
         )}
-
+  
         <form onSubmit={handleSubmit}>
           {/* Profesor */}
           <div className="mb-6">
-            <label htmlFor="profesor_id" className="block text-cyan-300 font-medium mb-2">Profesor:</label>
+            <label htmlFor="profesor_id" className="block text-cyan-700 font-medium mb-2">Profesor:</label>
             <select
               id="profesor_id"
               name="profesor_id"
               value={profesorMateria.profesor_id}
               onChange={handleChange}
-              className="w-full px-4 py-2 border border-gray-700 bg-gray-900 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-400"
+              className="w-full px-4 py-2 border border-gray-300 bg-white text-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
               required
             >
               <option value={0}>Seleccione un profesor</option>
@@ -128,16 +128,16 @@ export default function CrearProfesorMateria() {
               ))}
             </select>
           </div>
-
+  
           {/* Materia */}
           <div className="mb-6">
-            <label htmlFor="materia_id" className="block text-cyan-300 font-medium mb-2">Materia:</label>
+            <label htmlFor="materia_id" className="block text-cyan-700 font-medium mb-2">Materia:</label>
             <select
               id="materia_id"
               name="materia_id"
               value={profesorMateria.materia_id}
               onChange={handleChange}
-              className="w-full px-4 py-2 border border-gray-700 bg-gray-900 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-400"
+              className="w-full px-4 py-2 border border-gray-300 bg-white text-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
               required
             >
               <option value={0}>Seleccione una materia</option>
@@ -148,39 +148,39 @@ export default function CrearProfesorMateria() {
               ))}
             </select>
           </div>
-
+  
           {/* Calificación del alumno */}
           <div className="mb-6">
-            <label htmlFor="calificacion_alumno" className="block text-cyan-300 font-medium mb-2">Calificación Alumno:</label>
+            <label htmlFor="calificacion_alumno" className="block text-cyan-700 font-medium mb-2">Calificación Alumno:</label>
             <input
               type="number"
               id="calificacion_alumno"
               name="calificacion_alumno"
               value={profesorMateria.calificacion_alumno}
               onChange={handleChange}
-              className="w-full px-4 py-2 border border-gray-700 bg-gray-900 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-400"
+              className="w-full px-4 py-2 border border-gray-300 bg-white text-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
               required
             />
           </div>
-
+  
           {/* Experiencia */}
           <div className="mb-6">
-            <label htmlFor="experiencia" className="block text-cyan-300 font-medium mb-2">Experiencia:</label>
+            <label htmlFor="experiencia" className="block text-cyan-700 font-medium mb-2">Experiencia:</label>
             <input
               type="text"
               id="experiencia"
               name="experiencia"
               value={profesorMateria.experiencia}
               onChange={handleChange}
-              className="w-full px-4 py-2 border border-gray-700 bg-gray-900 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-400"
+              className="w-full px-4 py-2 border border-gray-300 bg-white text-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
               required
             />
           </div>
-
+  
           <div className="flex justify-between items-center">
             <button
               type="submit"
-              className="w-full bg-cyan-600 hover:bg-cyan-700 text-white font-bold py-2 px-4 rounded-lg transition duration-300"
+              className="w-full bg-[#0B4A75] hover:bg-cyan-700 text-white font-bold py-2 px-4 rounded-lg transition duration-300"
             >
               {id ? (
                 <span className="flex items-center justify-center">
@@ -197,4 +197,4 @@ export default function CrearProfesorMateria() {
       </motion.div>
     </div>
   );
-}
+}  

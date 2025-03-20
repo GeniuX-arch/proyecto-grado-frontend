@@ -121,41 +121,54 @@ export default function CrearHorarioDisponible() {
   const timeSlots = generateTimeSlots();
 
   return (
-    <div className={`bg-gradient-to-br from-gray-900 via-blue-900 to-cyan-700 min-h-screen bg-cover bg-center flex flex-col items-center justify-center pl-4 ${user?.rol==='admin' ? "md:pl-16 lg:pl-52" : ""} pr-6 pt-16`}>
+    <div
+      className={`min-h-screen bg-cover bg-center flex flex-col items-center justify-center pl-4 ${
+        user?.rol === 'admin' ? 'md:pl-16 lg:pl-52' : ''
+      } pr-6 pt-16`}
+      style={{
+        backgroundColor: '#F1FAFE', // Fondo claro uniforme
+      }}
+    >
       <Navbar />
       <motion.div
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.7 }}
-        className="w-full max-w-lg p-10 bg-gray-800 bg-opacity-90 backdrop-blur-lg rounded-xl shadow-lg"
+        className="w-full max-w-lg p-10 rounded-xl shadow-md"
+        style={{
+          backgroundColor: '#FFFFFF', // Contenedor blanco
+        }}
       >
-        <h2 className="text-3xl font-bold text-cyan-400 mb-6 text-center">
+        <h2 className="text-3xl font-bold mb-6 text-center" style={{ color: '#ACC440' }}>
           {id ? 'Editar Horario Disponible' : 'Crear Horario Disponible'}
         </h2>
-
+  
         {mensaje && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className={`mb-4 p-4 text-center text-white rounded ${
-              mensaje.includes('Error') ? 'bg-red-600' : 'bg-green-600'
-            }`}
+            className="mb-4 p-4 text-center text-white rounded"
+            style={{
+              backgroundColor: mensaje.includes('Error') ? '#FF4C4C' : '#44BBA4', // Rojo o verde
+            }}
           >
             {mensaje}
           </motion.div>
         )}
-
+  
         <form onSubmit={handleSubmit}>
           {/* Día */}
           <div className="mb-6">
-            <label htmlFor="dia" className="block text-cyan-300 font-medium mb-2">Día de la Semana:</label>
+            <label htmlFor="dia" className="block font-medium mb-2" style={{ color: '#4B8CA6' }}>
+              Día de la Semana:
+            </label>
             <select
               id="dia"
               name="dia"
               value={horarioDisponible.dia}
               onChange={handleChange}
-              className="w-full px-4 py-2 border border-gray-700 bg-gray-900 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-400"
+              className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#4B8CA6]"
               required
             >
               <option value="">Selecciona una opción</option>
@@ -167,68 +180,82 @@ export default function CrearHorarioDisponible() {
               <option value="sabado">Sábado</option>
             </select>
           </div>
-
-          {/* Hora de inicio, se buguea al actualizar */}
+  
+          {/* Hora de inicio */}
           <div className="mb-6">
-            <label htmlFor="hora_inicio" className="block text-cyan-300 font-medium mb-2">Hora de inicio:</label>
+            <label htmlFor="hora_inicio" className="block font-medium mb-2" style={{ color: '#4B8CA6' }}>
+              Hora de inicio:
+            </label>
             <select
               id="hora_inicio"
               name="hora_inicio"
               value={horarioDisponible.hora_inicio}
               onChange={handleChange}
-              className="w-full px-4 py-2 border border-gray-700 bg-gray-900 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-400"
+              className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#4B8CA6]"
               required
             >
               <option value="">Selecciona una opción</option>
               {timeSlots.map((slot, index) => (
-                <option key={index} value={slot.value}>{slot.display}</option>
+                <option key={index} value={slot.value}>
+                  {slot.display}
+                </option>
               ))}
             </select>
           </div>
-
+  
           {/* Hora de fin */}
           <div className="mb-6">
-            <label htmlFor="hora_fin" className="block text-cyan-300 font-medium mb-2">Hora de Fin:</label>
+            <label htmlFor="hora_fin" className="block font-medium mb-2" style={{ color: '#4B8CA6' }}>
+              Hora de Fin:
+            </label>
             <select
               id="hora_fin"
               name="hora_fin"
               value={horarioDisponible.hora_fin}
               onChange={handleChange}
-              className="w-full px-4 py-2 border border-gray-700 bg-gray-900 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-400"
+              className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#4B8CA6]"
               required
             >
               <option value="">Selecciona una opción</option>
               {timeSlots.map((slot, index) => (
-                <option key={index} value={slot.value}>{slot.display}</option>
+                <option key={index} value={slot.value}>
+                  {slot.display}
+                </option>
               ))}
             </select>
           </div>
-
-          {/* Buscador de Profesores */}
+  
+          {/* Buscador */}
           <div className="mb-4">
-            <label htmlFor="search" className="block text-cyan-300 font-medium mb-2">Buscar Profesor:</label>
+            <label htmlFor="search" className="block font-medium mb-2" style={{ color: '#4B8CA6' }}>
+              Buscar Profesor:
+            </label>
             <div className="relative">
               <input
                 type="text"
                 id="search"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full px-4 py-2 pl-10 border border-gray-700 bg-gray-900 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-400"
+                className="w-full px-4 py-2 pl-10 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#4B8CA6]"
                 placeholder="Buscar profesor..."
               />
-              <MagnifyingGlassIcon className="h-5 w-5 text-gray-400 absolute left-3 top-3" />
+              <MagnifyingGlassIcon
+                className="h-5 w-5 absolute left-3 top-3 text-gray-400"
+              />
             </div>
           </div>
-
+  
           {/* Profesor */}
           <div className="mb-6">
-            <label htmlFor="profesor_id" className="block text-cyan-300 font-medium mb-2">Profesor:</label>
+            <label htmlFor="profesor_id" className="block font-medium mb-2" style={{ color: '#4B8CA6' }}>
+              Profesor:
+            </label>
             <select
               id="profesor_id"
               name="profesor_id"
               value={horarioDisponible.profesor_id}
               onChange={handleChange}
-              className="w-full px-4 py-2 border border-gray-700 bg-gray-900 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-400"
+              className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#4B8CA6]"
               required
             >
               <option value="">Seleccione un profesor</option>
@@ -239,11 +266,18 @@ export default function CrearHorarioDisponible() {
               ))}
             </select>
           </div>
-
+  
+          {/* Botón */}
           <div className="flex justify-between items-center">
             <button
               type="submit"
-              className="w-full bg-cyan-600 hover:bg-cyan-700 text-white font-bold py-2 px-4 rounded-lg transition duration-300"
+              className="w-full font-bold py-2 px-4 rounded-lg transition duration-300"
+              style={{
+                backgroundColor: '#44BBA4', // Verde
+                color: '#FFFFFF',
+              }}
+              onMouseOver={(e) => (e.currentTarget.style.backgroundColor = '#379c89')}
+              onMouseOut={(e) => (e.currentTarget.style.backgroundColor = '#0B4A75')}
             >
               {id ? (
                 <span className="flex items-center justify-center">
