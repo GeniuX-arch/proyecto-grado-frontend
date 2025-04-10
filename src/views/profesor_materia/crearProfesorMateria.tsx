@@ -5,7 +5,7 @@ import Navbar from '../../components/Navbar';
 import { host } from '../../data/server';
 import { Profesor, ProfesorMateria } from '../../interfaces/interfaces';
 import { motion } from 'framer-motion';
-import { PencilIcon, TrashIcon, PlusIcon } from '@heroicons/react/24/outline';
+import { PencilIcon,  PlusIcon } from '@heroicons/react/24/outline';
 import { useAuth } from '../../context/AuthContext';
 
 export default function CrearProfesorMateria() {

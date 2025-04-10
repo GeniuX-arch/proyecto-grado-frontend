@@ -1,10 +1,9 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { 
   UserIcon, 
-  BellIcon, 
-  CogIcon, 
+ 
   ChevronDownIcon,
   AcademicCapIcon,
   BookOpenIcon,
@@ -16,7 +15,13 @@ import { motion, AnimatePresence } from 'framer-motion';
 import gestionutsLogo from '../../public/logo1.png';
 import calidad from '../../public/calidad.png'; 
 
-const MenuItem = ({ to, icon: Icon, children }) => {
+interface MenuItemProps {
+  to: string;
+  icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
+  children: React.ReactNode;
+}
+
+const MenuItem: React.FC<MenuItemProps> = ({ to, icon: Icon, children }) => {
   const location = useLocation();
   const isActive = location.pathname === to;
 
@@ -35,7 +40,19 @@ const MenuItem = ({ to, icon: Icon, children }) => {
   );
 };
 
-const SubMenu = ({ title, items, icon: Icon }) => {
+interface SubMenuItem {
+  to: string;
+  label: string;
+  icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
+}
+
+interface SubMenuProps {
+  title: string;
+  items: SubMenuItem[];
+  icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
+}
+
+const SubMenu: React.FC<SubMenuProps> = ({ title, items, icon: Icon }) => {
   const [isOpen, setIsOpen] = useState(false);
   return (
     <div>
@@ -80,8 +97,7 @@ export default function Navbar() {
   const navigate = useNavigate();
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [notifications, setNotifications] = useState([]);
-  const profileMenuRef = useRef(null);
+  const profileMenuRef = useRef<HTMLDivElement | null>(null);
 
   const handleLogout = useCallback(async () => {
     try {
@@ -94,8 +110,8 @@ export default function Navbar() {
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
-  const handleClickOutside = (event) => {
-    if (profileMenuRef.current && !profileMenuRef.current.contains(event.target)) {
+  const handleClickOutside = (event: MouseEvent) => {
+    if (profileMenuRef.current && !profileMenuRef.current.contains(event.target as Node)) {
       setIsProfileOpen(false);
     }
   };
@@ -107,16 +123,7 @@ export default function Navbar() {
     };
   }, []);
 
-  useEffect(() => {
-    const fetchNotifications = async () => {
-      const mockNotifications = [
-        { id: 1, message: 'Nueva clase asignada' },
-        { id: 2, message: 'Recordatorio: Reunión de algo' },
-      ];
-      setNotifications(mockNotifications);
-    };
-    fetchNotifications();
-  }, []);
+  
 
   const menuItems = [
     { to: '/', label: 'Profesores', icon: UsersIcon },
@@ -174,7 +181,7 @@ export default function Navbar() {
         </div>
       </header>
 
-      {user.rol === 'admin' && (
+      {user && user.rol === 'admin' && (
         <aside className={`bg-[#0B4A75]  fixed left-0 top-16 h-full w-48 z-40 flex flex-col transition-transform duration-300 transform ${isMenuOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 shadow-xl`}>
           <div className="p-4 flex justify-center">
             

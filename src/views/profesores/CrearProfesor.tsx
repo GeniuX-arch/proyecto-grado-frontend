@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom';
 import Navbar from '../../components/Navbar';
 import { host } from '../../data/server';
 import { actualizarProfesor, crearProfesor } from '../../data/profesores.conexion';
-import { useAuth } from '../../context/AuthContext';
+
 import { motion } from 'framer-motion';
 
 interface Profesor {
@@ -18,7 +18,7 @@ interface Profesor {
 }
 
 export default function CrearProfesor() {
-  const { user } = useAuth();
+  // Removed unused 'user' variable
   const { id } = useParams<{ id: string }>();
   const [profesor, setProfesor] = useState<Profesor>({
     tipo_cedula: '',

@@ -17,9 +17,8 @@ export default function Login() {
     setLoading(true);
     setError("");
     try {
-      const rol= await login(email, password);
-      console.log(rol)
-      if(rol==='admin'){
+      const rol = await login(email, password);
+      if (typeof rol === "string" && rol === 'admin') {
       navigate("/");
       }else{
       navigate("/profesor/perfil/1");

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -16,17 +16,12 @@ interface Horario {
   profesor_id?: number;
 }
 
-interface Profesor {
-  id: number;
-  cedula: string;
-  nombre: string;
-}
 
 export default function ListaHorariosDisponibles() {
   const [horarios, setHorarios] = useState<Horario[]>([]);
   const [mensaje, setMensaje] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [filtroProfesor, setFiltroProfesor] = useState<number | null>(null);
+  
   const [busquedaProfesor, setBusquedaProfesor] = useState<string>('');
 
   useEffect(() => {

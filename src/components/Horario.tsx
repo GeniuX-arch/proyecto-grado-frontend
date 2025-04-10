@@ -10,7 +10,7 @@ import { host } from "../data/server";
 import { Link } from "react-router-dom";
 
 interface Horario {
-  id?: number;
+  id: number; // <- hacer que el id no sea opcional
   titulo?: string;
   descripcion?: string;
   dia: string;
@@ -209,6 +209,7 @@ export default function Horario({ listadoClases }: { listadoClases: Horario[] })
                             horaFin={currentHora}
                             onDrop={(propsToPass) => {
                               setProps({
+                                id: 0, // Provide a default or meaningful id value
                                 dia: propsToPass.dia,
                                 horaInicio: propsToPass.horaInicio,
                                 horaFin: propsToPass.horaFin,

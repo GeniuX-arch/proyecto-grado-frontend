@@ -30,7 +30,7 @@ export default function Clases() {
           const descripcion = `${item.profesor_nombre}, ${item.materia_nombre}, ${item.salon_codigo}`;
 
           return {
-            id: item.id,
+            id: item.id ?? 0, // Default to 0 if id is undefined
             titulo: item.grupo,
             dia: item.dia_semana,
             horaInicio: item.hora_inicio,
@@ -76,7 +76,16 @@ export default function Clases() {
             className="px-4 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-cyan-500"
           />
         </div>
-        <Horario listadoClases={horario} />
+        <Horario
+  listadoClases={horario.map((clase) => ({
+    id: clase.id ?? 0, // Asegúrate de que `id` no sea opcional
+    titulo: clase.titulo,
+    descripcion: clase.descripcion,
+    dia: clase.dia,
+    horaInicio: clase.horaInicio,
+    horaFin: clase.horaFin,
+  }))}
+/>
       </div>
     </>
   );

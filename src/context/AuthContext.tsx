@@ -127,14 +127,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
     const register = async (userData: { name: string, email: string, password: string, rol: 'admin' | 'profesor' }) => {
     try {
-        const response = await axios.post(`${host}/register`, userData, {
+        await axios.post(`${host}/register`, userData, {
             headers: {
                 'Content-Type': 'application/json',
             }
         });
 
         // axios automáticamente maneja la conversión de JSON, por lo que puedes acceder a los datos directamente
-        const data = response.data;
 
         // Aquí puedes manejar los datos de la respuesta, como guardar el token o iniciar sesión automáticamente
         // setUser(data.user);
