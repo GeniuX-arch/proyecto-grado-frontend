@@ -1,8 +1,8 @@
 import axios from 'axios';
 
-axios.get('http://192.168.0.7/sanctum/csrf-cookie', { withCredentials: true })
+axios.get('http://192.168.0.8/sanctum/csrf-cookie', { withCredentials: true })
   .then(() => {
-    axios.post('http://192.168.0.7/login', {
+    axios.post('http://192.168.0.8/login', {
       email: 'user@example.com',
       password: 'password'
     }, { withCredentials: true })
@@ -15,7 +15,7 @@ axios.get('http://192.168.0.7/sanctum/csrf-cookie', { withCredentials: true })
   });
 
 
-axios.get('http://192.168.0.7/api/protected-route', { withCredentials: true })
+axios.get('http://192.168.0.8/api/protected-route', { withCredentials: true })
   .then(response => {
     console.log('Protected data:', response.data);
   })
@@ -24,7 +24,7 @@ axios.get('http://192.168.0.7/api/protected-route', { withCredentials: true })
   });
 
 
-axios.post('http://192.168.0.7/logout', {}, { withCredentials: true })
+axios.post('http://192.168.0.8/logout', {}, { withCredentials: true })
   .then(response => {
     console.log(response.data.message);
   })
